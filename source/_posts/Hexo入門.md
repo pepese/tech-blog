@@ -122,7 +122,7 @@ $ hexo publish [layout] <title>
 以下のライブラリを導入する。
 
 ```sh
-$ npm install hexo-deployer-git --save
+$ npm install hexo-deployer-git --save --no-optional
 ```
 
 さらに **_config.yml** に以下の設定を追加する。
@@ -131,8 +131,8 @@ $ npm install hexo-deployer-git --save
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type: github
-  repo: git@github.com:pepese/pepese.github.io.git
+  type: git
+  repo: https://pepese@github.com/pepese/pepese.github.io.git
   branch: master
   message: update
 ```
@@ -157,7 +157,7 @@ $ hexo generate
 <table>
 <tr><th>サブドメイン</th><td>techblog</td></tr>
 <tr><th>種別</th><td>CNAME</td></tr>
-<tr><th>内容</th><td>pepese.github.io</td></tr>
+<tr><th>内容</th><td>github.io</td></tr>
 </table>
 
 さらに以下のようにCNAMEファイルを配置する。
@@ -166,6 +166,7 @@ $ hexo generate
 $ echo 'techblog.pepese.com' > source/CNAME
 ```
 
+お名前.comを利用している場合は[こちら](http://qiita.com/tiwu_official/items/d7fb6c493ed5eb9ee4fc)を参考。  
 なお、この方法でやると **https** にはならない。
 
 - http://dev.shikakun.com/post/hexo-init/
