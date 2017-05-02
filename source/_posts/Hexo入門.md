@@ -4,12 +4,12 @@ date: 2017-05-02 17:05:58
 tags:
 ---
 
-はてなブログが一向に一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってみる。  
+はてなブログが一向に一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
 前提として **npm** と **Git** 環境が必要。
 
 [http://blog.pepese.com/entry/2017/02/16/141653:embed:cite]
 
-# インストールから起動まで
+# Hexoのインストールから起動まで
 
 ```sh
 $ npm install -g hexo-cli --no-optional // インストール
@@ -47,7 +47,7 @@ $ tree
 ├── package.json
 ├── scaffolds
 ├── source
-|   ├── _drafts
+|   ├── _drafts  // これは無いかも
 |   └── _posts
 └── themes
 ```
@@ -69,7 +69,7 @@ timezone: Japan
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://pepese.github.io
+url: https://techblog.pepese.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -167,9 +167,34 @@ $ echo 'techblog.pepese.com' > source/CNAME
 ```
 
 お名前.comを利用している場合は[こちら](http://qiita.com/tiwu_official/items/d7fb6c493ed5eb9ee4fc)を参考。  
-なお、この方法でやると **https** にはならない。
+なお、ここまでの作業だとGithubが用意してくれている証明書が使えないため **https** にはならない。  
+[Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。
 
-- http://dev.shikakun.com/post/hexo-init/
+- https://rcmdnk.com/blog/2017/01/03/blog-github-web/
+
+手順は以下。
+
+1. [Cloudflare](https://www.cloudflare.com/)のアカウント作成
+  - Sign upのリンクからメアドとパスワードを渡してアカウントを作成
+2. Cloudflareにサイトを登録
+  - 「Add Your First Domain」にて **pepese.com** を入力して「Begin Scan」
+3. CloudflareのDNSの設定
+  - お名前.com で設定したGitHub Pagesの設定が取得できればOK
+  - そのままContinue
+4. プランの選択
+  - 無料のFree Websiteを選択
+
+以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラのサイト（ここではお名前.com）に行ってネームサーバを変更するように指示される。  
+ここでは以下のように指示された。
+
+|Current Nameservers|Change Nameservers to:|
+|:---|:---|
+|01.dnsv.jp|dina.ns.cloudflare.com|
+|02.dnsv.jp|james.ns.cloudflare.com|
+|03.dnsv.jp|Remove this nameserver|
+|04.dnsv.jp|Remove this nameserver|
+
+上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。  
 
 # 調べることめも
 
