@@ -171,6 +171,8 @@ $ echo 'techblog.pepese.com' > source/CNAME
 [Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。
 
 - https://rcmdnk.com/blog/2017/01/03/blog-github-web/
+- https://www.kaitoy.xyz/2016/07/01/https-support-by-cloudflare/
+- http://qiita.com/noraworld/items/89dd85a434a7b759e00c
 
 手順は以下。
 
@@ -200,7 +202,6 @@ $ echo 'techblog.pepese.com' > source/CNAME
 
 - sitemap
 - タグ
-
-# 参考
-
-- [hexo に google adsense 設置&バナー編集](http://tofu.hatenadiary.com/entry/2017/01/14/025420)
+- Hexoで作ったブログにAdsenseを設定する
+  - [hexo に google adsense 設置&バナー編集](http://tofu.hatenadiary.com/entry/2017/01/14/025420)
+- Hexoで作ったブログにAnalyticsを設定する
