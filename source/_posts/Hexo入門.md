@@ -176,16 +176,27 @@ $ echo 'techblog.pepese.com' > source/CNAME
 
 手順は以下。
 
-1. [Cloudflare](https://www.cloudflare.com/)のアカウント作成
-  - Sign upのリンクからメアドとパスワードを渡してアカウントを作成
-2. Cloudflareにサイトを登録
-  - 「Add Your First Domain」にて **pepese.com** を入力して「Begin Scan」
-3. CloudflareのDNSの設定
-  - お名前.com で設定したGitHub Pagesの設定が取得できればOK
-  - そのままContinue
-4. プランの選択
-  - 無料のFree Websiteを選択
+(1) [Cloudflare](https://www.cloudflare.com/)のアカウント作成
 
+Sign upのリンクからメアドとパスワードを渡してアカウントを作成。
+
+(2) Cloudflareにサイトを登録
+
+「Add Your First Domain」にて **pepese.com** を入力して「Begin Scan」。
+
+(3) CloudflareのDNSの設定
+
+以下のようになっていればいい。
+
+|Type|Name|Value|TTL|
+|:---|:---|:---|:---|
+|A|pepese.com|192.30.252.153|Automatic TTL|
+|A|pepese.com|192.30.252.154|Automatic TTL|
+|CNAME|techblog|pepese.com|Automatic TTL|
+
+(4) プランの選択
+
+無料のFree Websiteを選択。  
 以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラのサイト（ここではお名前.com）に行ってネームサーバを変更するように指示される。  
 ここでは以下のように指示された。
 
