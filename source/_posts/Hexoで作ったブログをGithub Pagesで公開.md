@@ -1,5 +1,5 @@
 ---
-title: Hexo入門
+title: Hexoで作ったブログをGithub Pagesで公開
 date: 2017-05-02 17:05:58
 tags:
 ---
@@ -207,9 +207,16 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 |03.dnsv.jp|Remove this nameserver|
 |04.dnsv.jp|Remove this nameserver|
 
-上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。  
+上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。
 
-# 調べることめも
+(5) その他の設定
+
+- CloudflareのPage Rulesタブで常にHTTPSアクセスとなるように以下を設定する。
+  - If the URL matches: http://techblog.pepese.com*
+  - Then the settings are: Always use HTTPS
+- SpeedタブのAuto Minify項目でCloudflareでキャッシュする時にJavaScript/CSS/HTMLのソースをminifyする設定が可能。
+
+# 調べることメモ
 
 - sitemap
 - タグ
