@@ -5,9 +5,11 @@ tags:
 ---
 
 はてなブログが一向に一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
-前提として **npm** と **Git** 環境が必要。
+前提として **npm** と **Git** 環境が必要なため以下参照。
 
 [http://blog.pepese.com/entry/2017/02/16/141653:embed:cite]
+
+以降、[お名前.com]か何かでドメイン（ここでは **pepese.com** ）を取得した前提で書く。
 
 # Hexoのインストールから起動まで
 
@@ -52,11 +54,9 @@ $ tree
 └── themes
 ```
 
-## _config.yml
+## 設定ファイルの編集
 
-- https://hexo.io/docs/configuration.html
-
-以下を設定する。
+**_config.yml** を以下のように設定する。
 
 ```yml
 # Site
@@ -69,12 +69,44 @@ timezone: Japan
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://techblog.pepese.com
+url: https://pepese.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
 # 〜（省略）〜
+```
+
+[設定ファイルの公式ドキュメント](https://hexo.io/docs/configuration.html)
+
+## 記事の作成
+
+```sh
+$ hexo new [layout] <title>
+```
+
+**layout** には **post** 、 **page** 、 **draft** の3種類あり、それぞれ以下のように別のパスに作成される。
+
+|layout|パス|説明|
+|:---|:---|:---|
+|post|source/_posts|公開記事として作成される|
+|page|source|imageやjavascriptなどのアセット|
+|draft|source/_drafts|非公開記事として作成される|
+
+記事の削除は、「 **rm source/_post/title.md** 」などのコマンドで直接削除する。  
+ドラフトで作成していた記事は以下のコマンドで公開（つまりpostへ移動）される。
+
+### 静的ファイルの生成
+
+```sh
+$ hexo generate
+```
+
+上記のコマンドで「 **public/** 」配下に静的ファイル（HTTP/CSS/JS）が作成される。  
+後述のブログのデプロイ時には、「public/」配下のファイルが公開されることになる。
+
+```sh
+$ hexo publish [layout] <title>
 ```
 
 ## テーマの設定
@@ -94,28 +126,23 @@ $ git clone https://github.com/kywk/hexo-theme-casper.git themes/casper
 ブログの見た目を変更したいときは、 **themes/[テーマ名]/layout** 配下のファイルを編集する。  
 テーマを反映させたいときは、 **_config.yml** の **theme** 項目にテーマ名を設定する。
 
-## タイトル、メニューの設定
+```yml
+# 〜（省略）〜
 
-## 記事の作成
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: landscape
 
-```sh
-$ hexo new [layout] <title>
+# 〜（省略）〜
 ```
 
-**layout** には **post** 、 **page** 、 **draft** の3種類あり、それぞれ以下のように別のパスに作成される。
+### テーマの編集
 
-|layout|パス|説明|
-|:---|:---|:---|
-|post|source/_posts|公開記事として作成される|
-|page|source|アセット|
-|draft|source/_drafts|非公開記事として作成される|
+**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニューの編集が可能。
 
-記事の削除は、 **rm source/_post/title.md** で直接削除する。  
-ドラフトで作成していた記事は以下のコマンドで公開（つまりpostへ移動）されるj。
 
-```sh
-$ hexo publish [layout] <title>
-```
+# ブログの公開
 
 ## Github Pagesへの公開
 
@@ -138,37 +165,26 @@ deploy:
 ```
 
 なお、対応するGithubリポジトリは事前に作成しておくこと。  
-以下のコマンドでGithubリポジトリに反映される。
+**hexo deploy** コマンドでGithubリポジトリに反映される。
 
 ```sh
-$ hexo deploy
-```
-
-## 静的ファイルの作成
-
-```sh
+$ rm -r public/
 $ hexo generate
+$ hexo deploy # これがデプロイコマンド
 ```
 
-## 独自ドメインの設定
+「 **https://pepese.github.io** 」へアクセスするとブログがGithub Pagesとして公開されていることがわかる。
 
-ドメインを取得したサービスで以下のように設定する。
 
-<table>
-<tr><th>サブドメイン</th><td>techblog</td></tr>
-<tr><th>種別</th><td>CNAME</td></tr>
-<tr><th>内容</th><td>github.io</td></tr>
-</table>
+## HTTPS＋独自ドメインでブログの公開
 
-さらに以下のようにCNAMEファイルを配置する。
+ここでは独自ドメインをお名前.comで取得した「pepese.com」とする。    
+なお、独自ドメインを使用するとGithubが用意してくれている証明書が使えないため **https** にはならない。  
 
-```sh
-$ echo 'techblog.pepese.com' > source/CNAME
-```
 
 お名前.comを利用している場合は[こちら](http://qiita.com/tiwu_official/items/d7fb6c493ed5eb9ee4fc)を参考。  
-なお、ここまでの作業だとGithubが用意してくれている証明書が使えないため **https** にはならない。  
-[Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。
+[Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。  
+（お名前.comの有料オプションを使ってHTTPS化も可能だが、ここでは無料でできるCloudflareを使用する。）
 
 - https://rcmdnk.com/blog/2017/01/03/blog-github-web/
 - https://www.kaitoy.xyz/2016/07/01/https-support-by-cloudflare/
@@ -176,15 +192,15 @@ $ echo 'techblog.pepese.com' > source/CNAME
 
 手順は以下。
 
-(1) [Cloudflare](https://www.cloudflare.com/)のアカウント作成
+**(1)** [Cloudflare](https://www.cloudflare.com/)のアカウント作成
 
 Sign upのリンクからメアドとパスワードを渡してアカウントを作成。
 
-(2) Cloudflareにサイトを登録
+**(2)** Cloudflareにサイトを登録
 
 「Add Your First Domain」にて **pepese.com** を入力して「Begin Scan」。
 
-(3) CloudflareのDNSの設定
+**(3)** CloudflareのDNSの設定
 
 以下のようになっていればいい。
 
@@ -192,12 +208,12 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 |:---|:---|:---|:---|
 |A|pepese.com|192.30.252.153|Automatic TTL|
 |A|pepese.com|192.30.252.154|Automatic TTL|
-|CNAME|techblog|pepese.com|Automatic TTL|
+|CNAME|techblog|pepese.github.io|Automatic TTL|
 
-(4) プランの選択
+**(4)** プランの選択
 
 無料のFree Websiteを選択。  
-以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラのサイト（ここではお名前.com）に行ってネームサーバを変更するように指示される。  
+以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラのサイト（ここではお名前.com）のネームサーバを変更するように指示される。  
 ここでは以下のように指示された。
 
 |Current Nameservers|Change Nameservers to:|
@@ -207,18 +223,60 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 |03.dnsv.jp|Remove this nameserver|
 |04.dnsv.jp|Remove this nameserver|
 
-上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。
+上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。  
+この設定を行うことで、お名前.comのDNSサーバではなく、CloudflareのDNSサーバが使用されるようになる。
 
-(5) その他の設定
+**(5)** CNAMEファイルの作成
+
+以下のようにCNAMEファイルを配置して、Github Pagesを更新しておく。
+
+```sh
+$ echo 'techblog.pepese.com' > source/CNAME
+```
+
+**(6)** Hexoの設定ファイル（ **_config.yml** ）の編集
+
+ドメイン変更に伴って設定を変更する。
+
+```yml
+# 〜（省略）〜
+
+url: https://techblog.pepese.com # ここを変更
+root: /
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+
+# 〜（省略）〜
+```
+
+**(7)** その他の設定
+
+好みに応じて以下の設定をする。
 
 - CloudflareのPage Rulesタブで常にHTTPSアクセスとなるように以下を設定する。
   - If the URL matches: http://techblog.pepese.com*
   - Then the settings are: Always use HTTPS
 - SpeedタブのAuto Minify項目でCloudflareでキャッシュする時にJavaScript/CSS/HTMLのソースをminifyする設定が可能。
 
+以上で「 **https://techblog.pepese.com** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。
+
+# その他のHexoの設定
+
+## sitemapの作成
+
+```sh
+$ npm install hexo-generator-sitemap --save --no-optional
+```
+
+**_config.yml** に以下の設定を追加する。
+
+```yml
+sitemap:
+  path: sitemap.xml
+```    
+
 # 調べることメモ
 
-- sitemap
 - タグ
 - Hexoで作ったブログにAdsenseを設定する
   - [hexo に google adsense 設置&バナー編集](http://tofu.hatenadiary.com/entry/2017/01/14/025420)

@@ -72,3 +72,6 @@ deploy:
   repo: https://pepese@github.com/pepese/pepese.github.io.git
   branch: master
   message: update
+
+sitemap:
+  path: sitemap.xml
