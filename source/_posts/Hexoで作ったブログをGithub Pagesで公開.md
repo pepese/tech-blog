@@ -2,6 +2,9 @@
 title: Hexoで作ったブログをGithub Pagesで公開
 date: 2017-05-02 17:05:58
 tags:
+- Hexo
+- Github Pages
+id: hexo-github-pages
 ---
 
 はてなブログが一向に一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
@@ -90,11 +93,42 @@ $ hexo new [layout] <title>
 |layout|パス|説明|
 |:---|:---|:---|
 |post|source/_posts|公開記事として作成される|
-|page|source|imageやjavascriptなどのアセット|
+|page|source|imageやjavascriptなどのアセット？|
 |draft|source/_drafts|非公開記事として作成される|
+
+上記のpost、page、draftは、 **scaffolds** 配下の **post.md** 、 **page.md** 、 **draft.md** が雛形となって生成される。  
+この雛形で記事生成時のMarkdownのヘッダ部分（例えば以下）の初期値を設定することができる。
+
+```
+---
+title: {{ title }}
+date: {{ date }}
+tags:
+id:
+---
+```
+
+「 **{{ title }}** 」へは記事のファイル名が、「 **{{ date }}** 」へは **source/_posts** 配下へ記事が作成された段階の日時が自動で設定される。  
+「 **tags:** 」は以下のように記述することで記事へタグを付与することができ、タグ単位でリンクが作成される。
+
+```
+tags:
+- Hexo
+- Github Pages
+```
+
+「 **id:** 」は、 **_config.yml** へ以下（「 **:id** 」部分）のように設定することでURLとして扱うことができる。（デフォルトは記事名）
+
+```
+permalink: :year/:month/:day/:id/
+```
 
 記事の削除は、「 **rm source/_post/title.md** 」などのコマンドで直接削除する。  
 ドラフトで作成していた記事は以下のコマンドで公開（つまりpostへ移動）される。
+
+```sh
+$ hexo publish [layout] <title>
+```
 
 ### 静的ファイルの生成
 
@@ -105,10 +139,6 @@ $ hexo generate
 上記のコマンドで「 **public/** 」配下に静的ファイル（HTTP/CSS/JS）が作成される。  
 後述のブログのデプロイ時には、「public/」配下のファイルが公開されることになる。
 
-```sh
-$ hexo publish [layout] <title>
-```
-
 ## テーマの設定
 
 ### テーマのインストール
@@ -117,7 +147,7 @@ $ hexo publish [layout] <title>
 Githubで公開されているCasperを使用する場合は以下のように取得・配置する。
 
 ```sh
-$ git clone https://github.com/kywk/hexo-theme-casper.git themes/casper
+$ git clone https://github.com/cgmartin/hexo-theme-bootstrap-blog.git themes/bootstrap-blog
 
 # USAGE
 # git clone [Githubリポジトリ] themes/[テーマ名]
@@ -132,14 +162,15 @@ $ git clone https://github.com/kywk/hexo-theme-casper.git themes/casper
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: bootstrap-blog
 
 # 〜（省略）〜
 ```
 
 ### テーマの編集
 
-**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニューの編集が可能。
+**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニューの編集が可能。  
+ここ、詳細はまだ。
 
 
 # ブログの公開

@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: ぺーぺーSEのブログ
-subtitle: 備忘録・メモ用サイト。
-description: 備忘録・メモ用サイト。
+title: ぺーぺーSEのテックブログ
+subtitle: 備忘録用まとめサイト。
+description: 備忘録用まとめサイト。
 author: ぺーぺーSE
 language: ja
 timezone: Japan
@@ -14,7 +14,7 @@ timezone: Japan
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://pepese.github.io
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :year/:month/:day/:id/
 permalink_defaults:
 
 # Directory
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: bootstrap-blog
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
