@@ -169,8 +169,33 @@ theme: bootstrap-blog
 
 ### テーマの編集
 
-**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニューの編集が可能。  
-ここ、詳細はまだ。
+**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニュー等の編集が可能。  
+
+```sh
+.
+└── themeName
+    ├── _config.yml
+    ├── gulpfile.js
+    ├── layout
+    │   ├── _partial
+    │   │   ├── archive.ejs  # アーカイブのレイアウトを定義
+    │   │   ├── article.ejs  # 各記事のレイアウトを定義
+    │   │   ├── head.ejs     # headタグの中身
+    │   │   ├── header.ejs   # ページのヘッダ
+    │   │   └── post         # ここに記事の型を入れていく
+    │   │       ├── date.ejs
+    │   │       ├── nav.ejs
+    │   │       ├── tag.ejs
+    │   │       └── title.ejs
+    │   ├── archive.ejs
+    │   ├── index.ejs
+    │   └── layout.ejs       # ページ全体のレイアウト
+    ├── node_modules
+    ├── package.json
+    └── source               # CSS/JSなどのアセット
+```
+
+[参考](http://tuitui.hatenablog.com/entry/2016/02/16/003041)
 
 
 # ブログの公開
