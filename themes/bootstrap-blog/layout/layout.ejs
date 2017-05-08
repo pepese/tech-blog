@@ -1,0 +1,27 @@
+<%- partial('_partial/head') %>
+<body>
+  <%- partial('_partial/masthead') %>
+  <div class="container">
+    <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
+    <!-- Google Adsense TechBlog Head start -->
+    <%- partial('_custom_ad/google_adsense_techblog_head') %>
+    <!-- Google Adsense TechBlog Head end -->
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <%- body %>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <!-- Google Adsense TechBlog Side start -->
+          <%- partial('_custom_ad/google_adsense_techblog_side') %>
+          <!-- Google Adsense TechBlog Side end -->
+          <%- partial('_partial/sidebar', null, {cache: !config.relative_link}) %>
+        </div>
+    </div>
+  </div>
+  <!-- Google Adsense TechBlog Foot start -->
+  <%- partial('_custom_ad/google_adsense_techblog_foot') %>
+  <!-- Google Adsense TechBlog Foot end -->
+  <%- partial('_partial/footer', null, {cache: !config.relative_link}) %>
+  <%- partial('_partial/inline-scripts') %>
+</body>
+</html>
