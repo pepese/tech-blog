@@ -73,5 +73,21 @@ deploy:
   branch: master
   message: update
 
+#server:
+#  port: 4000
+#  log: false
+#  ip: 0.0.0.0
+#  compress: false
+#  header: false
+
 sitemap:
   path: sitemap.xml
+
+robotstxt:
+  useragent: "*"
+  disallow:
+    - /css/
+    - /js/
+    - /fancybox/
+  allow:
+  sitemap: /sitemap.xml

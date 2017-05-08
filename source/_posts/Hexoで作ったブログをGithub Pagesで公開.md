@@ -329,11 +329,41 @@ $ npm install hexo-generator-sitemap --save --no-optional
 ```yml
 sitemap:
   path: sitemap.xml
-```    
+```
+
+## robots.txtの作成
+
+```sh
+$ npm install hexo-generator-robotstxt --save --no-optional
+```
+
+**_config.yml** に以下の設定を追加する。
+
+```yml
+robotstxt:
+  useragent: "*"
+  disallow:
+    - /css/
+    - /js/
+    - /fancybox/
+  allow:
+  sitemap: /sitemap.xml
+```
+
+## 404ページの作成
+
+```sh
+$ touch source/404.md
+```
 
 # 調べることメモ
 
-- タグ
+- パン屑リスト
+- はてなブログみたいなリンク
+- SNSのリンク
+- descriptionタグ
+- 画像のalt属性
+- rss
 - Hexoで作ったブログにAdsenseを設定する
   - [hexo に google adsense 設置&バナー編集](http://tofu.hatenadiary.com/entry/2017/01/14/025420)
 - Hexoで作ったブログにAnalyticsを設定する
