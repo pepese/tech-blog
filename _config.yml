@@ -4,8 +4,8 @@
 
 # Site
 title: ぺーぺーSEのテックブログ
-subtitle: 備忘録用まとめサイト。
-description: 備忘録用まとめサイト。
+subtitle: 備忘録用メモサイト
+description: ぺーぺーSEがプログラミング（Java、JavaScript、Python、Ruby）、クラウド（AWS）、Web構築などのメモを残すサイト。
 author: ぺーぺーSE
 language: ja
 timezone: Japan
@@ -14,7 +14,7 @@ timezone: Japan
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://pepese.github.io
 root: /
-permalink: :year/:month/:day/:id/
+permalink: blog/:id/
 permalink_defaults:
 
 # Directory
@@ -64,6 +64,17 @@ pagination_dir: page
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: bootstrap-blog
+
+# Sidebar
+widgets:
+- about         # See also: `about_content`
+- category
+- tag
+- tagcloud
+- archive
+- recent_posts
+about_widget_content: >
+  hoge
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html

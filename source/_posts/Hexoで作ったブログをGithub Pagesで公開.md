@@ -12,7 +12,7 @@ id: hexo-github-pages
 
 [http://blog.pepese.com/entry/2017/02/16/141653:embed:cite]
 
-以降、[お名前.com]か何かでドメイン（ここでは **pepese.com** ）を取得した前提で書く。
+以降、[お名前.com]か何かでドメイン（ここでは **pepese.com** ）を取得した前提で書く。（実際には公開しないけど）
 
 # Hexoのインストールから起動まで
 
@@ -63,9 +63,9 @@ $ tree
 
 ```yml
 # Site
-title: ぺーぺーSEのブログ
-subtitle: 備忘録・メモ用サイト。
-description: 備忘録・メモ用サイト。
+title: ぺーぺーSEのテックブログ
+subtitle: 備忘録用メモサイト
+description: ぺーぺーSEがプログラミング（Java、JavaScript、Python、Ruby）、クラウド（AWS）、Web構築などのメモを残すサイト。
 author: ぺーぺーSE
 language: ja
 timezone: Japan
@@ -195,8 +195,11 @@ theme: bootstrap-blog
     └── source               # CSS/JSなどのアセット
 ```
 
-[参考](http://tuitui.hatenablog.com/entry/2016/02/16/003041)
+ページヘッダやサイドバーなどに変更を加える場合、その際 **themes/[テーマ名]/layout** 配下のファイルの変更を保持する必要があるので「 **.git/** 」を削除する。
 
+```sh
+$ rm -fR themes/bootstrap-blog/.git
+```
 
 # ブログの公開
 
@@ -316,7 +319,7 @@ permalink_defaults:
 
 以上で「 **https://techblog.pepese.com** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。
 
-# その他のHexoの設定
+# その他の設定、やりたきことメモ
 
 ## sitemapの作成
 
@@ -356,14 +359,58 @@ robotstxt:
 $ touch source/404.md
 ```
 
+上記のように「 **source/** 」配下に「 **404.md** 」ファイルを作成し、下記のような感じで記述する。
+
+```
+---
+title: Not Found
+---
+
+お探しの記事は見つかりませんでした。
+```
+
+これで「 **hexo generate** 」を実行すると「 **404.html** 」が公開ディレクトリ直下に作成され、Github Pagesの機能で存在しないページへアクセスされた際に表示される。
+
+## Google Adsenseの設置
+
+テーマディレクトリ配下に手を加えていく。
+
+```sh
+$ mkdir theme/[テーマ名]/layout/_custome_ad
+$ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
+```
+
+**google_adsense.ejs** ファイルを以下のように編集する。
+
+```
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 省略 -->
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+```
+
+広告を表示させたい箇所に以下のコードを貼り付ける。
+
+```
+<!-- ad start -->
+<%- partial('_custom_ad/google_adsense') %>
+<!-- ad end -->
+```
+
+「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+
+## Google Analyticsの設置
+
+Google AnalyticsのトラッキングID（ **UA-xxxxxxxx-x** ）を取得し、「 **themes/[テーマ名]/_config.yml** 」ファイルに以下の設定を追加する。
+
+```
+google_analytics: UA-xxxxxxxx-x
+```
+
 # 調べることメモ
 
-- パン屑リスト
-- はてなブログみたいなリンク
 - SNSのリンク
-- descriptionタグ
 - 画像のalt属性
-- rss
-- Hexoで作ったブログにAdsenseを設定する
-  - [hexo に google adsense 設置&バナー編集](http://tofu.hatenadiary.com/entry/2017/01/14/025420)
-- Hexoで作ったブログにAnalyticsを設定する
+- RSS
+- パン屑リスト（やらない）
