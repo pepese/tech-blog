@@ -520,10 +520,10 @@ $ npm install hexo-generator-feed --save --no-optional
 以下のボタンを好きなところに配置。
 
 ```html
-<a href="https://<%= config.url %>/atom.xml"><img src="images/rss_32.png" alt="RSSを購読する"></a>
+<a href="<%= config.url %>/atom.xml" title="RSS Feed"><img src="images/rss_32.png" alt="RSSを購読する"></a>
 ```
 
-画像は自分で準備する。
+画像（images/rss_32.png）は自分で準備する。
 
 ## URLのクロールとインデックス登録を検索エンジンにリクエストする
 
