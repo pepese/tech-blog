@@ -525,6 +525,27 @@ $ npm install hexo-generator-feed --save --no-optional
 
 画像（images/rss_32.png）は自分で準備する。
 
+## OGPの設定
+
+**OGP** （Open Graph Protcol）は、FacebookやTwitterなどのSNSでシェアされた際に、そのページのタイトル・URL・概要・サムネイル画像を表示させる仕組みのこと。  
+「 **themes/[テーマ名]/layout/_partial/head.ejs** 」に下記のような **open_graph** ヘルパーを使った箇所がある。
+
+```html
+<%- open_graph({twitter_id: theme.twitter_id, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
+```
+
+上記である程度OGPの設定はされているがサムネイル画像は設定されていないため、下記のように **image** というプロパティを追加する。（[公式ドキュメント](https://hexo.io/docs/helpers.html#open-graph)）
+
+```html
+<%- open_graph({image: theme.ogp_image, twitter_id: theme.twitter_id, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
+```
+
+上記では、imageパラメータの値として「 **theme.ogp_image** 」を使用しており、「 **themes/[テーマ名]/_config.yml** 」に以下のように記載することで参照できる。
+
+```yml
+ogp_image: /images/xxx.gif
+```
+
 ## URLのクロールとインデックス登録を検索エンジンにリクエストする
 
 - Google（Yahoo）
