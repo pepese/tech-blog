@@ -408,6 +408,31 @@ Google AnalyticsのトラッキングID（ **UA-xxxxxxxx-x** ）を取得し、�
 google_analytics: UA-xxxxxxxx-x
 ```
 
+## Amazonアソシエイトの設置
+
+```sh
+$ touch themes/[テーマ名]/layout/_custom_ad/amazon_affiliate.ejs
+```
+
+**amazon_affiliate_side.ejs** ファイルを以下のように編集する。
+
+```html
+<!-- Amazon -->
+<script type="text/javascript"><!--
+amazon_ad_tag = "xxxxxxxx"; amazon_ad_width = "160"; amazon_ad_height = "600"; amazon_ad_logo = "hide";//--></script>
+<script type="text/javascript" src="http://ir-jp.amazon-adsystem.com/s/ads.js"></script>
+```
+
+広告を表示させたい箇所に以下のコードを貼り付ける。
+
+```html
+<!-- ad start -->
+<%- partial('_custom_ad/amazon_affiliate') %>
+<!-- ad end -->
+```
+
+「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+
 ## Twitterの設定
 
 ### Twitter Cards
@@ -473,7 +498,6 @@ $ touch themes/[テーマ名]/layout/_custom_sns/twitter_share.ejs
 
 # 調べることメモ
 
-- amazon アソシエイトの設定
-- 画像のalt属性
 - RSS
+- 画像のalt属性
 - パン屑リスト（やらない）
