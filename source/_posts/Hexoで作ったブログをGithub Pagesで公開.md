@@ -488,16 +488,38 @@ $ touch themes/[テーマ名]/layout/_custom_sns/twitter_share.ejs
 
 「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
 
+## 画像の配置
+
+```sh
+$ mkdir source/images
+```
+
+上記に画像ファイルを配置する。  
+以下のように任意の場所に張り付ける。
+
+```html
+<img src="images/xxx" alt="画像の説明">
+```
+
+**alt** 属性はちゃんと書く。
+
+## RSS Feedの設置
+
+```sh
+$ npm install hexo-generator-feed --save --no-optional
+```
+
+以下のボタンを好きなところに配置。
+
+```html
+<a href="https://<%= config.url %>/atom.xml"><img src="images/rss_32.png" alt="RSSを購読する"></a>
+```
+
+画像は自分で準備する。
+
 ## URLのクロールとインデックス登録を検索エンジンにリクエストする
 
 - Google（Yahoo）
   - Googleアカウントを取得してGoogle Search Consoleの[Fetch as Google](https://www.google.com/webmasters/tools/googlebot-fetch)からリクエストする。
 - bing
   - https://www.bing.com/toolbox/submit-site-url
-
-
-# 調べることメモ
-
-- RSS
-- 画像のalt属性
-- パン屑リスト（やらない）
