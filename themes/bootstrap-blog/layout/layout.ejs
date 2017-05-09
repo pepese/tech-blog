@@ -3,6 +3,14 @@
   <%- partial('_partial/masthead') %>
   <div class="container">
     <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
+    <p>
+    <!-- twitter follow button start -->
+    <%- partial('_custom_sns/twitter_follow') %>
+    <!-- twitter follow button end -->
+    <!-- twitter share button start -->
+    <%- partial('_custom_sns/twitter_share') %>
+    <!-- twitter share button end -->
+    </p>
     <!-- Google Adsense TechBlog Head start -->
     <%- partial('_custom_ad/google_adsense_techblog_head') %>
     <!-- Google Adsense TechBlog Head end -->
@@ -17,10 +25,10 @@
           <%- partial('_partial/sidebar', null, {cache: !config.relative_link}) %>
         </div>
     </div>
+    <!-- Google Adsense TechBlog Foot start -->
+    <%- partial('_custom_ad/google_adsense_techblog_foot') %>
+    <!-- Google Adsense TechBlog Foot end -->
   </div>
-  <!-- Google Adsense TechBlog Foot start -->
-  <%- partial('_custom_ad/google_adsense_techblog_foot') %>
-  <!-- Google Adsense TechBlog Foot end -->
   <%- partial('_partial/footer', null, {cache: !config.relative_link}) %>
   <%- partial('_partial/inline-scripts') %>
 </body>

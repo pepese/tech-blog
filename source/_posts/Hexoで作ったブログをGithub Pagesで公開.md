@@ -99,7 +99,7 @@ $ hexo new [layout] <title>
 上記のpost、page、draftは、 **scaffolds** 配下の **post.md** 、 **page.md** 、 **draft.md** が雛形となって生成される。  
 この雛形で記事生成時のMarkdownのヘッダ部分（例えば以下）の初期値を設定することができる。
 
-```
+```yml
 ---
 title: {{ title }}
 date: {{ date }}
@@ -111,7 +111,7 @@ id:
 「 **{{ title }}** 」へは記事のファイル名が、「 **{{ date }}** 」へは **source/_posts** 配下へ記事が作成された段階の日時が自動で設定される。  
 「 **tags:** 」は以下のように記述することで記事へタグを付与することができ、タグ単位でリンクが作成される。
 
-```
+```yml
 tags:
 - Hexo
 - Github Pages
@@ -119,7 +119,7 @@ tags:
 
 「 **id:** 」は、 **_config.yml** へ以下（「 **:id** 」部分）のように設定することでURLとして扱うことができる。（デフォルトは記事名）
 
-```
+```yml
 permalink: :year/:month/:day/:id/
 ```
 
@@ -361,7 +361,7 @@ $ touch source/404.md
 
 上記のように「 **source/** 」配下に「 **404.md** 」ファイルを作成し、下記のような感じで記述する。
 
-```
+```yml
 ---
 title: Not Found
 ---
@@ -382,7 +382,7 @@ $ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
 
 **google_adsense.ejs** ファイルを以下のように編集する。
 
-```
+```html
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- 省略 -->
 <script>
@@ -392,7 +392,7 @@ $ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
 
 広告を表示させたい箇所に以下のコードを貼り付ける。
 
-```
+```html
 <!-- ad start -->
 <%- partial('_custom_ad/google_adsense') %>
 <!-- ad end -->
@@ -404,13 +404,76 @@ $ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
 
 Google AnalyticsのトラッキングID（ **UA-xxxxxxxx-x** ）を取得し、「 **themes/[テーマ名]/_config.yml** 」ファイルに以下の設定を追加する。
 
-```
+```yml
 google_analytics: UA-xxxxxxxx-x
 ```
 
+## Twitterの設定
+
+### Twitter Cards
+
+「 **themes/[テーマ名]/_config.yml** 」ファイルに以下の設定を追加する。
+
+```yml
+twitter_id: '@PeePeeSE'
+```
+
+これでheadタグ内に以下のメタが追加される。（所謂 **Twitter Cards**）
+
+```html
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ぺーぺーSEのテックブログ">
+<meta name="twitter:description" content="ぺーぺーSEがプログラミング（Java、JavaScript、Python、Ruby）、クラウド（AWS）、Web構築などのメモを残すサイト。">
+<meta name="twitter:creator" content="@PeePeeSE">
+```
+
+### フォロー・シェアボタンの設置
+
+```sh
+$ mkdir theme/[テーマ名]/layout/_custome_sns
+$ touch themes/[テーマ名]/layout/_custom_sns/twitter_follow.ejs
+$ touch themes/[テーマ名]/layout/_custom_sns/twitter_share.ejs
+```
+
+**twitter_follow.ejs** ファイルを以下のように編集する。（IDは書き換えてね）
+
+```html
+<a href="https://twitter.com/PeePeeSE" class="twitter-follow-button" data-show-count="false">Follow @PeePeeSE</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+```
+
+**twitter_share.ejs** ファイルを以下のように編集する。（IDは書き換えてね）
+
+```html
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="PeePeeSE">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+```
+
+以下を好きなところに設置。
+
+```html
+<!-- twitter follow button start -->
+<%- partial('_custom_sns/twitter_follow') %>
+<!-- twitter follow button end -->
+```
+
+```html
+<!-- twitter share button start -->
+<%- partial('_custom_sns/twitter_share') %>
+<!-- twitter share button end -->
+```
+
+「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+
+## URLのクロールとインデックス登録を検索エンジンにリクエストする
+
+- Google（Yahoo）
+  - Googleアカウントを取得してGoogle Search Consoleの[Fetch as Google](https://www.google.com/webmasters/tools/googlebot-fetch)からリクエストする。
+- bing
+  - https://www.bing.com/toolbox/submit-site-url
+
+
 # 調べることメモ
 
-- SNSのリンク
+- amazon アソシエイトの設定
 - 画像のalt属性
 - RSS
 - パン屑リスト（やらない）
