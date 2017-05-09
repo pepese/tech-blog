@@ -7,12 +7,10 @@ tags:
 id: hexo-github-pages
 ---
 
-はてなブログが一向に一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
+はてなブログが一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
 前提として **npm** と **Git** 環境が必要なため以下参照。
 
 [http://blog.pepese.com/entry/2017/02/16/141653:embed:cite]
-
-以降、[お名前.com]か何かでドメイン（ここでは **pepese.com** ）を取得した前提で書く。（実際には公開しないけど）
 
 # Hexoのインストールから起動まで
 
@@ -237,9 +235,9 @@ $ hexo deploy # これがデプロイコマンド
 
 ## HTTPS＋独自ドメインでブログの公開
 
-ここでは独自ドメインをお名前.comで取得した「pepese.com」とする。    
+ここでは独自ドメインを「 **pepese.com** 」として記載する。（ **実際には公開していない** ）  
+ホスト名は「 **techblog** 」とする。  
 なお、独自ドメインを使用するとGithubが用意してくれている証明書が使えないため **https** にはならない。  
-
 
 お名前.comを利用している場合は[こちら](http://qiita.com/tiwu_official/items/d7fb6c493ed5eb9ee4fc)を参考。  
 [Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。  
@@ -257,7 +255,7 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 
 **(2)** Cloudflareにサイトを登録
 
-「Add Your First Domain」にて **pepese.com** を入力して「Begin Scan」。
+「Add Your First Domain」にて「pepese.com」を入力して「Begin Scan」。
 
 **(3)** CloudflareのDNSの設定
 
@@ -272,7 +270,7 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 **(4)** プランの選択
 
 無料のFree Websiteを選択。  
-以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラのサイト（ここではお名前.com）のネームサーバを変更するように指示される。  
+以上を完了すると「Please visit your registrar's dashboard to change your nameservers to the following.」と出て、レジストラサイト（お名前.com など）のネームサーバを変更するように指示される。  
 ここでは以下のように指示された。
 
 |Current Nameservers|Change Nameservers to:|
@@ -282,12 +280,12 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 |03.dnsv.jp|Remove this nameserver|
 |04.dnsv.jp|Remove this nameserver|
 
-上記の指示通りにお名前.comの設定（ネームサーバの変更）を行う。  
-この設定を行うことで、お名前.comのDNSサーバではなく、CloudflareのDNSサーバが使用されるようになる。
+上記の指示通りにレジストラサイトの設定（ネームサーバの変更）を行う。  
+この設定を行うことで、レジストラサイトのDNSサーバではなく、CloudflareのDNSサーバが使用されるようになる。
 
 **(5)** CNAMEファイルの作成
 
-以下のようにCNAMEファイルを配置して、Github Pagesを更新しておく。
+以下のようにCNAMEファイルを作成する。
 
 ```sh
 $ echo 'techblog.pepese.com' > source/CNAME
@@ -308,7 +306,15 @@ permalink_defaults:
 # 〜（省略）〜
 ```
 
-**(7)** その他の設定
+**(7)** Github Pagesの更新
+
+```sh
+$ rm -r public/
+$ hexo generate
+$ hexo deploy
+```
+
+**(8)** その他のCloudflareの設定
 
 好みに応じて以下の設定をする。
 
@@ -317,7 +323,9 @@ permalink_defaults:
   - Then the settings are: Always use HTTPS
 - SpeedタブのAuto Minify項目でCloudflareでキャッシュする時にJavaScript/CSS/HTMLのソースをminifyする設定が可能。
 
-以上で「 **https://techblog.pepese.com** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。
+
+以上で「 **https://techblog.pepese.com** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。（ **実際には公開していない** ）  
+
 
 # その他の設定、やりたきことメモ
 
