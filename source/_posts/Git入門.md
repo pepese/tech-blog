@@ -7,7 +7,10 @@ tags:
 id: git-basics
 ---
 
-Gitのメモ。
+Git/Githubのメモ。  
+インストールから簡単な使い方まで書いてみる。
+
+<!-- more -->
 
 # 環境構築
 

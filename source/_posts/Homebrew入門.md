@@ -8,7 +8,10 @@ id: homebrew-basics
 ---
 
 [Homebrew](http://brew.sh/index_ja.html)についてまとめる。  
-HomebrewはMac用のaptやyumのようなパッケージマネージャ。ソフトウェアを簡単にインストールできる。
+HomebrewはMac用のaptやyumのようなパッケージマネージャ。ソフトウェアを簡単にインストールできる。  
+インストールから使い方までまとめてみる。
+
+<!-- more -->
 
 # インストール
 

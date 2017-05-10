@@ -10,7 +10,9 @@ id: hexo-github-pages
 はてなブログが一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
 前提として **npm** と **Git** 環境が必要なため以下参照。
 
-[http://blog.pepese.com/entry/2017/02/16/141653:embed:cite]
+- https://pepese.github.io/blog/mac-dev-environment/
+
+<!-- more -->
 
 # Hexoのインストールから起動まで
 
@@ -57,7 +59,7 @@ $ tree
 
 ## 設定ファイルの編集
 
-**_config.yml** を以下のように設定する。
+`_config.yml` を以下のように設定する。
 
 ```yml
 # Site
@@ -94,7 +96,7 @@ $ hexo new [layout] <title>
 |page|source|imageやjavascriptなどのアセット？|
 |draft|source/_drafts|非公開記事として作成される|
 
-上記のpost、page、draftは、 **scaffolds** 配下の **post.md** 、 **page.md** 、 **draft.md** が雛形となって生成される。  
+上記のpost、page、draftは、 `scaffolds/` 配下の **post.md** 、 **page.md** 、 **draft.md** が雛形となって生成される。  
 この雛形で記事生成時のMarkdownのヘッダ部分（例えば以下）の初期値を設定することができる。
 
 ```yml
@@ -106,8 +108,8 @@ id:
 ---
 ```
 
-「 **{{ title }}** 」へは記事のファイル名が、「 **{{ date }}** 」へは **source/_posts** 配下へ記事が作成された段階の日時が自動で設定される。  
-「 **tags:** 」は以下のように記述することで記事へタグを付与することができ、タグ単位でリンクが作成される。
+`{{ title }}` へは記事のファイル名が、 `{{ date }}` へは `source/_posts` 配下へ記事が作成された段階の日時が自動で設定される。  
+`tags:` は以下のように記述することで記事へタグを付与することができ、タグ単位でリンクが作成される。
 
 ```yml
 tags:
@@ -115,33 +117,40 @@ tags:
 - Github Pages
 ```
 
-「 **id:** 」は、 **_config.yml** へ以下（「 **:id** 」部分）のように設定することでURLとして扱うことができる。（デフォルトは記事名）
+`id:` は、 `_config.yml` へ以下（ `:id` 部分）のように設定することでURLとして扱うことができる。（デフォルトは記事名）
 
 ```yml
 permalink: :year/:month/:day/:id/
 ```
 
-記事の削除は、「 **rm source/_post/title.md** 」などのコマンドで直接削除する。  
+記事の削除は、 `rm source/_post/title.md` などのコマンドで直接削除する。  
 ドラフトで作成していた記事は以下のコマンドで公開（つまりpostへ移動）される。
 
 ```sh
 $ hexo publish [layout] <title>
 ```
 
-### 静的ファイルの生成
+### マークダウンの書き方小ネタ
+
+- `<!-- more -->`
+  - マークダウン記事の途中に記載すると、ブログトップにて記事が全て表示されずに「Read More」（所謂、 **続きを読む** ）が表示される
+- Octopressから移植された特殊な記法（[Tag Plugins](https://hexo.io/docs/tag-plugins.html)）
+  - Block QuoteやCode Blockなど
+
+## 静的ファイルの生成
 
 ```sh
 $ hexo generate
 ```
 
-上記のコマンドで「 **public/** 」配下に静的ファイル（HTTP/CSS/JS）が作成される。  
-後述のブログのデプロイ時には、「public/」配下のファイルが公開されることになる。
+上記のコマンドで `public/` 配下に静的ファイル（HTTP/CSS/JS）が作成される。  
+後述のブログのデプロイ時には、 `public/` 配下のファイルが公開されることになる。
 
 ## テーマの設定
 
 ### テーマのインストール
 
-**themes/** ディレクトリ配下にテーマを配置する。  
+`themes/` ディレクトリ配下にテーマを配置する。  
 Githubで公開されているCasperを使用する場合は以下のように取得・配置する。
 
 ```sh
@@ -151,8 +160,8 @@ $ git clone https://github.com/cgmartin/hexo-theme-bootstrap-blog.git themes/boo
 # git clone [Githubリポジトリ] themes/[テーマ名]
 ```
 
-ブログの見た目を変更したいときは、 **themes/[テーマ名]/layout** 配下のファイルを編集する。  
-テーマを反映させたいときは、 **_config.yml** の **theme** 項目にテーマ名を設定する。
+ブログの見た目を変更したいときは、 `themes/[テーマ名]/layout/` 配下のファイルを編集する。  
+テーマを反映させたいときは、 `_config.yml` の `theme` 項目にテーマ名を設定する。
 
 ```yml
 # 〜（省略）〜
@@ -167,7 +176,7 @@ theme: bootstrap-blog
 
 ### テーマの編集
 
-**themes/[テーマ名]/layout** 配下を編集することでタイトル、サイドバーメニュー等の編集が可能。  
+`themes/[テーマ名]/layout` 配下を編集することでタイトル、サイドバーメニュー等の編集が可能。  
 
 ```sh
 .
@@ -193,7 +202,7 @@ theme: bootstrap-blog
     └── source               # CSS/JSなどのアセット
 ```
 
-ページヘッダやサイドバーなどに変更を加える場合、その際 **themes/[テーマ名]/layout** 配下のファイルの変更を保持する必要があるので「 **.git/** 」を削除する。
+ページヘッダやサイドバーなどに変更を加える場合、その際 `themes/[テーマ名]/layout/` 配下のファイルの変更を保持する必要があるので `.git/` を削除する。
 
 ```sh
 $ rm -fR themes/bootstrap-blog/.git
@@ -222,7 +231,7 @@ deploy:
 ```
 
 なお、対応するGithubリポジトリは事前に作成しておくこと。  
-**hexo deploy** コマンドでGithubリポジトリに反映される。
+`$ hexo deploy` コマンドでGithubリポジトリに反映される。
 
 ```sh
 $ rm -r public/
@@ -237,7 +246,7 @@ $ hexo deploy # これがデプロイコマンド
 
 ここでは独自ドメインを「 **pepese.com** 」として記載する。（ **実際には公開していない** ）  
 ホスト名は「 **techblog** 」とする。  
-なお、独自ドメインを使用するとGithubが用意してくれている証明書が使えないため **https** にはならない。  
+なお、独自ドメインを使用するとGithubが用意してくれている証明書が使えないため *https* にはならない。  
 
 お名前.comを利用している場合は[こちら](http://qiita.com/tiwu_official/items/d7fb6c493ed5eb9ee4fc)を参考。  
 [Cloudflare](https://www.cloudflare.com/)を使用したサイトのHTTPS化を以下を参考に行う。  
@@ -291,7 +300,7 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 $ echo 'techblog.pepese.com' > source/CNAME
 ```
 
-**(6)** Hexoの設定ファイル（ **_config.yml** ）の編集
+**(6)** Hexoの設定ファイル `_config.yml` の編集
 
 ドメイン変更に伴って設定を変更する。
 
@@ -335,7 +344,7 @@ $ hexo deploy
 $ npm install hexo-generator-sitemap --save --no-optional
 ```
 
-**_config.yml** に以下の設定を追加する。
+`_config.yml` に以下の設定を追加する。
 
 ```yml
 sitemap:
@@ -348,7 +357,7 @@ sitemap:
 $ npm install hexo-generator-robotstxt --save --no-optional
 ```
 
-**_config.yml** に以下の設定を追加する。
+`_config.yml` に以下の設定を追加する。
 
 ```yml
 robotstxt:
@@ -367,7 +376,7 @@ robotstxt:
 $ touch source/404.md
 ```
 
-上記のように「 **source/** 」配下に「 **404.md** 」ファイルを作成し、下記のような感じで記述する。
+上記のように `source/` 配下に `404.md` ファイルを作成し、下記のような感じで記述する。
 
 ```yml
 ---
@@ -377,7 +386,7 @@ title: Not Found
 お探しの記事は見つかりませんでした。
 ```
 
-これで「 **hexo generate** 」を実行すると「 **404.html** 」が公開ディレクトリ直下に作成され、Github Pagesの機能で存在しないページへアクセスされた際に表示される。
+これで `$ hexo generate` を実行すると `404.html` が公開ディレクトリ直下に作成され、Github Pagesの機能で存在しないページへアクセスされた際に表示される。
 
 ## Google Adsenseの設置
 
@@ -388,7 +397,7 @@ $ mkdir theme/[テーマ名]/layout/_custome_ad
 $ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
 ```
 
-**google_adsense.ejs** ファイルを以下のように編集する。
+`google_adsense.ejs` ファイルを以下のように編集する。
 
 ```html
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -406,11 +415,11 @@ $ touch themes/[テーマ名]/layout/_custom_ad/google_adsense.ejs
 <!-- ad end -->
 ```
 
-「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+`themes/[テーマ名]/layout/layout.ejs` を直接編集してもよい。
 
 ## Google Analyticsの設置
 
-Google AnalyticsのトラッキングID（ **UA-xxxxxxxx-x** ）を取得し、「 **themes/[テーマ名]/_config.yml** 」ファイルに以下の設定を追加する。
+Google AnalyticsのトラッキングID（ **UA-xxxxxxxx-x** ）を取得し、 `themes/[テーマ名]/_config.yml` ファイルに以下の設定を追加する。
 
 ```yml
 google_analytics: UA-xxxxxxxx-x
@@ -422,7 +431,7 @@ google_analytics: UA-xxxxxxxx-x
 $ touch themes/[テーマ名]/layout/_custom_ad/amazon_affiliate.ejs
 ```
 
-**amazon_affiliate_side.ejs** ファイルを以下のように編集する。
+`amazon_affiliate_side.ejs` ファイルを以下のように編集する。
 
 ```html
 <!-- Amazon -->
@@ -439,13 +448,13 @@ amazon_ad_tag = "xxxxxxxx"; amazon_ad_width = "160"; amazon_ad_height = "600"; a
 <!-- ad end -->
 ```
 
-「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+`themes/[テーマ名]/layout/layout.ejs` を直接編集してもよい。
 
 ## Twitterの設定
 
 ### Twitter Cards
 
-「 **themes/[テーマ名]/_config.yml** 」ファイルに以下の設定を追加する。
+`themes/[テーマ名]/_config.yml` ファイルに以下の設定を追加する。
 
 ```yml
 twitter_id: '@PeePeeSE'
@@ -468,13 +477,13 @@ $ touch themes/[テーマ名]/layout/_custom_sns/twitter_follow.ejs
 $ touch themes/[テーマ名]/layout/_custom_sns/twitter_share.ejs
 ```
 
-**twitter_follow.ejs** ファイルを以下のように編集する。（IDは書き換えてね）
+`twitter_follow.ejs` ファイルを以下のように編集する。（IDは書き換えてね）
 
 ```html
 <a href="https://twitter.com/PeePeeSE" class="twitter-follow-button" data-show-count="false">Follow @PeePeeSE</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 ```
 
-**twitter_share.ejs** ファイルを以下のように編集する。（IDは書き換えてね）
+`twitter_share.ejs` ファイルを以下のように編集する。（IDは書き換えてね）
 
 ```html
 <a href="https://twitter.com/share" class="twitter-share-button" data-via="PeePeeSE">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -494,7 +503,7 @@ $ touch themes/[テーマ名]/layout/_custom_sns/twitter_share.ejs
 <!-- twitter share button end -->
 ```
 
-「 **themes/[テーマ名]/layout/layout.ejs** 」を直接編集してもよい。
+`themes/[テーマ名]/layout/layout.ejs` を直接編集してもよい。
 
 ## 画像の配置
 
@@ -528,7 +537,7 @@ $ npm install hexo-generator-feed --save --no-optional
 ## OGPの設定
 
 **OGP** （Open Graph Protcol）は、FacebookやTwitterなどのSNSでシェアされた際に、そのページのタイトル・URL・概要・サムネイル画像を表示させる仕組みのこと。  
-「 **themes/[テーマ名]/layout/_partial/head.ejs** 」に下記のような **open_graph** ヘルパーを使った箇所がある。
+`themes/[テーマ名]/layout/_partial/head.ejs` に下記のような **open_graph** ヘルパーを使った箇所がある。
 
 ```html
 <%- open_graph({twitter_id: theme.twitter_id, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
@@ -540,7 +549,7 @@ $ npm install hexo-generator-feed --save --no-optional
 <%- open_graph({image: theme.ogp_image, twitter_id: theme.twitter_id, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
 ```
 
-上記では、imageパラメータの値として「 **theme.ogp_image** 」を使用しており、「 **themes/[テーマ名]/_config.yml** 」に以下のように記載することで参照できる。
+上記では、imageパラメータの値として「 **theme.ogp_image** 」を使用しており、 `themes/[テーマ名]/_config.yml` に以下のように記載することで参照できる。
 
 ```yml
 ogp_image: /images/xxx.gif
