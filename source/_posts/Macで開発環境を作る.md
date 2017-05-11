@@ -96,7 +96,7 @@ Macデフォルトのターミナルより便利。
 
 Gitの使い方は以下。
 
-- http://blog.pepese.com/entry/2017/02/17/182311
+- https://pepese.github.io/blog/git-basics/
 
 ## anyenvをインストール
 
@@ -211,7 +211,7 @@ OS name: "mac os x", version: "10.12.2", arch: "x86_64", family: "mac"
 
 ## Atom
 
-[http://blog.pepese.com/entry/2016/11/23/173602:embed:cite]
+- https://pepese.github.io/blog/atom-install-packages/
 
 ## STS (Spring Tool Suite)
 

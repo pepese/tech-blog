@@ -1,0 +1,66 @@
+---
+title: Atomのインストールとパッケージの導入
+date: 2017-05-11 13:44:28
+tags:
+- Atom
+- エディタ
+id: atom-install-packages
+---
+
+Githubが開発したエディタ[Atom](https://atom.io/)のインストールからパッケージの導入までをまとめる。
+
+<!-- more -->
+
+# インストール（Mac）
+
+- [公式](https://atom.io)へアクセス
+- 「Download For Mac」をクリック
+- ダウンロードした ファイルがzipであれば解凍する
+- Macアプリ「Atom」が表示されるので、それを「アプリケーション」フォルダへドラッグ＆ドロップ
+- 「アプリケーション」フォルダへ移動し、「Atom」を起動
+
+brew caskが使える人は以下でもよい。
+
+```sh
+$ brew cask install atom
+```
+
+上記がなんのことかわからない人は以下参照。
+
+- https://pepese.github.io/blog/homebrew-basics/
+
+# 起動方法
+
+アイコンクリックでもいいがコマンドラインで起動できる。
+
+```sh
+$ atom file
+```
+
+プロジェクト（カレントディレクトリ）で起動したい場合は以下。
+
+```sh
+$ atom .
+```
+
+# パッケージ導入方法
+
+- メニュータブの「Packages」->「Settings View」を選ぶと「Settings」タブが開く
+  - 「Ctrl+,」（Win）、「Command+,」（Mac）でも開く
+- 「Install」メニューを選択し、欲しいパッケージを検索して「Install」ボタンを押すS
+- 設定が反映されない場合はAtomを再起動する
+
+# オススメのパッケージ
+
+- japanese-menu
+  - メニューバーとコンテキストメニューを日本語化
+- japanese-wrap
+  - 日本語を折り返してくれるパッケージ
+  - 現在のAtomは日本語の折り返しがうまく機能しないため
+- goto-defitinion
+  - 「Ctrl+Alt+Enter」（Win）、「Option+Cmd+Enter」（Mac）でクラス、メソッドの実装へ飛べるようになる
+- terminal-plus（ **platformio-ide-terminal** ）
+  - ターミナル画面を追加できるパッケージ
+    - 画面を切り替えてターミナル開くのが面倒になった人にオススメ
+  - 下部の「+」をクリックするか、 `Ctrl + Shift + @` でターミナルが開く
+  - しかしながら、2017/01/19時点では動かなかったため、terminal-plusをforkして作成された **platformio-ide-terminal** がいい

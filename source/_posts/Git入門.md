@@ -233,4 +233,4 @@ $ git rm -r [削除したいディレクトリ]
 
 もうちょっと知りたい人は以下を参照。
 
-- http://blog.pepese.com/entry/2016/02/22/200141
+- https://pepese.github.io/blog/git-commands/

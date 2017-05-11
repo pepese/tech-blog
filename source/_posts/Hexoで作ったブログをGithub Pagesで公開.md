@@ -244,7 +244,7 @@ $ hexo deploy # これがデプロイコマンド
 
 ## HTTPS＋独自ドメインでブログの公開
 
-ここでは独自ドメインを「 **pepese.com** 」として記載する。（ **実際には公開していない** ）  
+ここでは独自ドメインを「 **pepese.net** 」として記載する。（ **実際には公開していない** ）  
 ホスト名は「 **techblog** 」とする。  
 なお、独自ドメインを使用するとGithubが用意してくれている証明書が使えないため *https* にはならない。  
 
@@ -264,7 +264,7 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 
 **(2)** Cloudflareにサイトを登録
 
-「Add Your First Domain」にて「pepese.com」を入力して「Begin Scan」。
+「Add Your First Domain」にて「pepese.net」を入力して「Begin Scan」。
 
 **(3)** CloudflareのDNSの設定
 
@@ -272,8 +272,8 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 
 |Type|Name|Value|TTL|
 |:---|:---|:---|:---|
-|A|pepese.com|192.30.252.153|Automatic TTL|
-|A|pepese.com|192.30.252.154|Automatic TTL|
+|A|pepese.net|192.30.252.153|Automatic TTL|
+|A|pepese.net|192.30.252.154|Automatic TTL|
 |CNAME|techblog|pepese.github.io|Automatic TTL|
 
 **(4)** プランの選択
@@ -297,7 +297,7 @@ Sign upのリンクからメアドとパスワードを渡してアカウント�
 以下のようにCNAMEファイルを作成する。
 
 ```sh
-$ echo 'techblog.pepese.com' > source/CNAME
+$ echo 'techblog.pepese.net' > source/CNAME
 ```
 
 **(6)** Hexoの設定ファイル `_config.yml` の編集
@@ -307,7 +307,7 @@ $ echo 'techblog.pepese.com' > source/CNAME
 ```yml
 # 〜（省略）〜
 
-url: https://techblog.pepese.com # ここを変更
+url: https://techblog.pepese.net # ここを変更
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -328,12 +328,12 @@ $ hexo deploy
 好みに応じて以下の設定をする。
 
 - CloudflareのPage Rulesタブで常にHTTPSアクセスとなるように以下を設定する。
-  - If the URL matches: http://techblog.pepese.com*
+  - If the URL matches: http://techblog.pepese.net*
   - Then the settings are: Always use HTTPS
 - SpeedタブのAuto Minify項目でCloudflareでキャッシュする時にJavaScript/CSS/HTMLのソースをminifyする設定が可能。
 
 
-以上で「 **https://techblog.pepese.com** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。（ **実際には公開していない** ）  
+以上で「 **https://techblog.pepese.net** 」へアクセスすると独自ドメインでブログが公開されていることがわかる。（ **実際には公開していない** ）  
 
 
 # その他の設定、やりたきことメモ
