@@ -440,6 +440,7 @@ amazon_ad_tag = "xxxxxxxx"; amazon_ad_width = "160"; amazon_ad_height = "600"; a
 <script type="text/javascript" src="http://ir-jp.amazon-adsystem.com/s/ads.js"></script>
 ```
 
+ブログを *https* で公開する場合は、 `src` 属性のURLスキームを `https` へ変更する。  
 広告を表示させたい箇所に以下のコードを貼り付ける。
 
 ```html
