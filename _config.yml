@@ -101,4 +101,4 @@ robotstxt:
     - /js/
     - /fancybox/
   allow:
-  sitemap: /sitemap.xml
+  sitemap: https://pepese.github.io/sitemap.xml
