@@ -367,7 +367,7 @@ robotstxt:
     - /js/
     - /fancybox/
   allow:
-  sitemap: /sitemap.xml
+  sitemap: https://techblog.pepese.net/sitemap.xml
 ```
 
 ## 404ページの作成
