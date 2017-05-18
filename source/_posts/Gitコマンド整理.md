@@ -21,8 +21,12 @@ id: git-commands
   - ローカルリポジトリの作成
 - `git clone`
   - リモートリポジトリからローカルリポジトリを複製
+  - `git clone --mirror`
+    - リモートリポジトリのミラーリングを行う、バックアップに使う
 - `git config`
   - Gitクライアントの設定
+  - `--global` で全体に反映される設定、 `--local` で個別プロジェクトに反映される設定
+    - `--local` の方が強い
 
 
 # ローカル操作
@@ -43,22 +47,31 @@ Gitの以下の保存領域がある。
 - `git add`
   - ステージング（ワーキングディレクトリ → ステージングエリア）
   - ワーキングディレクトリの変更をステージングエリアに反映する
+  - `--all` オプションでワーキングディレクトリの全ての変更をステージング
 - `git commit`
   - コミット（ステージングエリア → ローカルリポジトリ）
   - ステージングエリアの内容をローカルリポジトリに反映する
+  - `git commit --amend`
+    - 直前のコミットを削除してステージングエリアが１つ前の状態に戻る
 - `git status`
   - ワーキングディレクトリとステージングエリアの変更状況を表示する
     - <span style="color:red">赤</span>はワーキングディレクトリ、<span style="color:blue">青</span>はステージングエリアの変更
 - `git log`
   - コミットによるローカルリポジトリの変更履歴を表示する
+- `git clean`
+  - ステージングしていないワーキングディレクトリの変更を戻す
+- `git rm`
+  - ワーキングディレクトリにあるファイルとステージングエリアのファイルを削除する
 - `git diff`
   - *ステージングエリア* と *ローカルリポジトリ* を比較する
 - `git checkout`
-  - 状態を戻す
-- `git commit --amend`
-  - 直前のコミットを削除してステージングエリアが１つ前の状態に戻る
+  - ワーキングディレクトリがそのコミット時の状態と同じになる
+    - `git checkout <branch_name>`
+    - `git checkout <commit id>`
+    - `git checkout <commit id> <file_name>`
 - `git revert`
-  - 過去のコミットを削除する（ワーキングディレクトリの内容も戻る）
+  - 指定コミットで加えられた変更を打ち消し、元に戻す新しいをコミットを生成・適用する（ワーキングディレクトリの内容も戻る）
+  - `git revert <commit id>`
   - `git revert HEAD^`
     - HEADの一個前を消す
   - `git revert HEAD^^`
@@ -94,7 +107,11 @@ Gitの以下の保存領域がある。
   - リモートリポジトリから変更を取得する（マージまで行う）
   - 「`git fetch` + `git merge origin/master`」に同じ
 - `git fetch`
-  - リモートリポジトリから最新の変更をローカルリポジトリに持ってくる（マージは行わない）
+  - リモートリポジトリから最新の変更情報を取得する（マージは行わない）
+- `git merge`
+  - `git fetch` で取得したリモートリポジトリの最新情報をローカルリポジトリへ取り込む
+- `git remote`
+  - リモートリポジトリの設定を行う
 
 ## *master* と *origin/master* の違い
 
@@ -108,16 +125,17 @@ Gitの以下の保存領域がある。
 
 - `git branch`
   - ブランチの一覧を表示する
-  - `git branch <branchname>`
+  - `git branch <branch_name>`
     - ブランチを作成する（現在のブランチのリビジョンで作成される）
-  - `git branch -d <branchname>`
+  - `git branch -d <branch_name>`
     - ブランチを削除する
-- `git checkout`
-  - ブランチの切り替え（元のブランチ名はmaster）／リビジョンへの切り替えもできる
-  - `git branch <branchname>/<revision>`
+- `git checkout <branch_name>`
+  - 指定したブランチの切り替えて、ワーキングディレクトリも上書きされる
+  - リビジョンへの切り替えもできる
+    - `git branch <branch_name>/<revision>`
 - `git merge`
   - マージ（masterからnewBranchを取り込む）
-  - `git merge <branch>`
+  - `git merge <branch_name>`
     - 今のブランチに指定したブランチをマージする
     - コンフリクトが発生するとコンフリクトが発生したファイルを修正してaddとcommit（メッセージは自動生成）を実行する必要がある
 - `git reset`
@@ -125,9 +143,17 @@ Gitの以下の保存領域がある。
   - `git reset --hard HEAD^`
     - 現在のブランチHEADの１つ前の状態まで戻る（HEADが１つ戻り、前のHEADはなくなる）
   - 前述したがコミットの取り消しにも使用できる
-
-- `git rebase <branchname>`
+- `git rebase <branch_name>`
   - 指定したブランチのHEADに現在のブランチの変更を追加する
   - `git rebase master`
     - 現在のブランチをmaster(HEAD)から作成したことにする
   - 競合が発生した場合は修正の後`git rebase --continue`を実行する
+
+# その他の操作
+
+- `git tag`
+  - タグを作成する
+- `git blame <file_name>`
+  - 対象ファイルを行単位で誰がいつ修正したのか表示
+- `git stash`
+  - コミットしていない変更を一時的に保存してブランチを切り替える
