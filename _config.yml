@@ -97,8 +97,5 @@ sitemap:
 robotstxt:
   useragent: "*"
   disallow:
-    - /css/
-    - /js/
-    - /fancybox/
   allow:
   sitemap: https://pepese.github.io/sitemap.xml

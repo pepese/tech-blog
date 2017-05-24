@@ -363,9 +363,6 @@ $ npm install hexo-generator-robotstxt --save --no-optional
 robotstxt:
   useragent: "*"
   disallow:
-    - /css/
-    - /js/
-    - /fancybox/
   allow:
   sitemap: https://techblog.pepese.net/sitemap.xml
 ```
