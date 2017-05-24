@@ -184,7 +184,9 @@ $ git cherry-pick <commit_id>
   - ブランチを作成する
   - 現在のブランチの現在のリビジョンで作成される
 - `git branch -d <branch_name>`
-  - ブランチを削除する
+  - ローカルのブランチを削除する
+- `git purh -d origin <branch_name>`
+  - リモートのブランチを削除する
 - `git checkout <branch_name>`
   - 現在のブランチを指定したブランチに切り替える
   - ワーキングディレクトリも指定したブランチの状態になる
