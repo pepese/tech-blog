@@ -67,7 +67,7 @@ Pool details 画面の **Pool Id** と、 App clients 画面の **App client id*
 ```sh
 $ npm upgrade -g @angular/cli
 $ ndenv rehash
-$ ng new cognito-js
+$ ng new cognito-js --style=scss
 $ cd cognito-js
 $ npm install amazon-cognito-identity-js --save # 依存から aws-sdk も導入される
 $ ng generate service services/cognito
@@ -94,186 +94,19 @@ $ ng generate service services/cognito
 
 `src/app/services/cognito.service.ts` を以下のように修正。
 
-```typescript
-import { Injectable } from '@angular/core';
-import * as AWS from "aws-sdk";
-import { CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import { environment } from '../../environments/environment';
-
-@Injectable()
-export class CognitoService {
-  userPool = null;
-
-  constructor() {
-    AWS.config.region = environment.region;
-    const data = { UserPoolId: environment.userPoolId, ClientId: environment.clientId};
-    this.userPool = new CognitoUserPool(data);
-  }
-
-  signUp(username, password, email, phone) {
-    const userData = {
-      Username : username,
-      Pool : this.userPool,
-      Storage: sessionStorage
-    };
-    let attributeList = [];
-    const dataEmail = {
-      Name : 'email',
-      Value : email
-    };
-    const dataPhoneNumber = {
-      Name : 'phone_number',
-      Value : phone
-    };
-    let attributeEmail = new CognitoUserAttribute(dataEmail);
-    let attributePhoneNumber = new CognitoUserAttribute(dataPhoneNumber);
-    attributeList.push(attributeEmail);
-    attributeList.push(attributePhoneNumber);
-    this.userPool.signUp(username, password, attributeList, null, function(err, result){
-      if (err) {
-        alert(err);
-        return;
-      }
-      const cognitoUser = result.user;
-      alert("SignUp is success!\nUser name is " + cognitoUser.getUsername() + ".\nYou need to check your SMS or E-Mail.");
-    });
-    return;
-  }
-
-  confirmRegistration(username, verification_code) {
-    const userData = {
-      Username : username,
-      Pool : this.userPool,
-      Storage: sessionStorage
-    };
-    const cognitoUser = new CognitoUser(userData);
-    cognitoUser.confirmRegistration(verification_code, true, function(err, result) {
-      if (err) {
-        alert(err);
-        return;
-      }
-      alert('Registration is success!');
-      console.log('call result: ' + result);
-    });
-    return;
-  }
-
-  signIn(username, password) {
-    const userData = {
-      Username : username,
-      Pool : this.userPool,
-      Storage: sessionStorage
-    };
-    const cognitoUser = new CognitoUser(userData);
-    const authenticationData = {
-        Username : username,
-        Password : password
-    };
-    const authenticationDetails = new AuthenticationDetails(authenticationData);
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result) {
-        alert('SignIn is success!');
-        console.log('access token + ' + result.getAccessToken().getJwtToken());
-      },
-      onFailure: function(err) {
-        alert(err);
-      }
-    });
-    return;
-  }
-}
-```
+<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/services/cognito.service.ts?footer=0"></script>
 
 `src/app/app.component.ts` を以下のように修正。
 
-```typescript
-import { Component } from '@angular/core';
-import { CognitoService } from './cognito/cognito.service';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [CognitoService]
-})
-export class AppComponent {
-  title = 'Cognito Sample';
-  username = '';
-  password = ``;
-  email = ``;
-  phone = ``;
-  verification_code = ``;
-
-  constructor(
-    private cognitoService: CognitoService
-  ){}
-
-  siginUp() {
-    this.cognitoService.signUp(this.username, this.password, this.email, this.phone);
-  }
-
-  confirmRegistration() {
-    this.cognitoService.confirmRegistration(this.username, this.verification_code);
-  }
-
-  signIn() {
-    this.cognitoService.signIn(this.username, this.password);
-  }
-}
-```
+<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/app.component.ts?footer=0"></script>
 
 `src/app/app.component.html` を以下のように修正。
 
-```html
-<h1>
-  {{title}}
-</h1>
-<hr />
-<div>
-  <h2>サインアップ</h2>
-  <p>以下の項目を入力してユーザを新規に仮登録します。</p>
-  <table>
-    <tr><td>ユーザ名：</td><td><input type="text" [(ngModel)]="username"></td><tr>
-    <tr><td>パスワード：</td><td><input type="text" [(ngModel)]="password"></td></tr>
-    <tr><td>メールアドレス：</td><td><input type="text" [(ngModel)]="email"></td></tr>
-    <tr><td>携帯番号：</td><td><input type="text" [(ngModel)]="phone"></td></tr>
-  </table>
-  <button (click)="siginUp()">サインアップ</button>
-</div>
-<hr />
-<div>
-  <h2>認証コードの確認</h2>
-  <p>サインアップしたユーザにメールやSMSで送付された認証コードを確認し、ユーザを本登録します。</p>
-  <p>認証コードは6桁数字です。</p>
-  <table>
-    <tr><td>ユーザ名：</td><td>{{username}}</td></tr>
-    <tr><td>認証コード：</td><td><input type="text" [(ngModel)]="verification_code"></td></tr>
-  </table>
-  <button (click)="confirmRegistration()">確認</button>
-</div>
-<hr />
-<div>
-  <h2>サインイン</h2>
-  <p>本登録したユーザでサインイン（ログイン）します。</p>
-  <table>
-    <tr><td>ユーザ名：</td><td>{{username}}</td></tr>
-    <tr><td>パスワード：</td><td>{{password}}</td></tr>
-  </table>
-  <button (click)="signIn()">サインイン</button>
-</div>
-```
+<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/app.component.html?footer=0"></script>
 
 `src/environments/environment.ts` を以下のように修正。
 
-```typescript
-export const environment = {
-  production: false,
-  region: 'ap-northeast-1',
-  userPoolId: 'ap-northeast-1_xxxxxxxxx',
-  clientId: 'xxxxxxxxxxxxxxxxxxxxxxxxxx'
-};
-
-```
+<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/environments/environment.ts?footer=0"></script>
 
 `$ ng serve` して起動を確認。
 
