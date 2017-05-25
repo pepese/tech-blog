@@ -97,5 +97,6 @@ sitemap:
 robotstxt:
   useragent: "*"
   disallow:
+    - /images/
   allow:
   sitemap: https://pepese.github.io/sitemap.xml
