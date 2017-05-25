@@ -16,6 +16,12 @@ Amazon Cognito を使ってユーザ認証ができる Angular アプリを作�
 - [Macで開発環境を作る](https://pepese.github.io/blog/mac-dev-environment/)
 - [Angular入門](http://blog.pepese.com/entry/2017/03/16/152007)
 
+以降、以下の順で記載する。
+
+- Amazon Cognito の概要
+- Cognito で認証するAngularアプリを作成する
+- API GatewayでCognitoで認証されたユーザを認可する
+
 <!-- more -->
 
 # Amazon Cognito の概要
@@ -62,7 +68,7 @@ Amazon Cognito はユーザ認証やソーシャル認証の機能を提供す�
 以上の手順で User Pools が作成できる。  
 Pool details 画面の **Pool Id** と、 App clients 画面の **App client id** は後ほど使用するのでひかえておく。
 
-# クライアント側（SPA）の作成
+# Cognito で認証するAngularアプリを作成する
 
 ```sh
 $ npm upgrade -g @angular/cli
@@ -306,6 +312,12 @@ export const environment = {
 
 `$ ng serve` して起動を確認。
 
+# API GatewayでCognitoで認証されたユーザを認可する
+
+以下を参照。
+
+- [Cognito UserPoolを使ってAPIを保護しよう](http://www.h4a.jp/detail/25148)
+- [API Gateway リソースの CORS を有効にする](http://docs.aws.amazon.com/ja_jp/apigateway/latest/developerguide/how-to-cors.html)
 
 # その他参考
 
