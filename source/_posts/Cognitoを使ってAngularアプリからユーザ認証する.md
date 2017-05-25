@@ -13,8 +13,8 @@ id: angular-cognito
 Amazon Cognito を使ってユーザ認証ができる Angular アプリを作成してみる。  
 以下の記事の知識を前提とする。
 
-- https://pepese.github.io/blog/mac-dev-environment/
-- http://blog.pepese.com/entry/2017/03/16/152007
+- [Macで開発環境を作る](https://pepese.github.io/blog/mac-dev-environment/)
+- [Angular入門](http://blog.pepese.com/entry/2017/03/16/152007)
 
 <!-- more -->
 
@@ -94,19 +94,215 @@ $ ng generate service services/cognito
 
 `src/app/services/cognito.service.ts` を以下のように修正。
 
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/services/cognito.service.ts?footer=0"></script>
+```typescript
+import { Injectable } from '@angular/core';
+import * as AWS from "aws-sdk";
+import { CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import { environment } from '../../environments/environment';
+
+@Injectable()
+export class CognitoService {
+  userPool = null;
+
+  constructor() {
+    AWS.config.region = environment.region;
+    const data = { UserPoolId: environment.userPoolId, ClientId: environment.clientId};
+    this.userPool = new CognitoUserPool(data);
+  }
+
+  signUp(username, password, email, phone) {
+    const userData = {
+      Username : username,
+      Pool : this.userPool,
+      Storage: sessionStorage
+    };
+    let attributeList = [];
+    const dataEmail = {
+      Name : 'email',
+      Value : email
+    };
+    const dataPhoneNumber = {
+      Name : 'phone_number',
+      Value : phone
+    };
+    let attributeEmail = new CognitoUserAttribute(dataEmail);
+    let attributePhoneNumber = new CognitoUserAttribute(dataPhoneNumber);
+    attributeList.push(attributeEmail);
+    attributeList.push(attributePhoneNumber);
+    this.userPool.signUp(username, password, attributeList, null, function(err, result){
+      if (err) {
+        alert(err);
+        return;
+      }
+      const cognitoUser = result.user;
+      alert("SignUp is success!\nUser name is " + cognitoUser.getUsername() + ".\nYou need to check your SMS or E-Mail.");
+    });
+    return;
+  }
+
+  confirmRegistration(username, verification_code) {
+    const userData = {
+      Username : username,
+      Pool : this.userPool,
+      Storage: sessionStorage
+    };
+    const cognitoUser = new CognitoUser(userData);
+    cognitoUser.confirmRegistration(verification_code, true, function(err, result) {
+      if (err) {
+        alert(err);
+        return;
+      }
+      alert('Registration is success!');
+      console.log('call result: ' + result);
+    });
+    return;
+  }
+
+  signIn(username, password) {
+    const userData = {
+      Username : username,
+      Pool : this.userPool,
+      Storage: sessionStorage
+    };
+    const cognitoUser = new CognitoUser(userData);
+    const authenticationData = {
+        Username : username,
+        Password : password
+    };
+    const authenticationDetails = new AuthenticationDetails(authenticationData);
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onSuccess: function (result) {
+        alert('SignIn is success!');
+        console.log('access token + ' + result.getAccessToken().getJwtToken());
+      },
+      onFailure: function(err) {
+        alert(err);
+      }
+    });
+    return;
+  }
+}
+```
 
 `src/app/app.component.ts` を以下のように修正。
 
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/app.component.ts?footer=0"></script>
+```typescript
+import { Component } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { CognitoService } from './services/cognito.service';
+import { environment } from '../environments/environment';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  providers: [CognitoService]
+})
+export class AppComponent {
+  title = 'Cognito Sample';
+  username = '';
+  password = ``;
+  email = ``;
+  phone = ``;
+  verification_code = ``;
+  url = '';
+  result = '';
+
+  constructor(
+    private cognitoService: CognitoService,
+    private http: Http
+  ){}
+
+  siginUp() {
+    this.cognitoService.signUp(this.username, this.password, this.email, this.phone);
+  }
+
+  confirmRegistration() {
+    this.cognitoService.confirmRegistration(this.username, this.verification_code);
+  }
+
+  signIn() {
+    this.cognitoService.signIn(this.username, this.password);
+  }
+
+  get() {
+    let key = 'CognitoIdentityServiceProvider.' + environment.clientId + '.' + this.username + '.idToken';
+    let idToken = sessionStorage.getItem(key);
+    let headers = new Headers({ 'Authorization': idToken });
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(this.url, options)
+                    .map(res => res.text())
+                    .subscribe(t => this.result = t);
+  }
+}
+```
 
 `src/app/app.component.html` を以下のように修正。
 
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/app/app.component.html?footer=0"></script>
+```html
+<h1>
+  {{title}}
+</h1>
+<hr />
+<div>
+  <h2>サインアップ</h2>
+  <p>以下の項目を入力してユーザを新規に仮登録します。</p>
+  <table>
+    <tr><td>ユーザ名：</td><td><input type="text" [(ngModel)]="username"></td><tr>
+    <tr><td>パスワード：</td><td><input type="text" [(ngModel)]="password"></td></tr>
+    <tr><td>メールアドレス：</td><td><input type="text" [(ngModel)]="email"></td></tr>
+    <tr><td>携帯番号：</td><td><input type="text" [(ngModel)]="phone"></td></tr>
+  </table>
+  <button (click)="siginUp()">サインアップ</button>
+</div>
+<hr />
+<div>
+  <h2>認証コードの確認</h2>
+  <p>サインアップしたユーザにメールやSMSで送付された認証コードを確認し、ユーザを本登録します。</p>
+  <p>認証コードは6桁数字です。</p>
+  <table>
+    <tr><td>ユーザ名：</td><td>{{username}}</td></tr>
+    <tr><td>認証コード：</td><td><input type="text" [(ngModel)]="verification_code"></td></tr>
+  </table>
+  <button (click)="confirmRegistration()">確認</button>
+</div>
+<hr />
+<div>
+  <h2>サインイン</h2>
+  <p>本登録したユーザでサインイン（ログイン）します。</p>
+  <table>
+    <tr><td>ユーザ名：</td><td>{{username}}</td></tr>
+    <tr><td>パスワード：</td><td>{{password}}</td></tr>
+  </table>
+  <button (click)="signIn()">サインイン</button>
+</div>
+<hr />
+<div>
+  <h2>GET アクセス</h2>
+  <p>Session StorageのidTokenをAuthorizationヘッダへ付与してGetリクエストを送付します。</p>
+  <p>API GatewayのAuthorizationなどで試してみてください。</p>
+  <table>
+    <tr><td>URL：　</td><td><input type="text" [(ngModel)]="url"></td></tr>
+  </table>
+  <button (click)="get()">Send</button>
+  <table>
+    <tr><td>{{result}}</td></tr>
+  </table>
+</div>
+```
 
 `src/environments/environment.ts` を以下のように修正。
 
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/cognito-js/src/environments/environment.ts?footer=0"></script>
+```typescript
+export const environment = {
+  production: false,
+  region: 'ap-northeast-1',
+  userPoolId: 'ap-northeast-1_xxxxxxxxx',
+  clientId: 'xxxxxxxxxxxxxxxxxxxxxxxxxx'
+};
+```
 
 `$ ng serve` して起動を確認。
 
