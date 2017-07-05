@@ -5,10 +5,6 @@ tags:
 - Mac
 - Homebrew
 - anyenv
-- Ruby
-- Node.js
-- Python
-- Perl
 - Java
 - STS
 - Maven
@@ -68,7 +64,7 @@ $ killall Finder
 
 以下を参照。
 
-- https://pepese.github.io/blog/homebrew-basics/
+- [Homebrew入門](https://pepese.github.io/blog/homebrew-basics/)
 
 ## iTerm2をインストール
 
@@ -96,69 +92,16 @@ Macデフォルトのターミナルより便利。
 
 Gitの使い方は以下。
 
-- https://pepese.github.io/blog/git-basics/
+- [Git入門](https://pepese.github.io/blog/git-basics/)
 
 ## anyenvをインストール
 
-- [公式](https://github.com/riywo/anyenv)を参照
-- スクリプト系プログラミング言語のインストール・バージョン管理ができるようになる
+スクリプト系プログラミング言語のインストール・バージョン管理ができるようになる。  
+以下を参照。
 
-```sh
-$ git clone https://github.com/riywo/anyenv ~/.anyenv
-$ echo 'export PATH="$HOME/.anyenv/bin:$PATH"' >> ~/.bash_profile
-$ echo 'eval "$(anyenv init -)"' >> ~/.bash_profile
-$ exec $SHELL -l
-```
-
-## Rubyをインストール
-
-```sh
-$ anyenv install rbenv
-$ git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.anyenv/envs/rbenv/plugins/rbenv-gem-rehash
-$ exec $SHELL -l
-$ rbenv install 2.3.0
-$ rbenv global 2.3.0
-$ ruby -v
-```
-
-「rbenv-gem-rehash」を導入することで「rbenv rehash」（~/.rbenv/versions/2.x.y/bin/ 以下に置いてあるコマンド群を ~/.rbenv/shims/以下に置いて使えるようにする）を実行する必要が無くなる。  
-
-ついでいgemの確認とbundlerの導入。
-
-```sh
-$ which gem
-/Users/xxx/.anyenv/envs/rbenv/shims/gem
-$ gem install bunlder
-$ which bundle
-/Users/xxx/.anyenv/envs/rbenv/shims/bundle
-```
-
-## node.jsをインストール
-
-```sh
-$ anyenv install ndenv
-$ ndenv install v4.2.5
-$ exec $SHELL -l
-$ ndenv shell v4.2.5
-$ npm update -g npm
-$ ndenv shell --unset
-$ ndenv global v4.2.5
-```
-
-
-## その他スクリプト言語をインストール(\*\*env）
-
-```sh
-$ anyenv install plenv
-$ anyenv install pyenv
-$ plenv install 5.25.7
-$ pyenv install 3.5.2
-$ plenv global 5.25.7
-$ pyenv global 3.5.2
-$ plenv rehash
-$ pyenv rehash
-$ anyenv varsions
-```
+- [すべての\*\*envを管理するanyenv](https://pepese.github.io/blog/anyenv/)
+  - Node.js、Python、Rubyの環境構築はこちら参照
+- [公式](https://github.com/riywo/anyenv)
 
 ## Oracle Javaをインストール
 
