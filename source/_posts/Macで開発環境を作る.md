@@ -154,7 +154,9 @@ OS name: "mac os x", version: "10.12.2", arch: "x86_64", family: "mac"
 
 ## Atom
 
-- https://pepese.github.io/blog/atom-install-packages/
+以下を参照。
+
+- [Atomのインストールとパッケージの導入](https://pepese.github.io/blog/atom-install-packages/)
 
 ## STS (Spring Tool Suite)
 
