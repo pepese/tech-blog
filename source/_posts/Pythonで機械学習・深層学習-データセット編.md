@@ -34,7 +34,20 @@ import matplotlib.pyplot as plt
 from sklearn import datasets
 # digits データセットをロード
 digits = datasets.load_digits()
-# 画像を matplotlib で表示
+type(digits) # sklearn.datasets.base.Bunch
+dir(digits) # ['DESCR', 'data', 'images', 'target', 'target_names']
+type(digits.DESCR) # データセットの説明 # str
+type(digits.data) # numpy.ndarray
+type(digits.data) # numpy.ndarray
+print(digits.data.shape) # (1797, 64) # 8x8ではなく8x8=64の形式の1次元ベクトルデータ
+type(digits.images) # numpy.ndarray
+print(digits.images.shape) # (1797, 8, 8) # 8x8の行列データ
+print(digits.data == digits.images.reshape(digits.images.shape[0], -1)) # True ..., True
+type(digits.target) # 番号の種類のID　# numpy.ndarray
+print(digits.target.shape) # 1,797
+type(digits.target_names) # 番号の種類のIDに対応する番号 # numpy.ndarray
+print(digits.target_names) # [0 1 2 3 4 5 6 7 8 9]
+# 画像データを matplotlib で表示
 # 1 番目のキャンバスを作成
 plt.figure(1)
 # digits データセットから先頭 10 枚を取得
@@ -66,11 +79,14 @@ from sklearn import datasets
 # iris データセットをロード
 iris = datasets.load_iris()
 type(iris) # sklearn.datasets.base.Bunch
+dir(iris) # ['DESCR', 'data', 'feature_names', 'target', 'target_names']
 type(iris.DESCR) # データセットの説明 # str
 type(iris.data) # アヤメに関する特長量 # numpy.ndarray
 type(iris.feature_names) # 特長良のカラム名 # list
+print(iris.feature_names) # ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 type(iris.target) # アヤメの種類のID # numpy.ndarray
-type(iris.target_names) # アヤメの種類名 # numpy.ndarray
+type(iris.target_names) # アヤメの種類のIDに対応する名前 # numpy.ndarray
+print(iris.target_names) # ['setosa', 'versicolor', 'virginica']
 # 画像を matplotlib で表示
 # 1 番目のキャンバスを作成
 plt.figure(1)

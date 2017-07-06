@@ -1,15 +1,15 @@
 ---
-title: Pythonで機械学習・深層学習 SVM編
+title: Pythonで機械学習・深層学習 SVMで2クラス分類問題編
 date: 2017-07-05 14:43:37
 tags:
 - Python
 - Machine Learning
 - Deep Learning
 - SVM
-id: python-ml-dl-svm
+id: python-ml-dl-svm-2class
 ---
 
-ここでは、 **scikit-learn** で **SVM** を実行してみる。  
+ここでは、 **scikit-learn** の **SVM** モジュールを使用して **2クラス分類問題** を解いてみる  
 データセットは、以下で紹介している **digits データセット** を使用する。
 
 - [Pythonで機械学習・深層学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
@@ -41,12 +41,12 @@ digits = datasets.load_digits()
 # digits データセットの中から 3 と 8 の位置を取得
 # これを後に学習用データと評価用データに分割して使用する
 flag_3_8 = (digits.target == 3) + (digits.target == 8)
-# 3 と 8 の画像データを取得
-images = digits.images[flag_3_8]
+# 3 と 8 の画像データを取得（一次元ベクトル）
+data = digits.data[flag_3_8]
+# 上記は下記のように 8x8 のimageを2次元ベクトルから 1次元ベクトルへ変換したものでもよい
+# data = images.reshape(digits.images[flag_3_8].shape[0], -1)
 # 3 と 8 の数字データを取得
 labels = digits.target[flag_3_8]
-# 3 と 8 の画像データを 2次元ベクトルから 1次元ベクトルへ変換
-images = images.reshape(images.shape[0], -1)
 # 以降、ホールドアウト検証にて正答率を算出する
 # データセットの数を取得
 num_of_samples = len(flag_3_8[flag_3_8])
@@ -56,16 +56,42 @@ training_data_size = int(num_of_samples * 3 / 5)
 classifier = svm.SVC(C=1.0, gamma=0.001)
 # 学習用データをSVMへ適用
 # データセットの前から 3/5 を学習用データとして使用
-classifier.fit(images[:training_data_size], labels[:training_data_size])
+classifier.fit(data[:training_data_size], labels[:training_data_size])
 # 正解データの取得
 # データセットの後ろから 2/5 を評価用データとして使用
 expected = labels[training_data_size:]
 # 学習済み SVM へデータをインプットして結果を取得
-predicted = classifier.predict(images[training_data_size:])
+predicted = classifier.predict(data[training_data_size:])
 # 結果の出力
 # SVMの出力と正解データを比較
-print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
+print('Accuracy:\n', metrics.accuracy_score(expected, predicted)) # 0.937062937063
 ```
+
+scikit-learn の SVM には、 LinearSVC 、 LinearSVR 、 NuSVC 、 NuSVR 、 OneClassSVM 、 SVC 、 SVR があり、整理すると以下のようになる。
+
+- 分類問題に使用する SVM （Support Vector Classification）
+  - SVC （C-Support Vector Classification）
+    - 標準的なソフトマージン(エラーを許容する)SVM
+    - `SVC(C=1.0, kernel='rbf', degree=3, gamma='auto', coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, decision_function_shape=None, random_state=None)`
+    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+  - LinearSVC （Linear Support Vector Classification）
+    - カーネルが線形カーネルの場合に特化したSVM
+    - `LinearSVC(penalty='l2', loss='squared_hinge', dual=True, tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, intercept_scaling=1, class_weight=None, verbose=0, random_state=None, max_iter=1000)`
+    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html)
+  - NuSVC （Nu-Support Vector Classification）
+    - エラーを許容する表現が異なるSVM
+    - `NuSVC(nu=0.5, kernel='rbf', degree=3, gamma='auto', coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, decision_function_shape=None, random_state=None)`
+    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html)
+- 回帰問題に使用する SVM （Support Vector Regression）
+  - SVR
+  - LinearSVR
+  - NuSVR
+- 異常検知に使用する SVM
+  - OneClassSVM
+
+[SVC参考](http://d.hatena.ne.jp/saket/20130212/1360656405)
+
+パラメータの最適値を選ぶには **グリッドサーチ** という手法がある。[参考](http://sucrose.hatenablog.com/entry/2013/05/25/133021)
 
 # 精度の評価方法
 
@@ -77,7 +103,8 @@ print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
 - k-分割交差検証
   - データセットを k 分割して、そのうち 1 個を評価用データ、その他の k-1 個を学習用データとして使用する方法
   - 評価用データを変更しながら k 回繰り返した結果の平均を精度に用いることが多い
-  - `sklearn.cross_validation.KFold`
+  - scikit-learn 0.18 までは `sklearn.cross_validation.KFold` モジュールだったが DeprecationWarning となっており、0.20 からは `sklearn.model_selection.KFold` を使用する
+    - [参考](http://segafreder.hatenablog.com/entry/2016/10/18/163925)
 
 先ほどの SVM の結果を k=5 の k-分割交差検証で評価すると以下のようになる。
 
@@ -86,40 +113,30 @@ import numpy as np
 from sklearn import datasets
 from sklearn import svm
 from sklearn import metrics
-# digits データセットのロード
 digits = datasets.load_digits()
-# digits データセットの中から 3 と 8 の位置を取得
 flag_3_8 = (digits.target == 3) + (digits.target == 8)
-# 3 と 8 の画像データを取得
-images = digits.images[flag_3_8]
-# 3 と 8 の数字データを取得
+data = digits.data[flag_3_8]
 labels = digits.target[flag_3_8]
-# 3 と 8 の画像データを 2次元ベクトルから 1次元ベクトルへ変換
-images = images.reshape(images.shape[0], -1)
-# データセットの数を取得
-num_of_samples = len(flag_3_8[flag_3_8])
-# ここまでは先ほどと同じ
+# ここまではさきほどと同じ
 # 交差検証用モジュールのロード
-import sklearn.cross_validation
-# 交差検証の準備
-kf = sklearn.cross_validation.KFold(num_of_samples, n_folds=5)
+import sklearn.model_selection
 # 交差検証の実施
 # train は学習用データ、testは評価用データ
-for train, test in kf:
+for train, test in sklearn.model_selection.KFold(n_splits=5).split(data, labels):
   # 学習用データ
-  train_images = images[train]
+  train_data = data[train]
   train_labels = labels[train]
   # 評価用データ
-  test_images = images[test]
+  test_data = data[test]
   test_labels = labels[test]
   # SVMモデルの作成
   classifier = svm.SVC(C=1.0, gamma=0.001)
   # 学習用データをSVMへ適用
-  classifier.fit(train_images, train_labels)
+  classifier.fit(train_data, train_labels)
   # 正解データの取得
   expected = test_labels
   # 学習済み SVM へデータをインプットして結果を取得
-  predicted = classifier.predict(test_images)
+  predicted = classifier.predict(test_data)
   # 結果の出力
   # SVMの出力と正解データを比較
   print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
@@ -194,47 +211,28 @@ import numpy as np
 from sklearn import datasets
 from sklearn import svm
 from sklearn import metrics
-# digits データセットのロード
 digits = datasets.load_digits()
-# digits データセットの中から 3 と 8 の位置を取得
 flag_3_8 = (digits.target == 3) + (digits.target == 8)
-# 3 と 8 の画像データを取得
-images = digits.images[flag_3_8]
-# 3 と 8 の数字データを取得
+data = digits.data[flag_3_8]
 labels = digits.target[flag_3_8]
-# 3 と 8 の画像データを 2次元ベクトルから 1次元ベクトルへ変換
-images = images.reshape(images.shape[0], -1)
-# データセットの数を取得
-num_of_samples = len(flag_3_8[flag_3_8])
-# ここまでは先ほどと同じ
-# 交差検証用モジュールのロード
-import sklearn.cross_validation
-# 交差検証の準備
-kf = sklearn.cross_validation.KFold(num_of_samples, n_folds=5)
-# 交差検証の実施
-# train は学習用データ、testは評価用データ
-for train, test in kf:
-  # 学習用データ
-  train_images = images[train]
+import sklearn.model_selection
+for train, test in sklearn.model_selection.KFold(n_splits=5).split(data, labels):
+  train_data = data[train]
   train_labels = labels[train]
-  # 評価用データ
-  test_images = images[test]
+  test_data = data[test]
   test_labels = labels[test]
-  # SVMモデルの作成
   classifier = svm.SVC(C=1.0, gamma=0.001)
-  # 学習用データをSVMへ適用
-  classifier.fit(train_images, train_labels)
-  # 正解データの取得
+  classifier.fit(train_data, train_labels)
   expected = test_labels
-  # 学習済み SVM へデータをインプットして結果を取得
-  predicted = classifier.predict(test_images)
+  predicted = classifier.predict(test_data)
+  # ここまではさきほどと同じ
   # 結果の出力
   # SVMの出力と正解データを比較
-  print('Confusion Matrix:\n', metrics.confusion_matrix(expected, predicted), '\n')
-  print('Accuracy:\n', metrics.accuracy_score(expected, predicted), '\n')
-  print('Precision:\n', metrics.precision_score(expected, predicted, pos_label=3), '\n')
-  print('Recall:\n', metrics.recall_score(expected, predicted, pos_label=3), '\n')
-  print('F-measure:\n', metrics.f1_score(expected, predicted, pos_label=3), '\n\n')
+  print('Confusion Matrix:\n', metrics.confusion_matrix(expected, predicted))
+  print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
+  print('Precision:\n', metrics.precision_score(expected, predicted, pos_label=3))
+  print('Recall:\n', metrics.recall_score(expected, predicted, pos_label=3))
+  print('F-measure:\n', metrics.f1_score(expected, predicted, pos_label=3), '\n')
 ```
 
 # アンサンブル学習
