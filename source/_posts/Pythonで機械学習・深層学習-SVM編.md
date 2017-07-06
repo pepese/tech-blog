@@ -21,7 +21,7 @@ id: python-ml-dl-svm
 このブログにある Python コードを実行するためのパッケージをインストールする。
 
 ```sh
-pip install jupyter scikit-learn matplotlib scipy
+$ pip install jupyter scikit-learn matplotlib scipy
 ```
 
 実行環境は Jupyter Notebook を想定。実行方法は `jupyter notebook` 。  
@@ -143,7 +143,7 @@ for train, test in kf:
 
 <table>
 <tr>
-<td></td><td></td><td colspan="2" align="center">予測</td>
+<td></td><td></td><td colspan="2">予測</td>
 </tr>
 <tr>
 <td></td><td></td><td>Positive</td><td>Negative</td>
@@ -163,10 +163,13 @@ for train, test in kf:
 
 上記を用いてそれぞれの指標値は以下のように算出できる。
 
-$$正答率（Accuracy）=\frac{TP+TN}{TP+FP+FN+TN}$$
-$$適合率（Precision）=\frac{TP}{TP+FP}$$
-$$再現率（Recall）=\frac{TP}{TP+FN}$$
-$$F値（F-measure）=\frac{2*適合率*再現率}{適合率+再現率}$$
+$$ 正答率（Accuracy）=\frac{TP+TN}{TP+FP+FN+TN} $$
+
+$$ 適合率（Precision）=\frac{TP}{TP+FP} $$
+
+$$ 再現率（Recall）=\frac{TP}{TP+FN} $$
+
+$$ F値（F-measure）=\frac{ 2 \times 適合率 \times 再現率 }{ 適合率 + 再現率 } $$
 
 これらの使用値と混同行列は scikit-learn の metrics モジュールを用いて、以下のように算出できる。
 
@@ -181,7 +184,8 @@ $$F値（F-measure）=\frac{2*適合率*再現率}{適合率+再現率}$$
 - 混同行列（Confusion Matrix）
   - `metrics.confusion_matrix(expected, predicted)`
 
-上記の `pos_label` は **Positive Label** のことで、正解のラベルは何か、を指定する。ここでは、数字の「3」か数字の「8」かを分類する問題であったので、 `pos_label=3` は正解が数字の「3」であることを指定している。  
+上記の `pos_label` は **Positive Label** のこと。  
+ここでは、数字の「3」か数字の「8」かを分類する問題であったので、 `pos_label=3` は Positive を数字の「3」に指定したことになる。（ Negative は数字の「8」）  
 
 以上の指標値を先ほど実行したSVMのサンプルで k-分割交差検証をした場合のコードは以下のようになる。
 

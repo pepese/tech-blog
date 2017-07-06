@@ -558,5 +558,16 @@ ogp_image: /images/xxx.gif
 
 - Google（Yahoo）
   - Googleアカウントを取得してGoogle Search Consoleの[Fetch as Google](https://www.google.com/webmasters/tools/googlebot-fetch)からリクエストする。
-- bing
-  - https://www.bing.com/toolbox/submit-site-url
+- [bing](https://www.bing.com/toolbox/submit-site-url)
+
+## 数式を表示できるようにする
+
+以下を実施することにより **Tex** による数式を表示できるようになる。
+
+```sh
+$ brew install pandoc
+$ npm install hexo-renderer-pandoc --save --no-optional
+$ npm install hexo-renderer-mathjax --save --no-optional
+```
+- [Pandoc ユーザーズガイド 日本語版](http://sky-y.github.io/site-pandoc-jp/users-guide/)
+- [参考](http://qiita.com/sky_y/items/7c29909c5cffa28b23d8)
