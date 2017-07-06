@@ -514,7 +514,7 @@ $ mkdir source/images
 以下のように任意の場所に張り付ける。
 
 ```html
-<img src="images/xxx" alt="画像の説明">
+<img src="../../images/xxx" alt="画像の説明">
 ```
 
 **alt** 属性はちゃんと書く。
