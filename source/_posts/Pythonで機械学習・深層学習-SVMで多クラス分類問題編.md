@@ -70,4 +70,4 @@ print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
 
 [scikit-learnによる多クラスSVM](http://qiita.com/sotetsuk/items/3a5718bb1f945a383ceb)
 
-k-分割交差検証について書く。
+k-分割交差検証について書く。[参考？](http://sucrose.hatenablog.com/entry/2013/05/25/133021)
