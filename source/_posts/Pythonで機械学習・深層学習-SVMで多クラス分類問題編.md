@@ -70,4 +70,46 @@ print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
 
 [scikit-learnによる多クラスSVM](http://qiita.com/sotetsuk/items/3a5718bb1f945a383ceb)
 
-k-分割交差検証について書く。[参考？](http://sucrose.hatenablog.com/entry/2013/05/25/133021)
+# 精度の評価
+
+k=5 の k-分割交差検証で、以下を算出する。
+
+- 混同行列（Confusion Matrix）
+- 正答率（Accuracy）
+- 適合率（Precision）
+- 再現率（Recall）
+- F値（F-measure）
+
+```python
+import numpy as np
+from sklearn import datasets
+from sklearn import svm
+from sklearn import multiclass
+from sklearn import metrics
+# digits データセットのロード
+digits = datasets.load_digits()
+# 画像データを取得（一次元ベクトル）
+data = digits.data
+# 数字データを取得
+labels = digits.target
+# データセットの数を取得
+# num_of_samples = labels.shape[0]
+# 学習データサイズの取得
+# training_data_size = int(num_of_samples * 3 / 5)
+
+for train, test in sklearn.model_selection.KFold(n_splits=5).split(data, labels):
+  train_data = data[train]
+  train_labels = labels[train]
+  test_data = data[test]
+  test_labels = labels[test]
+  estimator = svm.SVC(C=1.0, gamma=0.001)
+  classifier = multiclass.OneVsRestClassifier(estimator)
+  classifier.fit(train_data, train_labels)
+  expected = test_labels
+  predicted = classifier.predict(test_data)
+  print('Confusion Matrix:\n', metrics.confusion_matrix(expected, predicted))
+  print('Accuracy:\n', metrics.accuracy_score(expected, predicted))
+  print('Precision:\n', metrics.precision_score(expected, predicted, average="macro"))
+  print('Recall:\n', metrics.recall_score(expected, predicted, average="macro"))
+  print('F-measure:\n', metrics.f1_score(expected, predicted, average="macro"), '\n')
+```
