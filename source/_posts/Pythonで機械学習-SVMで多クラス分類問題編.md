@@ -1,22 +1,22 @@
 ---
-title: Pythonで機械学習・深層学習 SVMで多クラス分類問題編
+title: Pythonで機械学習 SVMで多クラス分類問題編
 date: 2017-07-06 22:26:58
 tags:
 - Python
 - Machine Learning
-- Deep Learning
+- scikit-learn
 - SVM
-id: python-ml-dl-svm-multiclass
+id: python-ml-svm-multiclass
 ---
 
 ここでは、 **scikit-learn** の **SVM** モジュールを使用して **多クラス分類問題** を解いてみる。  
 SVMを使用した2クラス分類問題は以下。
 
-- [Pythonで機械学習・深層学習 SVMで2クラス分類問題編](https://pepese.github.io/blog/python-ml-dl-svm-2class/)
+- [Pythonで機械学習 SVMで2クラス分類問題編](https://pepese.github.io/blog/python-ml-dl-svm-2class/)
 
 データセットは、以下で紹介している **digits データセット** を使用する。
 
-- [Pythonで機械学習・深層学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
+- [Pythonで機械学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
 
 <!-- more -->
 
@@ -85,6 +85,7 @@ import numpy as np
 from sklearn import datasets
 from sklearn import svm
 from sklearn import multiclass
+from sklearn import model_selection
 from sklearn import metrics
 # digits データセットのロード
 digits = datasets.load_digits()
@@ -97,7 +98,7 @@ labels = digits.target
 # 学習データサイズの取得
 # training_data_size = int(num_of_samples * 3 / 5)
 
-for train, test in sklearn.model_selection.KFold(n_splits=5).split(data, labels):
+for train, test in model_selection.KFold(n_splits=5).split(data, labels):
   train_data = data[train]
   train_labels = labels[train]
   test_data = data[test]

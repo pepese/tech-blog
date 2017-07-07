@@ -1,14 +1,14 @@
 ---
-title: Pythonで機械学習・深層学習 データセット編
+title: Pythonで機械学習 データセット編
 date: 2017-07-05 13:53:54
 tags:
 - Python
 - Machine Learning
-- Deep Learning
-id: python-ml-dl-datasets
+- scikit-learn
+id: python-ml-datasets
 ---
 
-ここでは、機械学習・深層学習で利用するデータセットを紹介する。
+ここでは、機械学習で利用するデータセットを紹介する。
 
 <!-- more -->
 

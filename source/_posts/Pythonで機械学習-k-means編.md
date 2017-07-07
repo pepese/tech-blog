@@ -1,18 +1,18 @@
 ---
-title: Pythonで機械学習・深層学習 k-means編
+title: Pythonで機械学習 k-means編
 date: 2017-07-05 17:15:40
 tags:
 - Python
 - Machine Learning
-- Deep Learning
+- scikit-learn
 - k-means
-id: python-ml-dl-k-means
+id: python-ml-k-means
 ---
 
 ここでは、 **scikit-learn** で **k-means** を実行してみる。  
 データセットは、以下で紹介している **iris データセット** を使用する。
 
-- [Pythonで機械学習・深層学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
+- [Pythonで機械学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
 
 <!-- more -->
 

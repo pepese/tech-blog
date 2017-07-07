@@ -1,18 +1,18 @@
 ---
-title: Pythonで機械学習・深層学習 SVMで2クラス分類問題編
+title: Pythonで機械学習 SVMで2クラス分類問題編
 date: 2017-07-05 14:43:37
 tags:
 - Python
 - Machine Learning
-- Deep Learning
+- scikit-learn
 - SVM
-id: python-ml-dl-svm-2class
+id: python-ml-svm-2class
 ---
 
 ここでは、 **scikit-learn** の **SVM** モジュールを使用して **2クラス分類問題** を解いてみる  
 データセットは、以下で紹介している **digits データセット** を使用する。
 
-- [Pythonで機械学習・深層学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
+- [Pythonで機械学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
 
 <!-- more -->
 
