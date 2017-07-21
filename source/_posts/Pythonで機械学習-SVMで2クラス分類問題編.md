@@ -72,24 +72,19 @@ scikit-learn の SVM には、 LinearSVC 、 LinearSVR 、 NuSVC 、 NuSVR 、 O
 - 分類問題に使用する SVM （Support Vector Classification）
   - SVC （C-Support Vector Classification）
     - 標準的なソフトマージン(エラーを許容する)SVM
-    - `SVC(C=1.0, kernel='rbf', degree=3, gamma='auto', coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, decision_function_shape=None, random_state=None)`
     - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
   - LinearSVC （Linear Support Vector Classification）
     - カーネルが線形カーネルの場合に特化したSVM
-    - `LinearSVC(penalty='l2', loss='squared_hinge', dual=True, tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, intercept_scaling=1, class_weight=None, verbose=0, random_state=None, max_iter=1000)`
     - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html)
   - NuSVC （Nu-Support Vector Classification）
     - エラーを許容する表現が異なるSVM
-    - `NuSVC(nu=0.5, kernel='rbf', degree=3, gamma='auto', coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, decision_function_shape=None, random_state=None)`
     - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html)
-- 回帰問題に使用する SVM （Support Vector Regression）
+- 回帰問題に使用する SVM （Support Vector Regression）[参考](http://d.hatena.ne.jp/saket/20130212/1360656405)
   - SVR
   - LinearSVR
   - NuSVR
 - 異常検知に使用する SVM
   - OneClassSVM
-
-[SVC参考](http://d.hatena.ne.jp/saket/20130212/1360656405)
 
 パイパーパラメータの最適値を選ぶには以下の手法があり、うち **グリッドサーチ** は scikit-learn で実装されている。[参考](http://sucrose.hatenablog.com/entry/2013/05/25/133021)
 
