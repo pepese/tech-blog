@@ -1,12 +1,12 @@
 ---
-title: Pythonで機械学習 k-means編
+title: Pythonで機械学習 k-meansでクラスタリング編
 date: 2017-07-05 17:15:40
 tags:
 - Python
 - Machine Learning
 - scikit-learn
 - k-means
-id: python-ml-k-means
+id: python-ml-k-means-clustering
 ---
 
 ここでは、 **scikit-learn** で **k-means** を実行してみる。  

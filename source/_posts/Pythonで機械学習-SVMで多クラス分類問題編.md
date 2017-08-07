@@ -18,6 +18,10 @@ SVMを使用した2クラス分類問題は以下。
 
 - [Pythonで機械学習 データセット編](https://pepese.github.io/blog/python-ml-dl-datasets/)
 
+後半で実施している精度評価についての詳細は以下を参照。
+
+- [Pythonで機械学習 精度評価編](https://pepese.github.io/blog/python-ml-dl-metrics-scores/)
+
 <!-- more -->
 
 # パッケージの導入
