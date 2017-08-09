@@ -16,7 +16,25 @@ HomebrewはMac用のaptやyumのようなパッケージマネージャ。ソフ
 # インストール
 
 ```sh
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)”
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)”
+==> This script will install:
+/usr/local/bin/brew
+/usr/local/share/doc/homebrew
+/usr/local/share/man/man1/brew.1
+/usr/local/share/zsh/site-functions/_brew
+/usr/local/etc/bash_completion.d/brew
+/usr/local/Homebrew
+==> The following new directories will be created:
+/usr/local/Cellar
+/usr/local/Homebrew
+/usr/local/Frameworks
+/usr/local/bin
+/usr/local/include
+/usr/local/lib
+/usr/local/opt
+/usr/local/sbin
+/usr/local/share/zsh
+/usr/local/share/zsh/site-functions
 ```
 
 上記を実行後、 `brew doctor` で問題がないことを確認。  
