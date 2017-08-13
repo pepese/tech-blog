@@ -28,7 +28,7 @@ id: python-ml-svm-2class
 $ pip install jupyter scikit-learn matplotlib scipy
 ```
 
-実行環境は Jupyter Notebook を想定。実行方法は `jupyter notebook` 。  
+実行環境は Jupyter Notebook を想定。実行方法は `$ jupyter notebook` 。  
 **matplotlib** の使い方は以下を参照。
 
 - [matplotlib入門](http://blog.pepese.com/entry/2016/09/18/174407)
