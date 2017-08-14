@@ -27,6 +27,7 @@ Node.jsのWebフレームワーク `Express` 触ってみた。
 ```sh
 $ npm install -g yarn
 $ ndenv rehash
+$ yarn --version
 ```
 
 # Expressアプリケーションの構築
@@ -118,7 +119,7 @@ $ touch app/public/images/.gitkeep
 
  「フロントエンドアプリケーションをプロジェクトに同梱する場合」は以下を参照。
 
-- [所謂Angular4でMEANスタックを作る](https://pepese.github.io/blog/mean-stack-basics/)
+- [所謂MEANスタックを作る](https://pepese.github.io/blog/mean-stack-basics/)
 
 ここでは、「フロントエンドアプリケーションをプロジェクトに同梱せず、Expressからテンプレートエンジンを使用する場合」で、最低限動くViewアプリを構築するために以下のスクリプトを実装する。
 
