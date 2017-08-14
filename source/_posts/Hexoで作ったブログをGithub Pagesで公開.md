@@ -20,21 +20,21 @@ id: hexo-github-pages
 $ npm install -g hexo-cli --no-optional // インストール
 $ ndenv rehash
 $ hexo -version                         // 確認
-hexo: 3.3.5
-hexo-cli: 1.0.2
-os: Darwin 16.5.0 darwin x64
+hexo: 3.3.8
+hexo-cli: 1.0.3
+os: Darwin 16.6.0 darwin x64
 http_parser: 2.7.0
-node: 7.6.0
-v8: 5.5.372.40
-uv: 1.11.0
+node: 8.3.0
+v8: 6.0.286.52
+uv: 1.13.1
 zlib: 1.2.11
 ares: 1.10.1-DEV
-modules: 51
-openssl: 1.0.2k
-icu: 58.2
+modules: 57
+openssl: 1.0.2l
+icu: 59.1
 unicode: 9.0
-cldr: 30.0.3
-tz: 2016j
+cldr: 31.0.1
+tz: 2017b
 $ hexo init tech-blog                   // ブログプロジェクト作成
 $ cd tech-blog
 $ npm install --no-optional
@@ -571,3 +571,21 @@ $ npm install hexo-renderer-mathjax --save --no-optional
 ```
 - [Pandoc ユーザーズガイド 日本語版](http://sky-y.github.io/site-pandoc-jp/users-guide/)
 - [参考](http://qiita.com/sky_y/items/7c29909c5cffa28b23d8)
+
+## Gist-it で Github のソースコード貼り付け
+
+以下のようにスクリプトを貼り付ける。
+
+```html
+<script src="https://gist-it.appspot.com/github/[Github Account]/[Repository]/blob/[branch]/[path-to-file]?footer=0"></script>
+```
+
+例えば以下。
+
+```html
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/controllers/get_index.js?footer=0"></script>
+```
+
+以下のように表示される。
+
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/controllers/get_index.js?footer=0"></script>
