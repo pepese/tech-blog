@@ -3,6 +3,8 @@ title: Node.js/npm入門
 date: 2017-08-14 14:43:12
 tags:
 - Node.js
+- npm
+- JavaScript
 id: nodejs-basics
 ---
 
