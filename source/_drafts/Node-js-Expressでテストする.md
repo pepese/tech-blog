@@ -8,49 +8,42 @@ tags:
 id: express-test
 ---
 
-NodeJS、Expressアプリケーションのテストをしてみる。  
-使用するライブラリは以下。
+Node.js/Expressアプリケーションのテストをしてみる。  
+使用するツール・ライブラリは以下。
 
 - テスティングフレームワーク
-  - Mocha
+  - [mocha](https://mochajs.org/)
+    - デフォルトでは `./test/*.js` 、 `./test/*.coffee` をテストスクリプトとして認識
+    - `mocha.opts` というファイルにオプションを設定できる模様（[参考](https://mochajs.org/#mochaopts)）
 - アサート
   - Chai
 - モック
   - Sinon.JS
 - カバレッジ
-  - istanbul
+  - [Istanbul](https://istanbul.js.org/)
+    - 公式の案内にもある通り、以下の `nyc` 経由で `istanbul` を利用する
+  - [nyc](https://github.com/istanbuljs/nyc)
+    - tap、mocha、AVA といったJSテスティングフレームワークと Istanbul をうまく連携させるコマンドラインツール
+    - [mocha用のチュートリアル](https://istanbul.js.org/docs/tutorials/mocha/)
 - ルーティングのテスト
   - supertest
 
+なお、タスクランナーは使用せず、npmスクリプトを使用する。  
 以下の記事を読んだ前提で書く。
 
 - [Express入門](https://pepese.github.io/blog/express-basics/)
 
 <!-- more -->
 
-# インストール
+# 環境設定
 
-## グローバル
+## ツールライブラリのインストール
 
-```sh
-$ npm install -g mocha chai mocha-sinon gulp
-$ ndenv rehash
-```
-
-## ローカル
-
-プロジェクトディレクトリで以下を実行。
+[Express入門](https://pepese.github.io/blog/express-basics/)で作成したプロジェクトにて以下を導入する。
 
 ```sh
-$ npm install mocha should chai sinon supertest gulp-debug gulp-istanbul gulp-mocha@3.0.1 isparta --save-dev
+$ yarn add mocha should chai sinon mocha-sinon supertest istanbul nyc --dev
 ```
-
-```sh
-$ yarn add mocha should chai sinon supertest gulp-debug gulp-istanbul gulp-mocha@3.0.1 isparta --dev
-```
-
-- **注意**
-  - [*istanbul* は 2017/8/14 時点では *gulp-mocha* の4系には対応しておらず、 *3.0.1* にする必要がある](https://github.com/SBoudrias/gulp-istanbul)
 
 ## ディレクトリ作成
 
@@ -62,33 +55,118 @@ $ mkdir app/spec
 $ mkdir app/spec/controllers
 ```
 
-# テストスクリプト作成
+# ユニットテストの実装
 
 先に紹介した記事のスクリプトをテストする。
 
-## gulpfile.js
+## packege.json
 
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/express-sample/gulpfile.js?footer=0"></script>
+以下を加筆する。
 
-## モジュールのテスト
-
-### app/spec/controllers/get_index.spec.js
-
-<script src="http://gist-it.appspot.com/https://github.com/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_index.spec.js?footer=0"></script>
-
-## ルーティングのテスト
-
-**supertest** を使用してルーティングのテストを実装する。  
-ただし、複雑なAPIや画面のテストはe2eテストでカバーするとして、ここでは簡易なルーティングのテストのみ。  
-**なんか動かん。。。**
-
-## 実行
-
-```sh
-$ gulp test
+```
+{
+  "nyc": {
+    "check-coverage": true,
+    "include": [
+      "app/**/*.js"
+    ],
+    "exclude": [
+      "app/spec/**/*.spec.js",
+      "app/config",
+      "app/coverage",
+      "app/log",
+      "app/public"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "require": [],
+    "extension": [
+      ".js"
+    ],
+    "cache": true,
+    "all": true,
+    "report-dir": "app/coverage"
+  },
+  "scripts": {
+    "test": "nyc mocha app/spec/**/*.spec.js"
+  },
+}
 ```
 
-# ちょっと解説
+## テストスクリプト `app/spec/controllers/get_index.spec.js`
+
+`app/controllers/get_index.js` を対象としたテストスクリプトを以下のように作成する。
+
+<script src="http://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_index.spec.js?footer=0"></script>
+
+## テストの実行
+
+npmスクリプトで以下のように実行する。
+
+```sh
+$ npm test
+
+get_index
+  ✓ Index画面が1回レンダリングされること
+
+1 passing (20ms)
+
+ERROR: Coverage for lines (2.26%) does not meet global threshold (90%)
+-----------------|----------|----------|----------|----------|----------------|
+File             |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+-----------------|----------|----------|----------|----------|----------------|
+All files        |     0.47 |        0 |     1.92 |     2.26 |                |
+ app             |        0 |        0 |        0 |        0 |                |
+  app.js         |        0 |        0 |        0 |        0 |... 134,135,137 |
+ app/controllers |    27.27 |      100 |       50 |    27.27 |                |
+  get_index.js   |      100 |      100 |      100 |      100 |                |
+  get_users.js   |        0 |      100 |        0 |        0 |          1,2,5 |
+  router.js      |        0 |      100 |      100 |        0 |      1,2,4,5,7 |
+ app/coverage    |        0 |        0 |        0 |        0 |                |
+  prettify.js    |        0 |        0 |        0 |        0 |              1 |
+  sorter.js      |        0 |        0 |        0 |        0 |... 153,154,158 |
+-----------------|----------|----------|----------|----------|----------------|
+npm ERR! Test failed.  See above for more details.
+```
+
+カバレッジが9割を下回っているのでエラーとなっているが、テストの実行としては成功。  
+予約語に入らないスクリプトを定義した場合は `$ npm run-script test-cov` のように実行する。（定義が `test-cov` だとすると）
+
+
+
+
+
+# ルーティングテストの実装
+
+**supertest** を使用してルーティングのテストを実装する。  
+ただし、複雑なAPIや画面のテストはe2eテストでカバーするとして、ここでは簡易なルーティングのテストのみ。
+
+```
+const request = require('supertest');
+const app = require('../../app');
+
+describe('routing_test', () => {
+  it('「/」が表示されること', (done) => {
+    request(app)
+      .get('/')
+      .expect('Content-Type', 'text/html')
+      .expect(200, done);
+  });
+  it('404が返却されること', (done) => {
+    request(app)
+      .get('/hogehoge')
+      .expect('Content-Type', 'text/html')
+      .expect(404, done);
+  });
+});
+```
+
+
+
+
+# ライブラリ・ツールの概念を解説
 
 ## Sinon
 
@@ -155,110 +233,3 @@ $ gulp test
 
 - MochaとChai
   - http://qiita.com/y_hokkey/items/f73ea6b3d5f6902396b6
-
-
-
-
-
-
-# 以降ガンガン上記を無視してやり直し中
-
- タスクランナーは使わない。
-
-- テスティングフレームワーク
-  - Mocha
-- アサート
-  - Chai
-- モック
-  - Sinon.JS
-- カバレッジ
-  - istanbul
-  - nyc
-    - isparta ってやつの代わりっぽい。。。
-- ルーティングのテスト
-  - supertest
-
-# インストール
-
-## グローバル
-
-グローバルいらん？
-
-```sh
-$ yarn global add mocha istanbul
-$ ndenv rehash
-```
-
-## ローカル
-
-```sh
-$ yarn add mocha should chai sinon mocha-sinon supertest istanbul nyc --dev
-```
-
-## package.json
-
-```
-{
-  "nyc": {
-    "check-coverage": true,
-    "include": [
-      "app/**/*.js"
-    ],
-    "exclude": [
-      "app/spec/**/*.spec.js",
-      "app/config",
-      "app/log",
-      "app/public"
-    ],
-    "reporter": [
-      "html",
-      "text"
-    ],
-    "require": [],
-    "extension": [
-      ".js"
-    ],
-    "cache": true,
-    "all": true,
-    "report-dir": "app/coverage"
-  },
-  "scripts": {
-    "test": "nyc mocha app/spec/**/*.spec.js"
-  },
-}
-```
-
-テストの実行は `$ npm test` 。  
-予約語に入らないスクリプトを作った場合の実行方法は `$ npm run-script test-cov` 。（定義が `test-cov` だとすると）
-
-### Express テストの例
-
-Expressのテストスクリプト（package.json）では以下のようになっている。
-
-```
-  "scripts": {
-    "lint": "eslint .",
-    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ test/acceptance/",
-    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/ test/acceptance/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
-    "test-tap": "mocha --require test/support/env --reporter tap --check-leaks test/ test/acceptance/"
-  }
-```
-
-https://github.com/expressjs/express/blob/master/package.json
-
-## メモ
-
-- mocha（[公式](https://mochajs.org/)）
-  - `--reporter` オプション
-    - The --reporter option allows you to specify the reporter that will be used, defaulting to “spec”. This flag may also be used to utilize third-party reporters. For example if you npm install mocha-lcov-reporter you may then do --reporter mocha-lcov-reporter.
-    - https://mochajs.org/#reporters
-  - デフォルトテストディレクトリ
-    - By default, mocha looks for the glob `./test/\*.js` and `./test/\*.coffee`, so you may want to put your tests in `test/` folder.
-  - `mocha.opts` というファイルにオプションを設定できる模様
-    - https://mochajs.org/#mochaopts
-- istanbul（[公式](https://istanbul.js.org/)）
-  - nyc
-    - The nyc command-line-client for Istanbul works well with most JavaScript testing frameworks: tap, mocha, AVA, etc.
-    - **重要！！** 設定方法は[ここ](https://github.com/istanbuljs/nyc)
-  - [mocha用のチュートリアル](https://istanbul.js.org/docs/tutorials/mocha/)
