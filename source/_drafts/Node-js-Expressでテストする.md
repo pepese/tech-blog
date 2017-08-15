@@ -185,7 +185,7 @@ $ gulp test
 グローバルいらん？
 
 ```sh
-$ yarn global add mocha chai mocha-sinon
+$ yarn global add mocha istanbul
 $ ndenv rehash
 ```
 
@@ -199,9 +199,66 @@ $ yarn add mocha should chai sinon mocha-sinon supertest istanbul nyc --dev
 
 ```
 {
+  "nyc": {
+    "check-coverage": true,
+    "include": [
+      "app/**/*.js"
+    ],
+    "exclude": [
+      "app/spec/**/*.spec.js",
+      "app/config",
+      "app/log",
+      "app/public"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "require": [],
+    "extension": [
+      ".js"
+    ],
+    "cache": true,
+    "all": true,
+    "report-dir": "app/coverage"
+  },
   "scripts": {
-    "test": "nyc mocha app/spec/**/*.spec.js",
-    "report": "nyc report --reporter=lcov"
+    "test": "nyc mocha app/spec/**/*.spec.js"
   },
 }
 ```
+
+テストの実行は `$ npm test` 。  
+予約語に入らないスクリプトを作った場合の実行方法は `$ npm run-script test-cov` 。（定義が `test-cov` だとすると）
+
+### Express テストの例
+
+Expressのテストスクリプト（package.json）では以下のようになっている。
+
+```
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ test/acceptance/",
+    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require test/support/env --reporter spec --check-leaks test/ test/acceptance/",
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/ test/acceptance/",
+    "test-tap": "mocha --require test/support/env --reporter tap --check-leaks test/ test/acceptance/"
+  }
+```
+
+https://github.com/expressjs/express/blob/master/package.json
+
+## メモ
+
+- mocha（[公式](https://mochajs.org/)）
+  - `--reporter` オプション
+    - The --reporter option allows you to specify the reporter that will be used, defaulting to “spec”. This flag may also be used to utilize third-party reporters. For example if you npm install mocha-lcov-reporter you may then do --reporter mocha-lcov-reporter.
+    - https://mochajs.org/#reporters
+  - デフォルトテストディレクトリ
+    - By default, mocha looks for the glob `./test/\*.js` and `./test/\*.coffee`, so you may want to put your tests in `test/` folder.
+  - `mocha.opts` というファイルにオプションを設定できる模様
+    - https://mochajs.org/#mochaopts
+- istanbul（[公式](https://istanbul.js.org/)）
+  - nyc
+    - The nyc command-line-client for Istanbul works well with most JavaScript testing frameworks: tap, mocha, AVA, etc.
+    - **重要！！** 設定方法は[ここ](https://github.com/istanbuljs/nyc)
+  - [mocha用のチュートリアル](https://istanbul.js.org/docs/tutorials/mocha/)
