@@ -46,21 +46,21 @@ $ atom .
 # パッケージ導入方法
 
 - メニュータブの「Packages」->「Settings View」を選ぶと「Settings」タブが開く
-  - 「Ctrl+,」（Win）、「Command+,」（Mac）でも開く
+    - 「Ctrl+,」（Win）、「Command+,」（Mac）でも開く
 - 「Install」メニューを選択し、欲しいパッケージを検索して「Install」ボタンを押すS
 - 設定が反映されない場合はAtomを再起動する
 
 # オススメのパッケージ
 
 - japanese-menu
-  - メニューバーとコンテキストメニューを日本語化
+    - メニューバーとコンテキストメニューを日本語化
 - japanese-wrap
-  - 日本語を折り返してくれるパッケージ
-  - 現在のAtomは日本語の折り返しがうまく機能しないため
+    - 日本語を折り返してくれるパッケージ
+    - 現在のAtomは日本語の折り返しがうまく機能しないため
 - goto-defitinion
-  - 「Ctrl+Alt+Enter」（Win）、「Option+Cmd+Enter」（Mac）でクラス、メソッドの実装へ飛べるようになる
+    - 「Ctrl+Alt+Enter」（Win）、「Option+Cmd+Enter」（Mac）でクラス、メソッドの実装へ飛べるようになる
 - terminal-plus（ **platformio-ide-terminal** ）
-  - ターミナル画面を追加できるパッケージ
-    - 画面を切り替えてターミナル開くのが面倒になった人にオススメ
-  - 下部の「+」をクリックするか、 `Ctrl + Shift + @` でターミナルが開く
-  - しかしながら、2017/01/19時点では動かなかったため、terminal-plusをforkして作成された **platformio-ide-terminal** がいい
+    - ターミナル画面を追加できるパッケージ
+        - 画面を切り替えてターミナル開くのが面倒になった人にオススメ
+    - 下部の「+」をクリックするか、 `Ctrl + Shift + @` でターミナルが開く
+    - しかしながら、2017/01/19時点では動かなかったため、terminal-plusをforkして作成された **platformio-ide-terminal** がいい

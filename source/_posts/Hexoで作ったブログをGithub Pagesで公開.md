@@ -133,9 +133,9 @@ $ hexo publish [layout] <title>
 ### マークダウンの書き方小ネタ
 
 - `<!-- more -->`
-  - マークダウン記事の途中に記載すると、ブログトップにて記事が全て表示されずに「Read More」（所謂、 **続きを読む** ）が表示される
+    - マークダウン記事の途中に記載すると、ブログトップにて記事が全て表示されずに「Read More」（所謂、 **続きを読む** ）が表示される
 - Octopressから移植された特殊な記法（[Tag Plugins](https://hexo.io/docs/tag-plugins.html)）
-  - Block QuoteやCode Blockなど
+    - Block QuoteやCode Blockなど
 
 ## 静的ファイルの生成
 
@@ -328,8 +328,8 @@ $ hexo deploy
 好みに応じて以下の設定をする。
 
 - CloudflareのPage Rulesタブで常にHTTPSアクセスとなるように以下を設定する。
-  - If the URL matches: http://techblog.pepese.net*
-  - Then the settings are: Always use HTTPS
+    - If the URL matches: http://techblog.pepese.net*
+    - Then the settings are: Always use HTTPS
 - SpeedタブのAuto Minify項目でCloudflareでキャッシュする時にJavaScript/CSS/HTMLのソースをminifyする設定が可能。
 
 
@@ -557,7 +557,7 @@ ogp_image: /images/xxx.gif
 ## URLのクロールとインデックス登録を検索エンジンにリクエストする
 
 - Google（Yahoo）
-  - Googleアカウントを取得してGoogle Search Consoleの[Fetch as Google](https://www.google.com/webmasters/tools/googlebot-fetch)からリクエストする。
+    - Googleアカウントを取得してGoogle Search Consoleの[Fetch as Google](https://www.google.com/webmasters/tools/googlebot-fetch)からリクエストする。
 - [bing](https://www.bing.com/toolbox/submit-site-url)
 
 ## 数式を表示できるようにする

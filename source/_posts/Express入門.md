@@ -124,19 +124,19 @@ $ touch app/public/images/.gitkeep
 ここでは、「フロントエンドアプリケーションをプロジェクトに同梱せず、Expressからテンプレートエンジンを使用する場合」で、最低限動くViewアプリを構築するために以下のスクリプトを実装する。
 
 - `app/app.js`
-  - Expressアプリケーションのミドルウェアの設定と起動処理
+    - Expressアプリケーションのミドルウェアの設定と起動処理
 - `app/controllers/router.js`
-  - Viewを処理するモジュールへのルーティングを行う
+    - Viewを処理するモジュールへのルーティングを行う
 - `app/controllers/get_index.js`
-  - Index画面を表示する
+    - Index画面を表示する
 - `app/controllers/get_users.js`
-  - Users画面を表示する
+    - Users画面を表示する
 - `app/public/stylesheets/style.scss`
 - `app/views/layout.pug`
 - `app/views/index.pug`
 - `app/views/error.pug`
 - `app/config/config.json`
-  - 環境差分設定ファイル
+    - 環境差分設定ファイル
 
 ### app/app.js
 
@@ -255,11 +255,11 @@ const router = express.Router();
 以下の方針で使い分けることにする。
 
 - アプリケーション・レベル
-  - **アプリ全体** 、 **全てのHTTPメソッド** へ影響する処理
-  - `app.use()` を使用する
+    - **アプリ全体** 、 **全てのHTTPメソッド** へ影響する処理
+    - `app.use()` を使用する
 - ルーター・レベル
-  - **特定のパス** 、 **特定のHTTPメソッド** へのルーティング
-  - `router.[all|get|post|put|delete](path, callback [, callback...])` を使用する
+    - **特定のパス** 、 **特定のHTTPメソッド** へのルーティング
+    - `router.[all|get|post|put|delete](path, callback [, callback...])` を使用する
 
 ### エラー処理ミドルウェア
 
@@ -365,10 +365,10 @@ app.get(name);
 ## モジュール間で変数をやりとりする方法
 
 - global変数を使う
-  - `const global.hoge = 'hogehoge';` みたいに、頭にglobalを付けるとglobalスコープで扱われる。
-  - ただし、 `require('./global.js');` のようにグローバル変数を定義したモジュールを使用するモジュールでロードする必要がある。
-  - グローバル領域を汚染するので注意が必要
+    - `const global.hoge = 'hogehoge';` みたいに、頭にglobalを付けるとglobalスコープで扱われる。
+    - ただし、 `require('./global.js');` のようにグローバル変数を定義したモジュールを使用するモジュールでロードする必要がある。
+    - グローバル領域を汚染するので注意が必要
 - 共有変数用のモジュールを作成する
-  - `module.exports = {};` とだけ書いた `common.js` を作成する
-  - 他モジュールからは `require('./common').hoge = hoge;` で変数を代入でき、 `const hoge = require('./common').hoge` で変数を参照できる
-  - どんな変数を作ったからわからなくなるので、 `common.js` にはコメントくらい残しておく必要がある
+    - `module.exports = {};` とだけ書いた `common.js` を作成する
+    - 他モジュールからは `require('./common').hoge = hoge;` で変数を代入でき、 `const hoge = require('./common').hoge` で変数を参照できる
+    - どんな変数を作ったからわからなくなるので、 `common.js` にはコメントくらい残しておく必要がある

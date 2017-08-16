@@ -85,14 +85,14 @@ TypeScriptの設定ファイルは `tsconfig.json` 。
 ```
 
 - compilerOptions
-  - [コンパイラ・オプション](https://www.typescriptlang.org/docs/handbook/compiler-options.html)を指定する
-  - 省略するとデフォルト値になる
+    - [コンパイラ・オプション](https://www.typescriptlang.org/docs/handbook/compiler-options.html)を指定する
+    - 省略するとデフォルト値になる
 - include / exclude
-  - glob風のファイルパターンでコンパイル対象を指定できる
-    - `*` は0文字以上の文字にマッチ(ディレクトリ区切りを除く)
-    - `?` は1文字以上の文字にマッチ(ディレクトリ区切りを除く)
-    - `**/` はサブディレクトリに再帰的にマッチ
-  - デフォルトで、`.ts` 、 `.tsx` 、`.d.ts` ファイルが対象で、 `compilerOptions` の `alloJs` パラメータががtrueの場合は `.js` と `.jsx` も対象になる
+    - glob風のファイルパターンでコンパイル対象を指定できる
+        - `*` は0文字以上の文字にマッチ(ディレクトリ区切りを除く)
+        - `?` は1文字以上の文字にマッチ(ディレクトリ区切りを除く)
+        - `**/` はサブディレクトリに再帰的にマッチ
+    - デフォルトで、`.ts` 、 `.tsx` 、`.d.ts` ファイルが対象で、 `compilerOptions` の `alloJs` パラメータががtrueの場合は `.js` と `.jsx` も対象になる
 
 ## compilerOptions のパラメータ
 

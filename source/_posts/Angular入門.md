@@ -173,62 +173,62 @@ e2e（エンドツーエンド）テストは **protractor** 。
 ## 主要なコマンド
 
 - `ng new`
-  - 新規にAngularプロジェクトを作成する
+    - 新規にAngularプロジェクトを作成する
 - `ng build`
-  - `src` 配下をビルドして `dist` へ出力する
+    - `src` 配下をビルドして `dist` へ出力する
 - `ng serve`
-  - Webサーバを起動してアプリケーションを実行する
+    - Webサーバを起動してアプリケーションを実行する
 - `ng generate`
-  - blueprints から選択して新たにコードを生成する
+    - blueprints から選択して新たにコードを生成する
 - `ng eject`
-  - `ng generate` などで作成したコードを取り除き、webpackの設定やスクリプトを変更する
+    - `ng generate` などで作成したコードを取り除き、webpackの設定やスクリプトを変更する
 - `ng get`
-  - 設定（key-value）から値（value）を取得する
+    - 設定（key-value）から値（value）を取得する
 - `ng set`
-  - 設定（key-value）に値（value）を追加する
+    - 設定（key-value）に値（value）を追加する
 - `ng lint`
-  - Linterを実行する
+    - Linterを実行する
 - `ng test`
-  - テストを実行する
+    - テストを実行する
 - `ng e2e`
-  - e2eテストを実行する
+    - e2eテストを実行する
 - `ng xi18n`
-  - コードからi18nメッセージを抜く
+    - コードからi18nメッセージを抜く
 
 上記以外や詳細なオプションは `ng help` を参照。
 
 ### blueprints の種類
 
 - module
-  - `ng generate module sample`
-  - モジュール（ `sample/sample.module.ts` ）が作成される。
-  - 自動で指定したモジュール名でディレクトリが切られることに注意
+    - `ng generate module sample`
+    - モジュール（ `sample/sample.module.ts` ）が作成される。
+    - 自動で指定したモジュール名でディレクトリが切られることに注意
 - component
-  - `ng generate component sample`
-  - コンポーネント（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
-    - `sample.component.ts` 、 `sample.component.spec.ts` 、 `sample.component.html` 、 `sample.component.scss`
-  - なお、既に存在するモジュール名で作成すると、そのモジュール名のディレクトリ内に作成される。
+    - `ng generate component sample`
+    - コンポーネント（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
+        - `sample.component.ts` 、 `sample.component.spec.ts` 、 `sample.component.html` 、 `sample.component.scss`
+    - なお、既に存在するモジュール名で作成すると、そのモジュール名のディレクトリ内に作成される。
 - directive
-  - `ng generate directive sample`
-  - ディレクティブ（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
-    - `sample.directive.ts` 、 `sample.directive.spec.ts`
+    - `ng generate directive sample`
+    - ディレクティブ（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
+        - `sample.directive.ts` 、 `sample.directive.spec.ts`
 - pipe
-  - `ng generate pipe sample`
-  - パイプ（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
-    - `sample.pipe.ts` 、 `sample.pipe.spec.ts`
+    - `ng generate pipe sample`
+    - パイプ（以下）を作成し、 `app.module.ts` に自動登録（importおよびメタデータ `declarations` への追加）される。
+        - `sample.pipe.ts` 、 `sample.pipe.spec.ts`
 - service
-  - `ng generate service sample`
-  - サービス（以下）を作成する。
-    - `sample.service.ts` 、 `sample.service.spec.ts`
+    - `ng generate service sample`
+    - サービス（以下）を作成する。
+        - `sample.service.ts` 、 `sample.service.spec.ts`
 - class
-  - `ng generate class sample`
-  - 普通のクラス（ `sample.ts` ）が作成される。
+    - `ng generate class sample`
+    - 普通のクラス（ `sample.ts` ）が作成される。
 - interface
-  - `ng generate interface sample`
-  - 普通のインターフェース（ `sample.ts` ）が作成される。
+    - `ng generate interface sample`
+    - 普通のインターフェース（ `sample.ts` ）が作成される。
 - enum
-  - `ng generate enum sample`
-  - 普通の列挙型（ `sample.enum.ts` ）が作成される。
+    - `ng generate enum sample`
+    - 普通の列挙型（ `sample.enum.ts` ）が作成される。
 
 ディレクトリを切りたい場合は `/` を加えて、 `ng generate service sample/sample-service` のようにする。
 
@@ -299,18 +299,18 @@ export class AppModule { }
 `@NgModule` の代表的なプロパティは以下の通り。ちなみにデコレータに設定するプロパティを **メタデータ** という。
 
 - `imports`
-  - このモジュールに他のモジュールを取り込み、このモジュール内で定義されているコンポーネントやテンプレートが他のモジュールのクラスを使用できるようになる。
-  - 他のモジュールの `providers` ・ `exports` に定義されたものを使用できるようになる。
+    - このモジュールに他のモジュールを取り込み、このモジュール内で定義されているコンポーネントやテンプレートが他のモジュールのクラスを使用できるようになる。
+    - 他のモジュールの `providers` ・ `exports` に定義されたものを使用できるようになる。
 - `providers`
-  - このモジュールおよび関係するコンポーネント・サービスへインジェクトするためのサービスクラスを定義・インスタンス化する。
+    - このモジュールおよび関係するコンポーネント・サービスへインジェクトするためのサービスクラスを定義・インスタンス化する。
 - `declarations`
-  - このモジュールに所属させるビュークラスを指定する。Angularのビュークラスには、 **コンポーネント** 、 **ディレクティブ** 、 **パイプ** がある。
+    - このモジュールに所属させるビュークラスを指定する。Angularのビュークラスには、 **コンポーネント** 、 **ディレクティブ** 、 **パイプ** がある。
 - `exports`
-  - このモジュール内のクラスを他のモジュールのコンポーネント・テンプレートで使用可能にする。
-  - `imports` の逆。
+    - このモジュール内のクラスを他のモジュールのコンポーネント・テンプレートで使用可能にする。
+    - `imports` の逆。
 - `bootstrap`
-  - **ルートコンポーネント** を定義する。ルートコンポーネントはアプリケーションのメインビュー。
-  - **ルートモジュールにだけ** に `bootstarp` プロパティを設定する。
+    - **ルートコンポーネント** を定義する。ルートコンポーネントはアプリケーションのメインビュー。
+    - **ルートモジュールにだけ** に `bootstarp` プロパティを設定する。
 
 以下が **ルートモジュール** を指定する方法（ `src/main.ts` ）。
 
@@ -355,20 +355,20 @@ export class HeroListComponent implements OnInit {
 `@Component` の代表的なメタデータプロパティは以下。
 
 - moduleId
-  - このモジュールが定義されるファイルのES/CommonJSモジュールID
+    - このモジュールが定義されるファイルのES/CommonJSモジュールID
 - selector
-  - このコンポーネントのHTMLタグ名を定義する。
+    - このコンポーネントのHTMLタグ名を定義する。
 - template
-  - テンプレートを直接記載する。
+    - テンプレートを直接記載する。
 - templateUrl
-  - テンプレートファイルのパスを指定する。
+    - テンプレートファイルのパスを指定する。
 - styles
-  - スタイルシート（CSSやSass）を直接記載する。このコンポーネント外には影響が無い。
+    - スタイルシート（CSSやSass）を直接記載する。このコンポーネント外には影響が無い。
 - styleUrls
-  - スタイルシートファイルのパスを指定する。このコンポーネント外には影響が無い。
+    - スタイルシートファイルのパスを指定する。このコンポーネント外には影響が無い。
 - providers
-  - このコンポーネントがDI経由で使用するサービスクラスを指定する。
-  - コンポーネントクラスの `constructor` の引数でも指定する必要がある。
+    - このコンポーネントがDI経由で使用するサービスクラスを指定する。
+    - コンポーネントクラスの `constructor` の引数でも指定する必要がある。
 
 その他の `@Component` のメタデータは[ここ](https://angular.io/docs/ts/latest/api/core/index/Component-decorator.html)で確認できる。
 
@@ -379,11 +379,11 @@ export class HeroListComponent implements OnInit {
 テンプレート内では、HTMLの属性として **ディレクティブ** （ `*ngFor` など）、コンポーネントとのデータ・機能のやりとりに **データバインディング** を使用することができる。
 
 - コンポーネントフィールドへのアクセス
-  - `*ngFor` ： コレクションフィールドの値にアクセス
-   - `*ngFor="let hero of heroes"` ： コレクションheroesの各要素をheroへ代入
+    - `*ngFor` ： コレクションフィールドの値にアクセス
+    - `*ngFor="let hero of heroes"` ： コレクションheroesの各要素をheroへ代入
 - コンポーネントのメソッド呼び出し
-  - `(click)="onClickMe()"` ： クリック時に `onClickMe()` メソッドを呼び出す
-  - `(keyup)="onKey($event)"` ： キーアップ時にイベントを引数に `onKey()` メソッドを呼び出す
+    - `(click)="onClickMe()"` ： クリック時に `onClickMe()` メソッドを呼び出す
+    - `(keyup)="onKey($event)"` ： キーアップ時にイベントを引数に `onKey()` メソッドを呼び出す
 
 また、テンプレートにはスタイルシート（CSS、Sassなど）を指定することができ、`@Component` デコレータのメタデータ（ `styles` 、 `styleUrls` ）で指定することができる。
 
@@ -401,17 +401,17 @@ Angularにクラスがどのように挙動するか知らせる役割。
 以下のように４種類ある。
 
 - 単方向バインド（interpolation）
-  - `<li>{{hero.name}}</li>`
-  - コンポーネントの `hero.name` プロパティの値を `<li>` 表示する
+    - `<li>{{hero.name}}</li>`
+    - コンポーネントの `hero.name` プロパティの値を `<li>` 表示する
 - プロパティバインド（property binding）
-  - `<hero-detail [hero]="selectedHero"></hero-detail>`
-  - 親コンポーネントの `selectedHero` の値を、子コンポーネントの `hero` へ渡している
+    - `<hero-detail [hero]="selectedHero"></hero-detail>`
+    - 親コンポーネントの `selectedHero` の値を、子コンポーネントの `hero` へ渡している
 - イベントバインド（event binding）
-  - `<li (click)="selectHero(hero)"></li>`
-  - ユーザのクリックにより `selectHero()` メソッドが呼び出される。
+    - `<li (click)="selectHero(hero)"></li>`
+    - ユーザのクリックにより `selectHero()` メソッドが呼び出される。
 - 双方向バインド（Two-way data binding）
-  - `<input [(ngModel)]="hero.name">`
-  - `ngModel` を用いて **参照と更新** を両方同時に実現する。
+    - `<input [(ngModel)]="hero.name">`
+    - `ngModel` を用いて **参照と更新** を両方同時に実現する。
 
 `ngModel` のようにテンプレートのHTMLタグの属性として記述できるAngularの機能を **ディレクティブ** という。
 
@@ -467,14 +467,14 @@ let birthday = new Date(1985,3,1); // これで1985年4月1日 なことに注�
 他にも下記のようなパイプがある。
 
 - DatePipe
-  - 上記例。日付を整形する。
-  - `date_expression | date[:format]`
+    - 上記例。日付を整形する。
+    - `date_expression | date[:format]`
 - UpperCasePipe
-  - 文字列を大文字にする。
-  - `expression | uppercase`
+    - 文字列を大文字にする。
+    - `expression | uppercase`
 - JsonPipe
-  - 入力値にJSON.stringfyを実行して返す。
-  - `expression | json`
+    - 入力値にJSON.stringfyを実行して返す。
+    - `expression | json`
 
 また、パイプは以下のような感じでチェーンできる。
 

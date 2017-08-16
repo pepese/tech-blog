@@ -43,9 +43,9 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
 変更があるかもしれないので[公式](http://brew.sh/index_ja.html)を確認のこと。
 
 - `/usr/local/Cellar/`
-  - Homebrewでインストールしたソフトウェアはここに配備される
+    - Homebrewでインストールしたソフトウェアはここに配備される
 - `/usr/local/bin/`
-  - インストールしたソフトウェアのコマンドのシンボリックリンクはここに配備される
+    - インストールしたソフトウェアのコマンドのシンボリックリンクはここに配備される
 
 # brew tap
 

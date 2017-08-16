@@ -74,21 +74,21 @@ print('Accuracy:\n', metrics.accuracy_score(expected, predicted)) # 0.9370629370
 scikit-learn の SVM には、 LinearSVC 、 LinearSVR 、 NuSVC 、 NuSVR 、 OneClassSVM 、 SVC 、 SVR があり、整理すると以下のようになる。
 
 - 分類問題に使用する SVM （Support Vector Classification）
-  - SVC （C-Support Vector Classification）
-    - 標準的なソフトマージン(エラーを許容する)SVM
-    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
-  - LinearSVC （Linear Support Vector Classification）
-    - カーネルが線形カーネルの場合に特化したSVM
-    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html)
-  - NuSVC （Nu-Support Vector Classification）
-    - エラーを許容する表現が異なるSVM
-    - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html)
+    - SVC （C-Support Vector Classification）
+        - 標準的なソフトマージン(エラーを許容する)SVM
+        - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+    - LinearSVC （Linear Support Vector Classification）
+        - カーネルが線形カーネルの場合に特化したSVM
+        - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html)
+    - NuSVC （Nu-Support Vector Classification）
+        - エラーを許容する表現が異なるSVM
+        - [API Doc](http://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html)
 - 回帰問題に使用する SVM （Support Vector Regression）[参考](http://d.hatena.ne.jp/saket/20130212/1360656405)
-  - SVR
-  - LinearSVR
-  - NuSVR
+    - SVR
+    - LinearSVR
+    - NuSVR
 - 異常検知に使用する SVM
-  - OneClassSVM
+    - OneClassSVM
 
 # 精度の評価
 

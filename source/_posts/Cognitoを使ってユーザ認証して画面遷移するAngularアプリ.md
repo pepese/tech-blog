@@ -43,19 +43,19 @@ $ ng generate component components/menu
 
 - src/tsconfig.app.json
 - src/app/app.routing.ts
-  - 遷移する画面（Component）情報をここへ集約する
+    - 遷移する画面（Component）情報をここへ集約する
 - src/app/app.module.ts
 - src/environments/environment.ts
 - src/app/app.component.ts
 - src/app/services/cognito.service.ts
 - src/app/components/login/login.component.ts
-  - `/login` 画面のComponent
+    - `/login` 画面のComponent
 - src/app/components/menu/menu.component.ts
-  - `/menu` 画面のComponent
+    - `/menu` 画面のComponent
 - src/app/components/login/login.component.html
-  - `/login` 画面
+    - `/login` 画面
 - src/app/components/menu/menu.component.html
-  - `/menu` 画面
+    - `/menu` 画面
 - src/app/app.component.html
 
 ## src/tsconfig.app.json

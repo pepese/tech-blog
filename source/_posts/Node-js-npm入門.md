@@ -91,16 +91,16 @@ $ npm bin -g
 オプションは以下の通り。
 
 - `--save` 、 `-S`
-  - `package.json` の `dependencies` に追記される
-  - `npm install  --production` した時に `mode_modules/` に配備される
-  - 開発したソフトウェアを動かすのに必要な依存ライブラリ
+    - `package.json` の `dependencies` に追記される
+    - `npm install  --production` した時に `mode_modules/` に配備される
+    - 開発したソフトウェアを動かすのに必要な依存ライブラリ
 - `--save-dev` 、 `-D`
-  - `package.json` の `devDependencies` に追記される
-  - `npm install --dev` した時に `mode_modules/` に配備される
-  - ソフトウェアを開発する際に必要になるツール・ライブラリ
+    - `package.json` の `devDependencies` に追記される
+    - `npm install --dev` した時に `mode_modules/` に配備される
+    - ソフトウェアを開発する際に必要になるツール・ライブラリ
 - `--save-optional` 、 `-O`
-  - `package.json` の `optionalDependencies` に追記される
-  - `npm install` した時に `mode_modules/` に配備される（失敗してもスルーされる）
+    - `package.json` の `optionalDependencies` に追記される
+    - `npm install` した時に `mode_modules/` に配備される（失敗してもスルーされる）
 
 デフォルト設定の場合、 `npm install` （オプション無）すると、 `dependencies` 、 `devDependencies` 、 `optionalDependencies` の全てがインストールされる。  
 アンインストールは `npm uninstall <package_name>` 。  
@@ -187,4 +187,4 @@ $ forever stop app.js
 ## Node.jsに関する話題
 
 - [Node.jsでのJavaScriptメモリリークを発見するための簡単ガイド](http://postd.cc/simple-guide-to-finding-a-javascript-memory-leak-in-node-js/)
-  - JavaScriptは **ガベージコレクション** を行う言語。
+    - JavaScriptは **ガベージコレクション** を行う言語。

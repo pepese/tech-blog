@@ -16,7 +16,7 @@ id: mac-dev-environment
 
 - OSの設定
 - 開発環境作成
-  - 開発言語、ビルドツールとか
+    - 開発言語、ビルドツールとか
 - エディタ・IDEの設定
 
 <!-- more -->
@@ -100,7 +100,7 @@ Gitの使い方は以下。
 以下を参照。
 
 - [すべての\*\*envを管理するanyenv](https://pepese.github.io/blog/anyenv/)
-  - Node.js、Python、Rubyの環境構築はこちら参照
+    - Node.js、Python、Rubyの環境構築はこちら参照
 - [公式](https://github.com/riywo/anyenv)
 
 ## Oracle Javaをインストール

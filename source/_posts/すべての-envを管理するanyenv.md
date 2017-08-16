@@ -38,11 +38,11 @@ anyenv自身のアップデートは上記の通りGithubからcloneしている
 ここでは以下をインストールする。
 
 - [anyenv-update](https://github.com/znz/anyenv-update)
-  - インストールされている \*\*env をアップデートするためのプラグイン
-  - `anyenv update` コマンドが使用できるようになる
+    - インストールされている \*\*env をアップデートするためのプラグイン
+    - `anyenv update` コマンドが使用できるようになる
 - [anyenv-git](https://github.com/znz/anyenv-git)
-  - anyenv で git のコマンドを実行できるようにするためのプラグイン
-  - `anyenv git` コマンドが使用できるようになる
+    - anyenv で git のコマンドを実行できるようにするためのプラグイン
+    - `anyenv git` コマンドが使用できるようになる
 
 ## anyenv-updateのインストール
 
