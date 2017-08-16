@@ -121,13 +121,13 @@ $ mkdir app/spec/controllers
 
 `app/controllers/get_index.js` を対象としたテストスクリプトを以下のように作成する。
 
-<script src="http://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_index.spec.js?footer=0"></script>
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_index.spec.js?footer=0"></script>
 
 ## テストスクリプト `app/spec/controllers/get_users.spec.js`
 
 `app/controllers/get_users.js` を対象としたテストスクリプトを以下のように作成する。
 
-<script src="http://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_users.spec.js?footer=0"></script>
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_users.spec.js?footer=0"></script>
 
 ## テストの実行
 
