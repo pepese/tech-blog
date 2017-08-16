@@ -25,8 +25,6 @@ Node.js/Expressアプリケーションのテストをしてみる。
   - [nyc](https://github.com/istanbuljs/nyc)
     - tap、mocha、AVA といったJSテスティングフレームワークと Istanbul をうまく連携させるコマンドラインツール
     - [mocha用のチュートリアル](https://istanbul.js.org/docs/tutorials/mocha/)
-- ルーティングのテスト
-  - supertest
 
 なお、タスクランナーは使用せず、npmスクリプトを使用する。  
 以下の記事を読んだ前提で書く。
@@ -37,12 +35,19 @@ Node.js/Expressアプリケーションのテストをしてみる。
 
 # 環境設定
 
-## ツールライブラリのインストール
+## グローバルインストール
+
+```sh
+$ yarn global add nyc
+$ ndenv rehash
+```
+
+## ローカルインストール
 
 [Express入門](https://pepese.github.io/blog/express-basics/)で作成したプロジェクトにて以下を導入する。
 
 ```sh
-$ yarn add mocha should chai sinon mocha-sinon supertest istanbul nyc --dev
+$ yarn add mocha should chai sinon mocha-sinon istanbul nyc --dev
 ```
 
 ## ディレクトリ作成
@@ -65,13 +70,21 @@ $ mkdir app/spec/controllers
 
 ```
 {
+  // 上記省略
   "nyc": {
     "check-coverage": true,
+    "per-file": true,
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90,
     "include": [
-      "app/**/*.js"
+      "app/"
     ],
     "exclude": [
       "app/spec/**/*.spec.js",
+      "app/app.js",
+      "app/controllers/router.js",
       "app/config",
       "app/coverage",
       "app/log",
@@ -90,8 +103,9 @@ $ mkdir app/spec/controllers
     "report-dir": "app/coverage"
   },
   "scripts": {
-    "test": "nyc mocha app/spec/**/*.spec.js"
+    "test": "mocha app/spec/*.spec.js app/spec/**/*.spec.js"
   },
+  // 下記省略
 }
 ```
 
@@ -101,70 +115,54 @@ $ mkdir app/spec/controllers
 
 <script src="http://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_index.spec.js?footer=0"></script>
 
+## テストスクリプト `app/spec/controllers/get_users.spec.js`
+
+`app/controllers/get_users.js` を対象としたテストスクリプトを以下のように作成する。
+
+<script src="http://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/spec/controllers/get_users.spec.js?footer=0"></script>
+
 ## テストの実行
 
-npmスクリプトで以下のように実行する。
+npmスクリプトで以下のようにテストを実行する。
 
 ```sh
 $ npm test
 
-get_index
-  ✓ Index画面が1回レンダリングされること
+  /
+    ✓ Index画面が1回レンダリングされること
 
-1 passing (20ms)
+  /users
+    ✓ Users画面が1回レンダリングされること
 
-ERROR: Coverage for lines (2.26%) does not meet global threshold (90%)
------------------|----------|----------|----------|----------|----------------|
-File             |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
------------------|----------|----------|----------|----------|----------------|
-All files        |     0.47 |        0 |     1.92 |     2.26 |                |
- app             |        0 |        0 |        0 |        0 |                |
-  app.js         |        0 |        0 |        0 |        0 |... 134,135,137 |
- app/controllers |    27.27 |      100 |       50 |    27.27 |                |
-  get_index.js   |      100 |      100 |      100 |      100 |                |
-  get_users.js   |        0 |      100 |        0 |        0 |          1,2,5 |
-  router.js      |        0 |      100 |      100 |        0 |      1,2,4,5,7 |
- app/coverage    |        0 |        0 |        0 |        0 |                |
-  prettify.js    |        0 |        0 |        0 |        0 |              1 |
-  sorter.js      |        0 |        0 |        0 |        0 |... 153,154,158 |
------------------|----------|----------|----------|----------|----------------|
-npm ERR! Test failed.  See above for more details.
+
+  2 passing (8ms)
 ```
 
-カバレッジが9割を下回っているのでエラーとなっているが、テストの実行としては成功。  
-予約語に入らないスクリプトを定義した場合は `$ npm run-script test-cov` のように実行する。（定義が `test-cov` だとすると）
+カバレッジレポートは `nyc` を用いて以下のように出力する。
+
+```sh
+$ nyc npm test
+
+  /
+    ✓ Index画面が1回レンダリングされること
 
 
+  /users
+    ✓ Users画面が1回レンダリングされること
 
 
+  2 passing (10ms)
 
-# ルーティングテストの実装
-
-**supertest** を使用してルーティングのテストを実装する。  
-ただし、複雑なAPIや画面のテストはe2eテストでカバーするとして、ここでは簡易なルーティングのテストのみ。
-
-```
-const request = require('supertest');
-const app = require('../../app');
-
-describe('routing_test', () => {
-  it('「/」が表示されること', (done) => {
-    request(app)
-      .get('/')
-      .expect('Content-Type', 'text/html')
-      .expect(200, done);
-  });
-  it('404が返却されること', (done) => {
-    request(app)
-      .get('/hogehoge')
-      .expect('Content-Type', 'text/html')
-      .expect(404, done);
-  });
-});
+--------------|----------|----------|----------|----------|----------------|
+File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------|----------|----------|----------|----------|----------------|
+All files     |      100 |      100 |      100 |      100 |                |
+ get_index.js |      100 |      100 |      100 |      100 |                |
+ get_users.js |      100 |      100 |      100 |      100 |                |
+--------------|----------|----------|----------|----------|----------------|
 ```
 
-
-
+`package.json` の `nyc` の設定の通りだが、HTML形式のレポートが `app/coverage` 配下に出力される。
 
 # ライブラリ・ツールの概念を解説
 
