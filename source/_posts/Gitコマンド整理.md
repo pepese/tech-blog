@@ -155,7 +155,7 @@ resetには「 **soft** 」、「 **mixed** 」（デフォルト）、「 **har
     - `git fetch` で取得したリモートリポジトリの変更（ `<repository>/<branch_name>` ）をローカルリポジトリの現在のブランチへ反映する
 - `git pull`
     - リモートリポジトリから変更を取得する（マージまで行う）
-    - 「`git fetch` + `git merge origin/master`」に同じ
+    - 「 `git fetch` + `git merge origin/master` 」に同じ
 
 > ## *master* と *origin/master* の違い
 >
@@ -171,9 +171,9 @@ resetには「 **soft** 」、「 **mixed** 」（デフォルト）、「 **har
 > リモートリポジトリから情報を取得し、欲しいコミットのコミットIDを指定して現在のブランチに取り込む。
 >
 > ```sh
-$ git fetch
-$ git cherry-pick <commit_id>
-```
+> $ git fetch
+> $ git cherry-pick <commit_id>
+> ```
 
 # ブランチ操作
 
@@ -193,6 +193,9 @@ $ git cherry-pick <commit_id>
 - `git branch <branch_name>/<revision>`
     - 現在のブランチを指定したブランチとリビジョンの状態に切り替える
     - ワーキングディレクトリも指定した状態になる
+- `git branch -b <branch_name>`
+    - 新しくブランチを作成し、切り替わる
+    - ただし、 **現在のブランチのワーキングディレクトリの状態が新しいブランチに反映** される
 
 # ブランチ間の変更の取り込み
 
