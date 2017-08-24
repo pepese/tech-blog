@@ -185,7 +185,7 @@ resetには「 **soft** 」、「 **mixed** 」（デフォルト）、「 **har
     - 現在のブランチの現在のリビジョンで作成される
 - `git branch -d <branch_name>`
     - ローカルのブランチを削除する
-- `git purh -d origin <branch_name>`
+- `git push -d origin <branch_name>`
     - リモートのブランチを削除する
 - `git checkout <branch_name>`
     - 現在のブランチを指定したブランチに切り替える
