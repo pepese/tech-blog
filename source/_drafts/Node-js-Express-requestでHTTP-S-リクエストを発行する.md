@@ -6,6 +6,7 @@ tags:
 - Express.js
 - JavaScript
 - request
+- promise
 id: express-http-client-request
 ---
 
@@ -21,6 +22,14 @@ Node.js/ExpressアプリケーションからHTTP(S)を発行してみる。
 
 <!-- more -->
 
+ちなみに HTTP(S)クライアントとしては `request` 以外にも以下のようなものがある。
+
+- [http](https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_http_methods) / [https](https://nodejs.org/dist/latest-v6.x/docs/api/https.html#https_https_get_options_callback)
+    - Node.js のネイティブライブラリ
+- [Unirest](http://unirest.io/nodejs.html)
+- [axios](https://github.com/mzabriskie/axios)
+    - `request` が嫌ならこれがいいかな？
+
 # 環境設定
 
 先の記事で紹介したプロジェクトにて以下を実行する。
@@ -31,19 +40,35 @@ $ yarn add request
 
 # 実装
 
-- ``
+- `app/controllers/get_ip.js`
+    - 自分のグローバルIPを取得するAPIにリクエストを発行するサンプル
+    - `http://[FQDN]/ip` で動確
+
+## `app/controllers/get_ip.js`
+
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/controllers/get_ip.js?footer=0"></script>
 
 # request の基本的な使い方
 
-- `request(options, callback)`
+- [`request(options, callback)`](https://github.com/request/request#requestoptions-callback)
     - コールバックで `options` に基づいたリクエストを発行する
-    - https://github.com/request/request#requestoptions-callback
-- `request.defaults(options)`
+    - サンプルはこれを使用
+    - [optiong の設定](https://github.com/request/request#requestoptions-callback)
+- [`request.defaults(options)`](https://github.com/request/request#requestdefaultsoptions)
     - HTTP(S)クライアントのデフォルトの設定を行う
-    - https://github.com/request/request#requestdefaultsoptions
-- `request.METHOD()`
-    - https://github.com/request/request#requestmethod
+- [`request.METHOD()`](https://github.com/request/request#requestmethod)
+    - HTTPメソッドを関数で表現する形式
 
-## `options` の設定
+# Promise
 
-- https://github.com/request/request#requestoptions-callback
+コールバック地獄を避けたい人は [request-promise](https://github.com/request/request-promise) を使うと簡単に非同期 bluebird 版 Promise を実現できる。
+
+## 導入
+
+```sh
+$ yarn add request-promise
+```
+
+## 実装 `app/controllers/get_ip_promise.js`
+
+<script src="https://gist-it.appspot.com/github/pepese/js-sample/blob/master/express-sample/app/controllers/get_ip_promise.js?footer=0"></script>
