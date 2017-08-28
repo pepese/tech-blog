@@ -1,5 +1,6 @@
 ---
 title: Node.js/Express/requestでHTTP(S)リクエストを発行する
+date: 2017-08-28 11:37:25
 tags:
 - Node.js
 - yarn
@@ -50,14 +51,17 @@ $ yarn add request
 
 # request の基本的な使い方
 
-- [`request(options, callback)`](https://github.com/request/request#requestoptions-callback)
+- `request(options, callback)`
     - コールバックで `options` に基づいたリクエストを発行する
     - サンプルはこれを使用
+    - [ドキュメント](https://github.com/request/request#requestoptions-callback)
     - [optiong の設定](https://github.com/request/request#requestoptions-callback)
-- [`request.defaults(options)`](https://github.com/request/request#requestdefaultsoptions)
+- `request.defaults(options)`
     - HTTP(S)クライアントのデフォルトの設定を行う
-- [`request.METHOD()`](https://github.com/request/request#requestmethod)
+    - [ドキュメント](https://github.com/request/request#requestdefaultsoptions)
+- `request.METHOD()`
     - HTTPメソッドを関数で表現する形式
+    - [ドキュメント](https://github.com/request/request#requestmethod)
 
 # Promise
 
