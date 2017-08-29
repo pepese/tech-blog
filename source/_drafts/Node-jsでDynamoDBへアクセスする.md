@@ -12,6 +12,7 @@ id: nodejs-dynamodb
 
 - DynamoDB の概要
 - DynamoDB の API
+- AWS CLI で DynamoDB へアクセス
 - Node.js での実装
 
 以下の記事を読んだ前提で書く。
@@ -56,6 +57,8 @@ Item は RDB でいうレコードに該当する。
 - Attribute Value
     - Attribute Type に沿った属性の値
 
+DynamoDBの各種キーは、 Item の中の Attribute から選択することになる。
+
 ### ドキュメント型/リストの例
 
 ```
@@ -92,17 +95,17 @@ FavoriteThings: ["Cookies", "Coffee", 3.14159]
 
 ## Key
 
-DynamoDB では Key を **プライマリーキー** と呼び、以下の2種類から選択できる。
+DynamoDB では Key を **プライマリーキー** と呼び、以下の2種類の構成から選択できる。
 
-- **パーティションキー** のみの単純キー
-- **パーティションキー** と **ソートキー** の複合キー
+1. **パーティションキー** のみの単純キー
+2. **パーティションキー** と **ソートキー** の複合キー
 
 パーティションキー、ソートキー共に Value で紹介した **Attribute と同様** の定義となる。  
-パーティションキーは **Hash Key** 、 ソートキーは **Range Key** と呼ばれることもある。
+パーティションキーは **Hash Key** 、 ソートキーは **Range Key** とも呼ばれることもある。
 
 ## テーブル
 
-テーブルは **テーブル名** と **プライマリーキー** （オプションでローカルセカンダリインデックス ）で定義することができる。
+テーブルは **テーブル名** と **プライマリーキー** （オプションで、ローカルセカンダリインデックス ）で定義することができる。
 
 ## パーティション
 
@@ -199,3 +202,54 @@ DynamoDB の API は大きく以下がある。
         - テーブルから Item を最大 25 個削除する
         - DeleteItem を複数回呼び出すよりも効率的
         - 1つ以上のテーブルを跨った削除も可能
+
+# AWS CLI で DynamoDB へアクセス
+
+## 環境設定
+
+```sh
+$ pip install awscli
+$ pyenv rehash
+$ which aws
+/Users/xxxx/.anyenv/envs/pyenv/shims/aws
+$ aws configure
+```
+
+## CreateTable
+
+```sh
+$ aws dynamodb create-table \
+  --attribute-definitions '[{"AttributeName":"test_hash","AttributeType":"S"},{"AttributeName":"test_range","AttributeType":"S"}]' \
+  --table-name 'test_table' \
+  --key-schema '[{"AttributeName":"test_hash","KeyType":"HASH"},{"AttributeName":"test_range","KeyType":"RANGE"}]' \
+  --provisioned-throughput '{"ReadCapacityUnits":5,"WriteCapacityUnits":5}'
+```
+
+## DeleteTable
+
+```sh
+$ aws dynamodb delete-table \
+  --table-name 'test_table'
+```
+
+## ListTables
+
+```sh
+$ aws dynamodb list-tables
+```
+
+## PutItem
+
+```sh
+$ aws dynamodb put-item \
+  --table-name 'test_table' \
+  --item '{"test_hash":{"S":"xxxxx"},"test_range":{"S":"yyyyy"},"test_value":{"S":"zzzzz"}}'
+```
+
+## GetItem
+
+```sh
+$ aws dynamodb get-item \
+  --table-name 'test_table' \
+  --key '{"test_hash":{"S":"xxxxx"},"test_range":{"S":"yyyyy"}}'
+```
