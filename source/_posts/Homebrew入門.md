@@ -13,7 +13,9 @@ HomebrewはMac用のaptやyumのようなパッケージマネージャ。ソフ
 
 <!-- more -->
 
-# インストール
+# 環境設定
+
+## インストール
 
 ```sh
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)”
@@ -46,6 +48,30 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
     - Homebrewでインストールしたソフトウェアはここに配備される
 - `/usr/local/bin/`
     - インストールしたソフトウェアのコマンドのシンボリックリンクはここに配備される
+
+## Homebrew のアップデート
+
+```sh
+$ brew update
+```
+
+## ソフトウェアのインストール
+
+```sh
+$ brew install <software>
+```
+
+## ソフトウェアの更新
+
+```sh
+$ brew upgrade <software>
+```
+
+## キャッシュされている古いソフトウェアの削除
+
+```sh
+$ brew cleanup
+```
 
 # brew tap
 
