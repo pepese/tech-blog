@@ -90,8 +90,6 @@ EOS
 
 ## ユーザ辞書の追加
 
-- https://taku910.github.io/mecab/dic.html
-
 自分で単語を登録したいときの方法。  
 csv ファイルに 1 行 1 単語で以下の形式で作成する。
 
@@ -99,6 +97,79 @@ csv ファイルに 1 行 1 単語で以下の形式で作成する。
 表層形,左文脈ID,右文脈ID,コスト,品詞,品詞細分類1,品詞細分類2,品詞細分類3,活用形,活用型,原形,読み,発音
 ```
 
+例えば以下。
+
+```
+にゃほにゃほたまくろー,1223,1223,6058,名詞,固有名詞,人名,名,*,*,ニャホニャホタマクロー,ニャホニャホタマクロー,ニャホニャホタマクロー
+```
+
 - 左文脈ID
+    - その単語を左から見たときの内部状態ID
+    - `/usr/local/lib/mecab/dic/neologd/left-id.def` から該当する ID を選択
+    - 空にしておくと mecab-dict-index が自動的に ID を付与する
 - 右文脈ID
+    - その単語を右から見たときの内部状態ID
+    - `/usr/local/lib/mecab/dic/neologd/right-id.def` から該当する ID を選択
+    - 空にしておくと, mecab-dict-index が自動的に ID を付与する
 - コスト
+    - その単語がどれだけ出現しやすいかを示す
+    - 小さいほど, 出現しやすいという意味
+    - 似たような単語と 同じスコアを割り振り, その単位で切り出せない場合は, 徐々に小さくしていけばいい
+
+以下のコマンドを実行する。
+
+```sh
+$ /usr/local/Cellar/mecab/0.996/libexec/mecab/mecab-dict-index -d /usr/local/lib/mecab/dic/neologd -u user-dic.dic -f utf8 -t utf8 user-dic.csv
+```
+
+- -d DIR
+    - システム辞書があるディレクトリ
+- -u FILE
+    - FILE というユーザファイルを作成
+- -f charset
+    - CSVの文字コード
+- -t charset
+    - バイナリ辞書の文字コード
+
+`/usr/local/lib/mecab/dic/user-dic/` ディレクトリを作成し、上記のコマンドで作成した `user-dic.dic` を配置。  
+`/usr/local/etc/mecabrc` に以下を追記。
+
+```
+userdic = /usr/local/lib/mecab/dic/user-dic/user-dic.dic
+```
+
+[参考](https://taku910.github.io/mecab/dic.html)
+
+# Node.js から Mecabを使う
+
+上記の手順で MeCab をセットアップしていることが前提。
+
+```sh
+$ yarn add mecab-async
+```
+
+```javascript
+let MeCab = new require('mecab-async');
+let mecab = new MeCab();
+let input = process.argv[2];
+
+mecab.parse(input,(err,result)=>{
+  if(err){
+  }
+  console.log(result);
+});
+```
+
+```sh
+$ node app.js "にゃほにゃほたまくろー"
+[ [ 'にゃほにゃほたまくろー',
+    '名詞',
+    '固有名詞',
+    '人名',
+    '名',
+    '*',
+    '*',
+    'ニャホニャホタマクロー',
+    'ニャホニャホタマクロー',
+    'ニャホニャホタマクロー' ] ]
+```
