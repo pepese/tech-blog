@@ -18,4 +18,8 @@ id:
     - この辞書には岩波国語辞書（岩波書店）に載っている単語がポジティブであるほど+1に近い値、ネガティブであるほど-1に近い値がふられている
     - 全単語55,125中、ポジティブワード（スコア0以上）が5,242語、ネガティブワードが49,983語
 - [日本語評価極性辞書](http://www.cl.ecei.tohoku.ac.jp/index.php?Open%20Resources%2FJapanese%20Sentiment%20Polarity%20Dictionary)
-    - 
+
+# シソーラス
+
+- [分類語彙表](http://pj.ninjal.ac.jp/corpus_center/goihyo.html)
+- [日本語 WordNet](http://compling.hss.ntu.edu.sg/wnja/)
