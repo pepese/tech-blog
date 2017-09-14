@@ -37,7 +37,7 @@ $ mkdir app/db
 `.gitignore` へ以下を追加。
 
 ```
-./app/db
+/app/db
 ```
 
 # 実装
