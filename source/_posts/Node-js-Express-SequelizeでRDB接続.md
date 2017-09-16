@@ -29,15 +29,17 @@ Node.js/ExpressアプリケーションからRDBへ接続してみる。
 先の記事で紹介したプロジェクトにて以下を実行する。
 
 ```sh
-$ yarn add sequelize
-$ yarn add sqlite3
+$ yarn add sequelize sqlite3 morgan
 $ mkdir app/db
 ```
 
 `.gitignore` へ以下を追加。
 
 ```
-/app/db/*.sqlite
+node_modules
+app/db/*.sqlite
+.DS_Store
+./**/.DS_Store
 ```
 
 # 実装
