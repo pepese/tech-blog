@@ -1,7 +1,7 @@
 ---
 title: 雑談Botを作る
 tags:
-id:
+id: ai-chat
 ---
 
 # 雑談

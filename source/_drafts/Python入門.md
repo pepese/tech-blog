@@ -1,7 +1,7 @@
 ---
 title: Python入門
 tags:
-id:
+id: python-basics
 ---
 
 自分にとって最低限のことだけまとめる。

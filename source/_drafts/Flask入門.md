@@ -1,7 +1,7 @@
 ---
 title: Flask入門
 tags:
-id:
+id: flask-basics
 ---
 
 
