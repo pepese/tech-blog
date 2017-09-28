@@ -17,13 +17,13 @@ id: python-nlp-vector
 
   <!-- more -->
 
-# word2vec/Mecab を用いて意味ベクトルを作成する
-
 Mecab については以下を参考。
 
 - [形態素解析システムMeCab入門](https://pepese.github.io/blog/mecab-basics/)
 
-## word2vec 導入
+# コマンドで word2vec
+
+## 導入
 
 Macでの導入方法。
 
@@ -41,28 +41,71 @@ distance.c:18:10: fatal error: 'malloc.h' file not found
 make: *** [distance] Error 1
 ```
 
-Macでは `<malloc.h>` は必要ないので、以下コマンドでソースコードから除去する。
+Mac では上記の通りエラーが発生する。  
+Mac では `<malloc.h>` ではなく `<stdlib.h>` を使用するので以下を実行してから make する。
 
 ```sh
-$ sed -ie 's/#include <malloc.h>//g' *.c
+$ sed -ie 's/#include <malloc.h>/#include <stdlib.h>/g' *.c
 ```
 
-以下で動作確認。（ wget が無かったら `brew install wget` などで導入しておく）  
-（ちなみに自分の環境では動かなかったwww）
+なお、コンパイルして作成した `word2vec` などのコマンドは `make` を実行したカレントに作成されており、パスは通っていない。
+
+## 実行
+
+動作確認用の `./demo-word.sh` を実行する。
 
 ```sh
+$ brew install wget
+$ brew install gzip
 $ ./demo-word.sh
+$ ./distance vectors.bin
+Enter word or sentence (EXIT to break): dog
+
+Word: dog  Position in vocabulary: 1902
+
+                                              Word       Cosine distance
+------------------------------------------------------------------------
+                                              dogs		0.637071
+                                           spaniel		0.604613
+                                            borzoi		0.582073
+                                             hound		0.579149
+                                           mastiff		0.573205
+                                           terrier		0.563618
+                                              hund		0.552174
+                                               ...
+Enter word or sentence (EXIT to break):
 ```
 
-なお、コンパイルして作成した `word2vec` コマンドは `make` を実行したカレントに作成されており、パスは通っていない。
+上記が成功したら英語コーパス（text8）による学習は完了しているので、次回以降は `./distance vectors.bin` で実行できる。  
+また `word2vec` コマンドの学習インプットとなるテキストは **分かち書き** である必要がある。  
+上記のデモは英語をコーパスとして使用しているため、もともと分かち書きである。  
+日本語コーパスをインプットとする場合は分かち書きした状態にする必要がある。
 
-## コーパスの収集
+## word2vec の機能
+
+- distance
+    - 入力した単語の類義語や同義語を返す
+- analogy
+    - 単語の足し算、引き算ができる
+
+## 日本語学習済みモデル
+
+```sh
+$ wget http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/data/20170201.tar.bz2
+$ tar xf 20170201.tar.bz2
+$ ./distance 20170201
+```
+
+[参考](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/)
+
+## コーパスの収集して学習・実行する
 
 コーパスとして Wikipedia のデータを使用する。  
 word2vec へのインプットとして上記のコーパスが分かち書きされた 1つのテキストデータを作成する必要がある。
 
 ```sh
-$ wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2
+$ nohup wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 &
+$ tail -f nohup.out
 ```
 
 上記で取得したデータは XMLファイルなので、テキストファイルに整形する必要がある。  
@@ -85,11 +128,107 @@ $ wp2txt --input-file ../jawiki-latest-pages-articles.xml.bz2
 
 ```sh
 $ cd ..
-$ cat jawiki-latest-pages-articles/*.txt | mecab -O wakati > jawiki-latest-pages-articles-wakati-ipadic.txt
+$ cat jawiki-latest-pages-articles/*.txt | mecab -Owakati > jawiki-latest-pages-articles-wakati-ipadic.txt
 ```
 
 コーパスを使って学習する。
 
 ```sh
-$ time {path to}/word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 1
+$ time ./word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary
+
+./word2vec -train wakati-hoge.txt -output hoge.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 0
+
+time ./word2vec -train wakati-hoge.txt -output hoge.bin -cbow 1 -size 200 -window 8 -negative 25 -hs 0 -sample 1e-4 -threads 20 -binary 1 -iter 15
+```
+
+オプションは以下。
+
+- -train
+    - 学習に使用するファイル。分かち書きが必要。
+- -output
+    - 学習結果を出力するファイル名
+- -size
+    - ベクトルの次元数
+- -window
+    - 指定した数値の分だけ、単語の前後にある単語を文脈として判断させる
+- -sample
+    - 単語を無視する頻度。ランダムに頻出単語を消去する。1e-3は「頻出度が高め」 の意味。
+- -hs
+    - 学習に階層化ソフトマックスを使用するかどうか
+- -negative
+    - ネガティブサンプリングに用いる単語数、ランダムに間違った解答として判断させる
+- -threads
+    - 学習に使用するスレッド数
+- -iter
+    - トレーニング反復回数
+- -min-count
+    - n回未満登場する単語を破棄
+- -alpha
+    - わからん
+- -classes
+    - ベクトルよりもワードクラスを優先させる
+- -debug
+    - デバッグモード
+- -binary
+    - バイナリ形式で出力するかどうか
+    - `-binary 0` で出力ファイルを見ると各単語のベクトルが見れる
+- -save-vocab
+    - 語彙をファイル保存
+- -read-vocab
+    - 語彙をファイルから使用
+- -cbow
+    - 学習モデル CBOW を使うか、Skip-gram を使うか
+
+以下で学習データを使って実行。
+
+```sh
+$ ./distance jawiki-latest-pages-articles-wakati-ipadic.bin
+Enter word or sentence (EXIT to break):
+```
+
+# Pythonで word2vec
+
+学習の実装は以下。
+
+```python
+# -*- coding: utf-8 -*-
+from gensim.models import word2vec
+import logging
+
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+sentences = word2vec.Text8Corpus('jawiki_wakati.txt')
+
+model = word2vec.Word2Vec(sentences, size=200, min_count=20, window=15)
+
+model.save("jawiki_wakati.model")
+```
+
+2単語の類似度を出力する実装は以下。
+
+```python
+# -*- coding: utf-8 -*-
+from gensim.models import word2vec
+import logging
+import sys
+
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+model = word2vec.Word2Vec.load("jawiki_wakati.model")
+argvs = sys.argv
+print model.similarity(argvs[1], argvs[2])
+```
+
+```sh
+$ python similarity.py 日本 フィリピン
+```
+
+また、ベクトルの出力は以下。
+
+```python
+import gensim
+sentences = gensim.models.word2vec.Text8Corpus("/tmp/text8")
+model = gensim.models.word2vec.Word2Vec(sentences, size=200, window=5, workers=4, min_count=5)
+model.save("/tmp/text8.model")
+print model["japan"]
 ```
