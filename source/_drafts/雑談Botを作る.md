@@ -23,3 +23,45 @@ id: ai-chat
 
 - [分類語彙表](http://pj.ninjal.ac.jp/corpus_center/goihyo.html)
 - [日本語 WordNet](http://compling.hss.ntu.edu.sg/wnja/)
+
+# メモ
+
+文章 -> インテント（カテゴリ）に分類 -> インテント（カテゴリ）に基づいて特徴語（エンティティ）を抽出
+
+上記の結果から対話を実施する。対話のあり方としては以下。基本・観点はどんな返事（検索結果）か？  
+
+- FAQ
+- （商品など）の検索
+    - 不足する情報は聞き返す
+- 雑談
+    - 挨拶、プロフィールに対する回答（FAQの一部とも考えられる？）
+
+## 分類
+
+<table border="1">
+  <tr>
+    <td colspan="5" rowspan="1">文法</td>
+    <td colspan="2" rowspan="2">ネガポジ</td>
+  </tr>
+  <tr>
+    <td colspan="1" rowspan="2">肯定文</td>
+    <td colspan="1" rowspan="2">否定文</td>
+    <td colspan="1" rowspan="2">命令文</td>
+    <td colspan="2" rowspan="1">疑問文</td>
+  </tr>
+  <tr>
+    <td>Closed Question</td>
+    <td>Open Question</td>
+    <td>ネガ</td>
+    <td>ポジ</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
