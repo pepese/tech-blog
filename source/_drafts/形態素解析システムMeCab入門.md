@@ -173,3 +173,19 @@ $ node app.js "にゃほにゃほたまくろー"
     'ニャホニャホタマクロー',
     'ニャホニャホタマクロー' ] ]
 ```
+
+
+# Python3 から MeCab を使う
+
+```sh
+$ pip install mecab-python3
+```
+
+```python
+import MeCab
+mc = MeCab.Tagger("")
+print (mc.parse("形態素解析システムMeCab入門"))
+```
+
+`MeCab.Tagger` の引数に `mecab` コマンドの引数を指定することができる。  
+また、 parse の結果は文字列になっている。
