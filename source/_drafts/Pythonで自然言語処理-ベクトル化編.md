@@ -14,6 +14,7 @@ id: python-nlp-vector
   - コーパスが必要な予感
 - [doc2vec 参考](https://deepage.net/machine_learning/2017/01/08/doc2vec.html)
   - なんと doc2vec も **gensim** から使える模様
+  - http://tadaoyamaoka.hatenablog.com/entry/2017/04/29/122128
 
   <!-- more -->
 
@@ -105,7 +106,9 @@ word2vec へのインプットとして上記のコーパスが分かち書き�
 
 ```sh
 $ nohup wget https://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz2 &
-$ tail -f nohup.out
+$ less nohup.out
+Redirecting output to ‘wget-log’.
+$ tail -f wget-log
 ```
 
 上記で取得したデータは XMLファイルなので、テキストファイルに整形する必要がある。  
@@ -134,14 +137,10 @@ $ cat jawiki-latest-pages-articles/*.txt | mecab -Owakati > jawiki-latest-pages-
 コーパスを使って学習する。
 
 ```sh
-$ time ./word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary
-
-./word2vec -train wakati-hoge.txt -output hoge.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 0
-
-time ./word2vec -train wakati-hoge.txt -output hoge.bin -cbow 1 -size 200 -window 8 -negative 25 -hs 0 -sample 1e-4 -threads 20 -binary 1 -iter 15
+$ time ./word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 0
 ```
 
-オプションは以下。
+オプションは以下。（ `$ ./word2vec` コマンドで表示される）
 
 - -train
     - 学習に使用するファイル。分かち書きが必要。
@@ -152,7 +151,8 @@ time ./word2vec -train wakati-hoge.txt -output hoge.bin -cbow 1 -size 200 -windo
 - -window
     - 指定した数値の分だけ、単語の前後にある単語を文脈として判断させる
 - -sample
-    - 単語を無視する頻度。ランダムに頻出単語を消去する。1e-3は「頻出度が高め」 の意味。
+    - 単語を無視する頻度の閾値。1e-3は「頻出度が高め」 の意味。
+    - あまりに高い頻度で出現する単語は意味のない単語である可能性が高いので、無視する。
 - -hs
     - 学習に階層化ソフトマックスを使用するかどうか
 - -negative
@@ -164,7 +164,8 @@ time ./word2vec -train wakati-hoge.txt -output hoge.bin -cbow 1 -size 200 -windo
 - -min-count
     - n回未満登場する単語を破棄
 - -alpha
-    - わからん
+    - 学習率
+    - 高いほど収束が速いですが、高すぎると発散します。低いほど精度が高いですが、収束が遅くなります。
 - -classes
     - ベクトルよりもワードクラスを優先させる
 - -debug
@@ -187,6 +188,10 @@ Enter word or sentence (EXIT to break):
 ```
 
 # Pythonで word2vec
+
+```sh
+$ pip install gensim
+```
 
 学習の実装は以下。
 
@@ -223,12 +228,17 @@ print model.similarity(argvs[1], argvs[2])
 $ python similarity.py 日本 フィリピン
 ```
 
-また、ベクトルの出力は以下。
+単語のベクトルを出力する実装は以下。
 
 ```python
-import gensim
-sentences = gensim.models.word2vec.Text8Corpus("/tmp/text8")
-model = gensim.models.word2vec.Word2Vec(sentences, size=200, window=5, workers=4, min_count=5)
-model.save("/tmp/text8.model")
-print model["japan"]
+# -*- coding: utf-8 -*-
+from gensim.models import word2vec
+import logging
+import sys
+
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+model = word2vec.Word2Vec.load("jawiki_wakati.model")
+argvs = sys.argv
+print model[argvs[1]]
 ```
