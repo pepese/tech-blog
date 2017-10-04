@@ -1,23 +1,11 @@
 ---
-title: Pythonで自然言語処理 ベクトル化編
-date: 2017-07-07 20:42:56
+title: word2vec入門
 tags:
 - Python
 - gensim
 - word2vec
-- doc2vec
-id: python-nlp-vector
+id: word2vec-basics
 ---
-
-- [word2vec 参考](https://foolean.net/p/71)
-  - なんと **gensim** の中に word2vec モジュールがある模様
-  - コーパスが必要な予感
-- [doc2vec 参考](https://deepage.net/machine_learning/2017/01/08/doc2vec.html)
-  - なんと doc2vec も **gensim** から使える模様
-  - http://tadaoyamaoka.hatenablog.com/entry/2017/04/29/122128
-
-  <!-- more -->
-
 Mecab については以下を参考。
 
 - [形態素解析システムMeCab入門](https://pepese.github.io/blog/mecab-basics/)
@@ -97,6 +85,33 @@ $ tar xf 20170201.tar.bz2
 $ ./distance 20170201
 ```
 
+## 日本語のコーパス
+
+青空文庫
+
+```sh
+$ brew install nkf
+$ wget http://www.aozora.gr.jp/cards/001847/files/57347_ruby_57225.zip
+$ unzip 57347_ruby_57225.zip
+$ nkf -g rojinto_umi.txt
+Shift_JIS
+$ nkf -w --overwrite rojinto_umi.txt
+$ nkf -g rojinto_umi.txt
+UTF-8
+$ cat rojinto_umi.txt | mecab -Owakati > rojinto_umi_wakati.txt
+$ time ./word2vec -train rojinto_umi_wakati.txt -output rojinto_umi_wakati.model -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 1
+$ ./distance rojinto_umi_wakati.model
+Enter word or sentence (EXIT to break): 老人
+
+Word: 老人  Position in vocabulary: 22
+
+                                              Word       Cosine distance
+------------------------------------------------------------------------
+                                               　		0.913845
+                                         分かっ		0.904279
+                                         無かっ		0.865596
+```
+
 [参考](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/)
 
 ## コーパスの収集して学習・実行する
@@ -137,7 +152,7 @@ $ cat jawiki-latest-pages-articles/*.txt | mecab -Owakati > jawiki-latest-pages-
 コーパスを使って学習する。
 
 ```sh
-$ time ./word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 0
+$ time ./word2vec -train jawiki-latest-pages-articles-wakati-ipadic.txt -output jawiki-latest-pages-articles-wakati-ipadic.bin -size 200 -window 5 -sample 1e-3 -negative 5 -hs 0 -binary 1
 ```
 
 オプションは以下。（ `$ ./word2vec` コマンドで表示される）
@@ -209,7 +224,8 @@ model = word2vec.Word2Vec(sentences, size=200, min_count=20, window=15)
 model.save("jawiki_wakati.model")
 ```
 
-2単語の類似度を出力する実装は以下。
+2単語の類似度を出力する実装は以下。  
+（どうやら Cos 類似度の模様）
 
 ```python
 # -*- coding: utf-8 -*-
