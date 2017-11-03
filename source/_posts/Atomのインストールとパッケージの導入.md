@@ -64,3 +64,19 @@ $ atom .
         - 画面を切り替えてターミナル開くのが面倒になった人にオススメ
     - 下部の「+」をクリックするか、 `Ctrl + Shift + @` でターミナルが開く
     - しかしながら、2017/01/19時点では動かなかったため、terminal-plusをforkして作成された **platformio-ide-terminal** がいい
+
+
+# ATOM IDE
+
+## インストール
+
+パッケージの導入から **atom-ide-ui** を導入する。  
+その後、利用したい開発言語に合わせて以下のものを導入する。
+
+- ide-typescript
+- ide-flowtype
+- ide-csharp
+- ide-java (Java 8 runtime required)
+- ide-php
+
+[ここ](https://atom.io/packages/search?q=IDE)で言語対応のパッケージを検索できる。
