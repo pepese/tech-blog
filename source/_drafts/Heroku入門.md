@@ -37,12 +37,27 @@ $ heroku apps help # apps の USAGE
 ## アドオン
 
 ```sh
-$ heroku addons:greate xxxx
+$ heroku addons:create xxxx
 ```
+
+## プロセスの確認、停止
+
+```sh
+$ heroku apps:info # アプリケーションの情報を見る
+$ heroku ps # プロセスを見る
+$ heroku logs # ログを見る
+```
+
+```sh
+$ heroku ps:scale web=0 # 停止
+$ heroku ps:scale web=1 # 起動
+```
+
+Webプロセスのスケール（Dyno、インスタンス台数）を 0 に指定して実質プロセスを停止している。
 
 # node.js
 
-`heroku open` でエラーが発生した場合は以下に対応。
+`$ heroku open` でエラーが発生した場合は以下に対応。
 
 - npm script に **start** を追加する
     - `"start": "node app/app.js"`
