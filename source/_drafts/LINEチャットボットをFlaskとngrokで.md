@@ -1,5 +1,5 @@
 ---
-title: LINEチャットボットをFlaskとHerokuで
+title: LINEチャットボットをFlaskとngrokで
 tags:
 id:
 ---
@@ -11,6 +11,7 @@ Herokuについては以下参照。
 
 ```sh
 $ pip install Flask gunicorn line-bot-sdk
+$ brew cask install ngrok
 ```
 
 # ソースコード
@@ -79,25 +80,17 @@ python-3.6.2
 
 # 起動
 
-## ローカル
+## ローカルでAP起動
 
 ```sh
-$ FLASK_APP=app.py flask run
-```
-
-## Heroku
-
-以下参照。
-
-[Heroku入門]()
-
-## ngrok
-
-```sh
-$ brew cask install ngrok
 $ FLASK_APP=app.py flask run
  * Serving Flask app "app"
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+```
+
+## ngrokで公開
+
+```sh
 $ ngrok http 5000
 ngrok by @inconshreveable                                       (Ctrl+C to quit)
 
@@ -117,3 +110,5 @@ HTTP Requests
 GET /favicon.ico               404 NOT FOUND                                    
 GET /                          200 OK
 ```
+
+なお好きなホスト名はngrokの有料サービスの模様。
