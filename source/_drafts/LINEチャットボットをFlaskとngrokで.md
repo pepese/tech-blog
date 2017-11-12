@@ -1,7 +1,11 @@
 ---
 title: LINEチャットボットをFlaskとngrokで
 tags:
-id:
+- Flask
+- Python
+- ngrok
+- chatbot
+id: flask-ngrok-chatbot
 ---
 
 FlaskとHerokuでメッセージをオウム返しするLINEのチャットボットを作ってみた。  
@@ -111,4 +115,4 @@ GET /favicon.ico               404 NOT FOUND
 GET /                          200 OK
 ```
 
-なお好きなホスト名はngrokの有料サービスの模様。
+なお好きなホスト名をつけたい場合は、ngrokの有料サービスを利用する必要がある模様。
