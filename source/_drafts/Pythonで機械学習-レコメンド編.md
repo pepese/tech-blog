@@ -133,9 +133,7 @@ kNN（k-Nearest-Neighbor、k近傍法）を簡単に説明すると、推定す�
     - [Github](https://github.com/ibayer/fastFM)
     - [論文](http://www.jmlr.org/papers/volume17/15-355/15-355.pdf)
 
-# Python で実装
-
-scikit-surprise で実装できるアルゴリズムの一覧は [ここ](http://surprise.readthedocs.io/en/stable/prediction_algorithms_package.html) 。
+# scikit-surprise で実装
 
 ## 環境設定
 
@@ -205,6 +203,7 @@ def convert(input_file_name):
 
     return output_file_name
 
+# 「ユーザID アイテムID 評価値」形式にデータファイルを変換
 output_file_name = convert('sushi3-2016/sushi3b.5000.10.score')
 
 # with open(output_file_name, mode='r') as f:
@@ -212,11 +211,58 @@ output_file_name = convert('sushi3-2016/sushi3b.5000.10.score')
 
 from surprise import Reader, Dataset
 
-reader = Reader(line_format='user item rating', sep=' ')
+# ファイルからデータをロードし、Dataset形式に
+# dataset.raw_ratings にデータが格納される
 dataset = Dataset.load_from_file(output_file_name, reader=reader)
-
+# dataset を計算し、trainset 形式に
 trainset = dataset.build_full_trainset()
 ```
+
+dataset には以下のようなフィールドがある。（面倒なので説明は一部のみ）
+
+- build_full_trainset
+- construct_testset
+- construct_trainset
+- folds
+- load_builtin : scikit-surprise が準備しているデータセットの読み込み
+- load_from_df : DataFrame 形式のデータを Dataset 形式へ変換するメソッド
+- load_from_file : ファイルからデータをロードし、 Dataset 形式へ変換するメソッド
+- load_from_folds : ファイルからデータをロードし、 Dataset 形式へ変換するメソッド（クロスバリデーションなどで利用）
+- n_folds
+- ratings_file
+- raw_folds
+- raw_ratings : `ユーザID アイテムID 評価値 None` 形式のデータ
+- read_ratings
+- reader
+- shuffle
+- split
+
+trainset には以下のようなフィールドがある。（面倒なので説明は一部のみ）
+
+- all_items : n_items の range を返却するメソッド
+- all_ratings
+- all_users
+- build_anti_testset
+- build_testset
+- global_mean : 評価値の平均（ `_global_mean` ）を計算するメソッド
+- ir : ユーザ ID をインデクスとした各アイテムの評価値のタプル
+- knows_item
+- knows_user
+- n_items : アイテム数
+- n_ratings : 評価数（ユーザ数 x アイテム数、欠損は考えられていない）
+- n_users : ユーザ数
+- offset
+- rating_scale
+- to_inner_iid : trainset 内部で管理しているアイテム ID へ変換するメソッド
+- to_inner_uid
+- to_raw_iid
+- to_raw_uid
+- ur : アイテム ID をインデクスとした各ユーザの評価値のタプル
+
+scikit-surprise で実装できるアルゴリズムの一覧は [ここ](http://surprise.readthedocs.io/en/stable/prediction_algorithms_package.html) 。  
+scikit-surprise の各アルゴリズムのクラスは `AlgoBase` クラスを継承して作成されている。  
+このクラスには、 `compute_similarities` というメソッドがあり、 `algo.train(trainset)` を実行した後に実行すると、ユーザ間（もしくはアイテム間）の類似度を計算してくれ、ユーザ数 x ユーザ数の 2 次元配列を返却する。  
+類似度の計算方法、ユーザベースかアイテムベースかは `sim_options` オプションで指定する。
 
 ## メモリベース協調フィルタリング
 
@@ -228,11 +274,14 @@ trainset = dataset.build_full_trainset()
 from surprise import KNNBasic
 
 sim_options = {
-    'name': 'pearson',
-    'user_based': True
+    'name': 'pearson', # 類似度を計算する方法を指定（ cosine,msd,pearson,pearson_baseline ）
+    'user_based': True # False にするとアイテムベースに
 }
 algo = KNNBasic(k=5, min_k=1,sim_options=sim_options)
 algo.train(trainset)
+
+# algo.compute_similarities() を実行すると
+# 類似度を計算してくれ、ユーザ数 x ユーザ数の 2 次元配列を返却する
 
 user_id = '{:04d}'.format(0)
 item_id = '{:02d}'.format(92)
@@ -257,6 +306,9 @@ sim_options = {
 }
 algo = KNNBasic(k=5, min_k=1,sim_options=sim_options)
 algo.train(trainset)
+
+# algo.compute_similarities() を実行すると
+# 類似度を計算してくれ、アイテム数 x アイテム数の 2 次元配列を返却する
 
 user_id = '{:04d}'.format(0)
 item_id = '{:02d}'.format(92)
