@@ -259,16 +259,13 @@ trainset には以下のようなフィールドがある。（面倒なので�
 - to_raw_uid
 - ur : アイテム ID をインデクスとした各ユーザの評価値のタプル
 
-scikit-surprise で実装できるアルゴリズムの一覧は [ここ](http://surprise.readthedocs.io/en/stable/prediction_algorithms_package.html) 。  
+scikit-surprise で実装できるアルゴリズムの一覧は [ここ](http://surprise.readthedocs.io/en/stable/prediction_algorithms_package.html) 。
+
 scikit-surprise の各アルゴリズムのクラスは `AlgoBase` クラスを継承して作成されている。  
-このクラスには、 `compute_similarities` というメソッドがあり、 `algo.train(trainset)` を実行した後に実行すると、ユーザ間（もしくはアイテム間）の類似度を計算してくれ、ユーザ数 x ユーザ数の 2 次元配列を返却する。  
+このクラスには、 `compute_similarities` というメソッドがあり、 `algo.train(trainset)` を実行した後に実行すると、ユーザ間（もしくはアイテム間）の類似度を計算してくれ、「ユーザ数 x ユーザ数」の 2 次元配列を返却する。  
 類似度の計算方法、ユーザベースかアイテムベースかは `sim_options` オプションで指定する。
 
 ## メモリベース協調フィルタリング
-
-[scikit-surprise での実装](http://surprise.readthedocs.io/en/stable/knn_inspired.html)
-
-### ユーザベース
 
 ```python
 from surprise import KNNBasic
@@ -282,6 +279,7 @@ algo.train(trainset)
 
 # algo.compute_similarities() を実行すると
 # 類似度を計算してくれ、ユーザ数 x ユーザ数の 2 次元配列を返却する
+# algo.train した後に algo.sim でとれる予感
 
 user_id = '{:04d}'.format(0)
 item_id = '{:02d}'.format(92)
@@ -292,35 +290,12 @@ print('Predicted rating(User: {0}, Item: {1}): {2:.2f}'.format(pred.uid, pred.ii
 
 スクラッチでの実装例は以下。
 
-- http://ohke.hateblo.jp/entry/2017/09/22/230000
-- https://qiita.com/hik0107/items/96c483afd6fb2f077985
-
-### アイテムベース
-
-```python
-from surprise import KNNBasic
-
-sim_options = {
-    'name': 'cosine',
-    'user_based': False
-}
-algo = KNNBasic(k=5, min_k=1,sim_options=sim_options)
-algo.train(trainset)
-
-# algo.compute_similarities() を実行すると
-# 類似度を計算してくれ、アイテム数 x アイテム数の 2 次元配列を返却する
-
-user_id = '{:04d}'.format(0)
-item_id = '{:02d}'.format(92)
-
-pred = algo.predict(uid=user_id, iid=item_id)
-print('Predicted rating(User: {0}, Item: {1}): {2:.2f}'.format(pred.uid, pred.iid, pred.est))
-```
-
-スクラッチでの実装例は以下。
-
-- http://ohke.hateblo.jp/entry/2017/09/29/230000
-- https://qiita.com/kotaroito/items/6acb58bb16b68a460af9
+- ユーザベース
+    - http://ohke.hateblo.jp/entry/2017/09/22/230000
+    - https://qiita.com/hik0107/items/96c483afd6fb2f077985
+- アイテムベース
+    - http://ohke.hateblo.jp/entry/2017/09/29/230000
+    - https://qiita.com/kotaroito/items/6acb58bb16b68a460af9
 
 ## モデルベース協調フィルタリング
 
