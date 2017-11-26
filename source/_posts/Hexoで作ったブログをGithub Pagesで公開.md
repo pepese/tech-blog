@@ -234,7 +234,7 @@ deploy:
 `$ hexo deploy` コマンドでGithubリポジトリに反映される。
 
 ```sh
-$ rm -r public/
+$ hexo clean
 $ hexo generate
 $ hexo deploy # これがデプロイコマンド
 ```
