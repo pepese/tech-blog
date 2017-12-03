@@ -28,14 +28,13 @@ id:
     - apiserver 、 controller-manager 、　scheduler などのプロセスが稼働
 - **Kubernetes Node** (旧名 Minion)
     - Master からコントロールされるワーカーサーバ
-    - ホストマシン複数台
+    - ホストマシン複数台で構成されるクラスタ
     - コンテナがマウントされる
     - kubelet 、 kube-proxy 、 flanneld 、 docker デーモンなどのプロセスが稼働
     - 複数 Node をまとめて **Cluster** と呼ぶ
 - **Pod**
-    - コンテナを起動するとデフォルトではコンテナ毎に仮想 NIC （プライベート IP ）が割り当てられる
     - 複数のコンテナ間で共有して使用する仮想 NIC とそれを利用するコンテナ（と Volume ）をまとめて Pod という
-    - Kubernetes では Pod 単位でコンテナを起動する
+    - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
     - Pod の中は Localhost の扱い
     - **Replication Controller** (rc) が Pod 内のコンテナの多重度をコントロールする
         - 障害検知、オートスケール
@@ -49,10 +48,11 @@ id:
     - 所謂 Docker コンテナ
     - 1 つの Volume を複数コンテナで共有できる
 - flanneld
-    - 各ホストマシン上で動くプロセス
+    - Node 上で動くプロセス
     - コンテナ間の通信を可能にする
     - Kubernetes 管理下のコンテナに一意の IP を割り振る
 - etcd
+    - Node 上で動くプロセス
     - flaneld が使用する共有データ（分散 KVS ）
     - 管理用コマンドは etcdctl
 - Label
@@ -161,7 +161,17 @@ VM 上のゲスト OS も削除されているのがわかる。
 ## kubectl
 
 クラスタを起動した時点で `kubectl` コマンドに対してコンテキストが設定されており、実行したコマンドが minikube VM の方を向いている。  
-`kubectl` コマンドのリファレンスは[ここ](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands) 。
+`kubectl` コマンドのリファレンスは[ここ](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands) 。  
+代表的なものは以下。
+
+- `kubectl get`
+    - Kubernetes の各種リソース情報の一覧を取得
+- `kubectl describe`
+    - Kubernetes の各種リソース情報の詳細を取得
+- `kubectl logs [pod_name]`
+    - Pod 内のコンテナのログを取得
+- `kubectl exec`
+    - Pod 内のコンテナ上でコマンドを実行する
 
 ### クライアント、サーバのバージョンを確認
 
@@ -181,7 +191,7 @@ minikube   Ready     <none>    10m       v1.8.0
 
 ### コンテナをデプロイ
 
-サンプルのコンテナをデプロイして、一覧を取得する。
+サンプルのコンテナをデプロイして、コンテナ、 Pod の一覧を取得する。
 
 ```sh
 $ kubectl run kubernetes-bootcamp --image=docker.io/jocatalin/kubernetes-bootcamp:v1 --port=8080
@@ -231,5 +241,204 @@ $ curl http://localhost:8001/api/v1/proxy/namespaces/default/pods/kubernetes-boo
 Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-6db74b9f76-fwqf6 | v=1
 ```
 
-続きは以下。  
-https://kubernetes.io/docs/tutorials/kubernetes-basics/explore-intro/
+Pod 内のコンテナ上でコマンドを実行してみる。
+
+```sh
+$ kubectl exec kubernetes-bootcamp-6db74b9f76-5c4p4 env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=kubernetes-bootcamp-6db74b9f76-5c4p4
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+NPM_CONFIG_LOGLEVEL=info
+NODE_VERSION=6.3.1
+HOME=/root
+```
+
+### コンテナへログイン
+
+bash セッションを作成してコンテナへアクセスする。  
+`exit` でぬける。
+
+```sh
+$ kubectl exec -ti kubernetes-bootcamp-6db74b9f76-5c4p4 bash
+root@kubernetes-bootcamp-6db74b9f76-5c4p4:/#
+root@kubernetes-bootcamp-6db74b9f76-5c4p4:/# curl localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-6db74b9f76-5c4p4 | v=1
+root@kubernetes-bootcamp-6db74b9f76-5c4p4:/# exit
+```
+
+### Service
+
+Pod は IP を持つが、その IP は Kubernetes Cluster の外部へ公開されない。  
+Service は Pod へのトラフィックを中継する。  
+Service は ServiceSpec という YAML もしくは JSON ファイルで設定する。  
+Service には以下の種類（ **type** という）がある。
+
+- ClusterIP (default)
+    - Kubernetes Cluster 内に閉じる Internal IP を公開する
+- NodePort
+    - 指定したPort に対して Node の NAT を構成する
+    - Kubernetes Cluster 外部に公開され、 `<NodeIP>:<NodePort>` でアクセスできる
+    - ClusterIP のスーパーセット
+- LoadBalancer
+    - Kubernetes Cluster 外部に公開されるロードバランサ
+    - 外部 IP アドレスが作成され、アクセス可能となる
+    - NodePort のスーパーセット
+- ExternalName
+    - 任意の名前と設定できる
+    - kube-dns の CNAME レコードとなる
+
+あるService へ所属する Pod はラベル（ **LabelSelector** ）によって決定される。
+
+```sh
+$ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   43m
+```
+
+Service を作成してみる。
+
+```sh
+$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+service "kubernetes-bootcamp" exposed
+$
+$ kubectl get services
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP          46m
+kubernetes-bootcamp   NodePort    10.102.125.240   <none>        8080:31130/TCP   10m
+$
+$ kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   run=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 run=kubernetes-bootcamp
+Type:                     NodePort
+IP:                       10.102.125.240
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  31130/TCP
+Endpoints:                172.17.0.4:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+$
+$ kubectl get services/kubernetes-bootcamp
+NAME                  TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.102.125.240   <none>        8080:31130/TCP   13m
+```
+
+`-l` オプションを使用して、ラベルを指定してリソースを取得可能。
+
+```sh
+$ kubectl get pods -l run=kubernetes-bootcamp
+NAME                                   READY     STATUS    RESTARTS   AGE
+kubernetes-bootcamp-6db74b9f76-5c4p4   1/1       Running   0          54m
+$ kubectl get services -l run=kubernetes-bootcamp
+NAME                  TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.102.125.240   <none>        8080:31130/TCP   20m
+```
+
+ラベルは以下のように付与する。
+
+```sh
+$ kubectl label pod kubernetes-bootcamp-6db74b9f76-5c4p4 app=v1
+pod "kubernetes-bootcamp-6db74b9f76-5c4p4" labeled
+$
+$ kubectl describe pods kubernetes-bootcamp-6db74b9f76-5c4p4
+Name:           kubernetes-bootcamp-6db74b9f76-5c4p4
+Namespace:      default
+Node:           minikube/192.168.99.100
+Start Time:     Sun, 03 Dec 2017 09:10:57 +0900
+Labels:         app=v1
+                pod-template-hash=2863065932
+                run=kubernetes-bootcamp
+# (省略)
+$
+$ kubectl get pods -l app=v1
+NAME                                   READY     STATUS    RESTARTS   AGE
+kubernetes-bootcamp-6db74b9f76-5c4p4   1/1       Running   0          57m
+```
+
+削除は以下。
+
+```sh
+$ kubectl delete service -l run=kubernetes-bootcamp
+service "kubernetes-bootcamp" deleted
+$ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   1h
+```
+
+### スケーリング
+
+スケーリングの設定を行うことで Pod がスケールする。
+
+```sh
+$ kubectl get deployments
+NAME                  DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1         1         1            1           1h
+```
+
+- DESIRED：設定されたレプリカ数
+- CURRENT：起動中のレプリカ数
+- UP-TO-DATE： DESIRED の状態になったレプリカ数
+- AVAILABLE：ユーザからアクセス可能なレプリカ数
+
+Pod を 4 つまでスケールさせてみる。
+
+```sh
+$ kubectl scale deployments/kubernetes-bootcamp --replicas=4
+deployment "kubernetes-bootcamp" scaled
+$
+$ kubectl get deployments
+NAME                  DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   4         4         4            4           1h
+$
+$ kubectl get pods -o wide
+NAME                                   READY     STATUS    RESTARTS   AGE       IP           NODE
+kubernetes-bootcamp-6db74b9f76-2ppvx   1/1       Running   0          10m       172.17.0.6   minikube
+kubernetes-bootcamp-6db74b9f76-5c4p4   1/1       Running   0          1h        172.17.0.4   minikube
+kubernetes-bootcamp-6db74b9f76-ct7lp   1/1       Running   0          10m       172.17.0.5   minikube
+kubernetes-bootcamp-6db74b9f76-vkhbl   1/1       Running   0          10m       172.17.0.7   minikube
+```
+
+### コンテナをローリングアップデート
+
+```sh
+$ kubectl describe pods
+```
+
+現状は `v1` の Pod が 4 つあるのがわかる。  
+`kubectl set image` コマンドでコンテナイメージを更新する。
+
+```sh
+$ kubectl get pods
+NAME                                   READY     STATUS    RESTARTS   AGE
+kubernetes-bootcamp-6db74b9f76-2ppvx   1/1       Running   0          23m
+kubernetes-bootcamp-6db74b9f76-5c4p4   1/1       Running   0          1h
+kubernetes-bootcamp-6db74b9f76-ct7lp   1/1       Running   0          23m
+kubernetes-bootcamp-6db74b9f76-vkhbl   1/1       Running   0          23m
+$
+$ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+deployment "kubernetes-bootcamp" image updated
+$
+$ kubectl get pods
+# (省略)
+$ kubectl rollout status deployments/kubernetes-bootcamp
+deployment "kubernetes-bootcamp" successfully rolled out
+```
+
+`kubectl get pods` コマンドでステータスが `Terminating` 、 `ContainerCreating` 、 `Running` となっていき、ローリングアップデートされていくのがわかる。  
+`kubectl rollout status` でローリングアップデートが成功したか確認する。  
+なお、なんらかが原因で失敗している場合、以下のコマンドで UNDO できる。
+
+```sh
+$ kubectl rollout undo deployments/kubernetes-bootcamp
+```
