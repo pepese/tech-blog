@@ -18,3 +18,22 @@ $ npm install wd         # get appium client
 $ appium &               # start appium
 $ node your-appium-test.js
 ```
+
+高野さんレクチャー
+
+```sh
+$ yarn global add appium
+```
+
+appium-desktop
+- https://github.com/appium/appium-desktop/releases/download/v1.2.7/appium-desktop-1.2.7.dmg
+
+
+
+
+# Android
+
+```sh
+$ brew cask install android-sdk
+$ brew cask install android-studio
+```
