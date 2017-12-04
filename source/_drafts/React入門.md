@@ -21,8 +21,15 @@ Facebookが開発、OSSとして公開しているJavaScriptライブラリ。
 - JSX
     - 一見 DOM が混じったような JS の記法
     - HTML のように見えるが、 XML
+    - 通常の XML とは以下が異なる
+        - 属性をダブルクオートではなく中括弧で囲む
+        - DOM の最上位要素は 1 つ
 - Flux
     - クライアントサイドのWebアプリケーション（ユーザーインターフェース）を開発するためのアプリケーションアーキテクチャ
+    - Action 、 Dispatcher 、 Store 、 View の機能がある
+- React Router ( `react-router-dom` )
+    - ページ遷移を司る
+    - ページ全体もページの一部の変更も可能
 
 ## React コンポーネントのライフサイクル
 
