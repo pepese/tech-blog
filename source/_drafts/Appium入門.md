@@ -100,3 +100,47 @@ Android 実機での自動テスト手順は以下。
         - `Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=org.pepese/org.pepese.MainActivity }`
 4. appium-desktop を起動
     - Capability を設定
+
+# サンプルを実行
+
+## iOS
+
+コマンドラインの iOS ビルドツールの準備。
+
+```sh
+$ xcode-select --install
+$ sudo xcode-select --switch /Applications/Xcode.app
+$ xcodebuild -version
+Xcode 9.1
+Build version 9B55
+```
+
+サンプルアプリとテストを取得してセットアップ。
+
+```sh
+$ git clone https://github.com/appium/sample-code
+$ git clone https://github.com/appium/ios-test-app
+$ cd ios-test-app
+$ xcodebuild -sdk iphonesimulator
+$ cd ..
+$ cp -R ios-test-app/build sample-code/sample-code/apps/TestApp/build
+$ cd sample-code/sample-code/examples/python
+```
+
+`xcodebuild -version -sdk` コマンドで `PlatformVersion` を確認し、 `ios_simple.py` ファイルの 20 行目あたりの `PlatformVersion` を書き直す。  
+別ターミナルを起動し `appium &` コマンドで Appium を起動してから以下を実行。
+
+```sh
+$ py.test ios_simple.py
+```
+
+
+## Android
+
+```sh
+$ py.test android_simple.py
+```
+
+動かない、参考で以下確認。
+
+https://qiita.com/natsuki_summer/items/2d8d60114cdb95929dcb
