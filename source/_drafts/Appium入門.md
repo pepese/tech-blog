@@ -1,30 +1,31 @@
 ---
 title: Appium入門
 tags:
-id:
+- appium
+- Android
+- iOS
+id: appium-basics
 ---
-
 
 Appium は Selenium WebDriver の一種。  
 Node.js 上でサーバーとして動作し、HTTP 経由で WebDriver API を通して操作を受け付けるという仕組み。  
 Appium の背後には iOS 用, Android 用, Win 用などのドライバがある。
 
-# 環境設定（公式）
+<!-- more -->
 
-```sh
-$ brew install node      # get node.js
-$ npm install -g appium  # get appium
-$ npm install wd         # get appium client (Web Driver)
-$ appium &               # start appium
-$ node your-appium-test.js
-```
-
-# 実際の環境構築メモ
+# 環境設定
 
 ## Appium
 
 ```sh
+$ brew install node
 $ yarn global add appium appium-doctor wd
+```
+
+以下で起動。
+
+```sh
+$ appium &
 ```
 
 ## appium-desktop
@@ -46,10 +47,21 @@ $ appium-doctor --ios # インストール、設定が正しいかチェック
 `brew install carthage` を実行する際、権限不足で `/usr/local/Frameworks` ディレクトリ作成に失敗する。  
  そのため、 `brew link carthage` に失敗するので、あらかじめディレクトリを作ってあげてからインストールする。
 
+### シミュレータ
+
+- Xcode を起動
+- Xcode -> Open Developper Tool -> Simulator
+- Window -> Scale -> 50%
+- ホームボタンは Shift + Command + H
+
+### 実機
+
+TBD
 
 ## Android
 
 ```sh
+$ brew cask install java
 $ brew cask install android-sdk
 ```
 
@@ -68,3 +80,23 @@ $ brew cask install android-studio
 
 Android Studio を起動し、 Standard を選択してダウンロード。  
 「[ダウンロードしたアプリケーションの実行許可]の下の方に intel なんたらかんたら」って出たら、Mac の「システム環境設定　> セキュリティとプライバシー」を開いて許可する。
+
+### エミュレータ
+
+1. Android Studio を起動
+2. AVD Manager を起動
+3. エミュレータを作成
+
+### 実機
+
+Android 実機での自動テスト手順は以下。
+
+1. Android 実機を USB で PC に繋ぎ、実機側で USB デバッグを許可
+2. `$ adb devices` で device 番号が表示されることを
+3. 実機でアプリを起動して、パッケージ名などを確認
+    - `$ adb shell pm list packages | grep pepese`
+        - `package:org.pepese`
+    - `$ adb shell dumpsys activity | grep uniqlo | grep Intent`
+        - `Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=org.pepese/org.pepese.MainActivity }`
+4. appium-desktop を起動
+    - Capability を設定
