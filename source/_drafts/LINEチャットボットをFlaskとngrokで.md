@@ -8,8 +8,10 @@ tags:
 id: flask-ngrok-chatbot
 ---
 
-FlaskとHerokuでメッセージをオウム返しするLINEのチャットボットを作ってみた。  
-Herokuについては以下参照。
+Flask と Heroku でメッセージをオウム返しする LINE のチャットボットを作ってみた。  
+Heroku で公開したい場合は以下参照。
+
+- [Heroku入門](https://pepese.github.io/blog/heroku-basics/)
 
 # セットアップ
 

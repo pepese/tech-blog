@@ -1,7 +1,7 @@
 ---
 title: Spark入門
 tags:
-id:
+id: spark-basics
 ---
 
 Spark さわってみた。

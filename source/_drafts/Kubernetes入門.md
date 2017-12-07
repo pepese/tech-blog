@@ -1,7 +1,7 @@
 ---
 title: Kubernetes入門
 tags:
-id:
+id: kubernetes-basics
 ---
 
 **Kubernetes** （ **k8s** ）をさわってみる。

@@ -1,7 +1,7 @@
 ---
 title: React入門
 tags:
-id:
+id: react-basics
 ---
 
 Facebookが開発、OSSとして公開しているJavaScriptライブラリ。  

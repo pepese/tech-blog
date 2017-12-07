@@ -1,5 +1,6 @@
 ---
 title: Heroku入門
+date: 2017-12-07 18:54:42
 tags:
 - Heroku
 id: heroku-basics
@@ -9,6 +10,8 @@ Heroku は salesforce が運営する PaaS 。
 Free プランではクレカ登録無しで月に 550 dyno hours （約 23 日分、 1 ヶ月分無い）、クレカ登録すると月に 1000 dyno hours を無料で利用できる。  
 Free プランの落とし穴は、 30 分アクセスが無いとインスタンス（ dyno ）が Sleep してしまうところ。　　
 以下、 Free プランでアカウントを取得している前提で記載する。
+
+<!-- more -->
 
 # Heroku CLI
 
@@ -68,7 +71,9 @@ $ heroku ps:scale web=1 # 起動
 
 Webプロセスのスケール（Dyno、インスタンス台数）を 0 に指定して実質プロセスを停止している。
 
-# node.js アプリケーション
+# 小ネタめも
+
+## node.js アプリケーション
 
 `$ heroku open` でエラーが発生した場合は以下に対応。
 
@@ -77,7 +82,7 @@ Webプロセスのスケール（Dyno、インスタンス台数）を 0 に指�
 
 Heroku ではアプリケーションの起動方法に各プログラミング言語毎にルールがあるので注意。
 
-# １つのアプリケーションを複数のHeroku環境へデプロイ
+## １つのアプリケーションを複数のHeroku環境へデプロイ
 
 ```sh
 $ heroku create アプリ名 --remote 新環境名

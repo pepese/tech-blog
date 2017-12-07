@@ -1,7 +1,7 @@
 ---
 title: iOSアプリ開発入門
 tags:
-id:
+id: ios-app-basics
 ---
 
 # 準備するもの・こと

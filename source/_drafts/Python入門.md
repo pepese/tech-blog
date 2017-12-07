@@ -6,8 +6,17 @@ id: python-basics
 
 自分にとって最低限のことだけまとめる。
 
+- Windows での環境構築
 - モジュールとパッケージ
 - 起動モジュール
+
+# Windows での環境構築
+
+1. Anaconda の導入
+    - [公式](https://www.anaconda.com/download/)z
+2. Microsoft VisualC++ Build Tools の導入
+    - [直リンク](http://go.microsoft.com/fwlink/?LinkId=691126&fixForIE=.exe.)
+    - [公式](http://landinghub.visualstudio.com/visual-cpp-build-tools)
 
 # モジュールとパッケージ
 
