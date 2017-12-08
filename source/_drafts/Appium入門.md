@@ -70,6 +70,7 @@ $ brew cask install android-sdk
 ```
 export JAVA_HOME=`/usr/libexec/java_home`
 export ANDROID_HOME=/usr/local/share/android-sdk
+export ANDROID_SDK_ROOT=$ANDROID_HOME # これいらない？
 export PATH=$JAVA_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
 ```
 
@@ -83,9 +84,24 @@ Android Studio を起動し、 Standard を選択してダウンロード。
 
 ### エミュレータ
 
+Android は iOS とは違って、まずエミュレータを作る必要がある。
+
 1. Android Studio を起動
+    - Start a new Android Studio project
 2. AVD Manager を起動
 3. エミュレータを作成
+
+以下はコマンド。（かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された模様）
+
+```sh
+$ sdkmanager "system-images;android-23;google_apis;x86"
+$ avdmanager create avd -n test -k "system-images;android-23;google_apis;x86" -b x86 -c 100M -d 7 -f
+Parsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/build-tools/26.0.2/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/emulator/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/patcher/v4/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/platform-tools/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/system-images/android-23/google_apis/x86/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/tools/package.xml
+$ avdmanager list avd
+$ emulator -avd test
+```
+
+まだ動いてない
 
 ### 実機
 
@@ -144,3 +160,9 @@ $ py.test android_simple.py
 動かない、参考で以下確認。
 
 https://qiita.com/natsuki_summer/items/2d8d60114cdb95929dcb
+
+
+# 参考
+
+[Android Studio 公式 Doc](https://developer.android.com/studio/intro/index.html)
+[emulator コマンドとかディレクトリ構成とか](https://developer.android.com/studio/run/emulator-commandline.html)
