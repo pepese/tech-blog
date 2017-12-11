@@ -28,10 +28,6 @@ $ yarn global add appium appium-doctor wd
 $ appium &
 ```
 
-## appium-desktop
-
-[ここ](https://github.com/appium/appium-desktop/releases/) から最新版を取得してインストール。
-
 ## iOS
 
 Xcode を App Store でインストールしてから以下を実行。
@@ -84,10 +80,10 @@ Android Studio を起動し、 Standard を選択してダウンロード。
 
 ### エミュレータ
 
-Android は iOS とは違って、まずエミュレータを作る必要がある。
+Android エミュレータは iOS シミュレータと異なり、エミュレータを作る必要がある。
 
 1. Android Studio を起動
-    - Start a new Android Studio project
+    - 「 Start a new Android Studio project 」で適当にプロジェクトを作る
 2. AVD Manager を起動
 3. エミュレータを作成
 
@@ -101,8 +97,6 @@ $ avdmanager list avd
 $ emulator -avd test
 ```
 
-まだ動いてない
-
 ### 実機
 
 Android 実機での自動テスト手順は以下。
@@ -112,10 +106,46 @@ Android 実機での自動テスト手順は以下。
 3. 実機でアプリを起動して、パッケージ名などを確認
     - `$ adb shell pm list packages | grep pepese`
         - `package:org.pepese`
-    - `$ adb shell dumpsys activity | grep uniqlo | grep Intent`
+    - `$ adb shell dumpsys activity | grep pepese | grep Intent`
         - `Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=org.pepese/org.pepese.MainActivity }`
 4. appium-desktop を起動
     - Capability を設定
+
+## appium-desktop
+
+1. [ここ](https://github.com/appium/appium-desktop/releases/) から最新版を取得してインストール。
+2. 「 Simple 」で「 Start Server vx.x.x 」を押下
+3. 右上の左のボタン「 Start Inspector Session 」を押下
+4. 上のタブを「 Automatic Server 」、下のタブを「 Desired Capability 」の状態で、右下の「 JSON Representation 」にエニュレータや実機へ接続するための設定を記載する
+    - [公式：設定ドキュメント](https://appium.io/slate/en/master/?ruby#appium-server-capabilities)
+
+iOS シミュレータの場合の例は以下。
+
+```javascript
+{
+    "platformName": "iOS",
+    "platformVersion": "11.1",
+    "deviceName": "iPhone Simulator",
+    "automationName": "XCUITest",
+    "app": "[アプリまでのパス]"
+}
+```
+
+iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。  
+Android 実機の場合の例は以下。
+
+```javascript
+{
+  "appPackage": "org.pepese.sample",
+  "appActivity": "org.pepese.sample.MainActivity",
+  "platformName": "Android",
+  "automationName": "Appium",
+  "platformVersion": "6.0",
+  "deviceName": "xxxxx"
+}
+```
+
+Android エミュレータを起動して `$ adb devices` して deviceName を取得しておく。
 
 # サンプルを実行
 
