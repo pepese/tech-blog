@@ -86,12 +86,14 @@ Android エミュレータは iOS シミュレータと異なり、エミュレ�
     - 「 Start a new Android Studio project 」で適当にプロジェクトを作る
 2. AVD Manager を起動
 3. エミュレータを作成
+    - device Phone / Nexus 6
+    - CPU/ABI : Google APIs ARM EABI v7a System Image (system-images;android-25;google_apis;armeabi-v7a)
 
 以下はコマンド。（かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された模様）
 
 ```sh
-$ sdkmanager "system-images;android-23;google_apis;x86"
-$ avdmanager create avd -n test -k "system-images;android-23;google_apis;x86" -b x86 -c 100M -d 7 -f
+$ sdkmanager "system-images;android-25;google_apis;armeabi-v7a"
+$ avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a" -b x86 -c 100M -d 7 -f
 Parsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/build-tools/26.0.2/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/emulator/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/patcher/v4/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/platform-tools/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/system-images/android-23/google_apis/x86/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/tools/package.xml
 $ avdmanager list avd
 $ emulator -avd test
@@ -112,6 +114,14 @@ Android 実機での自動テスト手順は以下。
     - Capability を設定
 
 ## appium-desktop
+
+appium-desktop を使用することにより以下のことが可能になる。
+
+- Appiumサーバー起動（ `$ appium &` ）
+- 実機やエニュレータと接続
+- インスペクターを利用してアプリ画面内の要素の確認やその操作
+
+以下のように導入する。
 
 1. [ここ](https://github.com/appium/appium-desktop/releases/) から最新版を取得してインストール。
 2. 「 Simple 」で「 Start Server vx.x.x 」を押下
@@ -140,12 +150,33 @@ Android 実機の場合の例は以下。
   "appActivity": "org.pepese.sample.MainActivity",
   "platformName": "Android",
   "automationName": "Appium",
-  "platformVersion": "6.0",
-  "deviceName": "xxxxx"
+  "platformVersion": "8.0",
+  "deviceName": "emulator-5554",
+  "app": "[アプリまでのパス]"
 }
 ```
 
 Android エミュレータを起動して `$ adb devices` して deviceName を取得しておく。
+
+### トラブルシューティング
+
+#### `adb install` で `INSTALL_FAILED_NO_MATCHING_ABIS` が出た
+
+アプリと ABI の組み合わせが悪いときに発生。  
+「 ARM(armeabi-v7a) 」を選択する。
+
+#### エミュレータが起動すると `Process system isn't responding` と表示される
+
+device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生。  
+「 Nexus 5 」と「 armeabi-v7a 」の時は出なかった。
+
+https://stackoverflow.com/questions/43779596/process-system-isnt-responding-in-android-emulator
+
+RAM を増やすのが正解？
+
+https://stackoverflow.com/questions/43097141/process-system-isnt-responding-on-android-device-emulator
+
+まだ解決してない
 
 # サンプルを実行
 
