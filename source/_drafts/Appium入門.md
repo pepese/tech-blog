@@ -22,11 +22,13 @@ $ brew install node
 $ yarn global add appium appium-doctor wd
 ```
 
-以下で起動。
+Appium は以下で起動。
 
 ```sh
 $ appium &
 ```
+
+後述の appium-desktop を使用せず、 Appium のテストコードだけ実行する場合はこれ。
 
 ## iOS
 
@@ -66,13 +68,12 @@ $ brew cask install android-sdk
 ```
 export JAVA_HOME=`/usr/libexec/java_home`
 export ANDROID_HOME=/usr/local/share/android-sdk
-export ANDROID_SDK_ROOT=$ANDROID_HOME # これいらない？
 export PATH=$JAVA_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
 ```
 
 ```sh
 $ appium-doctor --android # インストール、設定が正しいかチェック
-$ brew cask install android-studio
+$ brew cask install android-studio # 3.0.1.0
 ```
 
 Android Studio を起動し、 Standard を選択してダウンロード。  
@@ -80,24 +81,40 @@ Android Studio を起動し、 Standard を選択してダウンロード。
 
 ### エミュレータ
 
-Android エミュレータは iOS シミュレータと異なり、エミュレータを作る必要がある。
+Android エミュレータは iOS シミュレータと異なり、エミュレータを手で作る必要がある。  
+（また、各種ツール類を導入する必要がある？）
 
 1. Android Studio を起動
     - 「 Start a new Android Studio project 」で適当にプロジェクトを作る
-2. AVD Manager を起動
-3. エミュレータを作成
+2. SDK Manager を起動
+    - 左のメニューの Appearance & Behavior -> System Settings -> Android SDK を選択
+    - SDK Tools を選択して以下をインストール・更新
+        - Android SDK Tools
+        - Android SDK Platform-tools
+        - Android SDK Build-tools
+    - SDK Platforms を選択して、利用した API Version をインストール
+3. AVD Manager を起動
+4. エミュレータを作成
     - device Phone / Nexus 6
     - CPU/ABI : Google APIs ARM EABI v7a System Image (system-images;android-25;google_apis;armeabi-v7a)
+        - system-images;android-27;google_apis;x86
 
-以下はコマンド。（かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された模様）
+
+以下はコマンド。（かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された模様）  
+**GUIとコマンドは併用すべきではない！**
 
 ```sh
+$ sdkmanager --list
 $ sdkmanager "system-images;android-25;google_apis;armeabi-v7a"
-$ avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a" -b x86 -c 100M -d 7 -f
-Parsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/build-tools/26.0.2/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/emulator/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/patcher/v4/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/platform-tools/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/system-images/android-23/google_apis/x86/package.xmlParsing /usr/local/Caskroom/android-sdk/3859397,26.0.2/tools/package.xml
+$ avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a"
 $ avdmanager list avd
+$ emulator -list-avds
 $ emulator -avd test
 ```
+
+- [sdkmanager](https://developer.android.com/studio/command-line/sdkmanager.html)
+- [avdmanager](https://developer.android.com/studio/command-line/avdmanager.html#syntax)
+- [emulator](https://developer.android.com/studio/run/emulator-commandline.html)
 
 ### 実機
 
@@ -146,13 +163,22 @@ Android 実機の場合の例は以下。
 
 ```javascript
 {
-  "appPackage": "org.pepese.sample",
-  "appActivity": "org.pepese.sample.MainActivity",
+  "appPackage": "org.pepese",
+  "appActivity": "org.pepese.MainActivity",
   "platformName": "Android",
   "automationName": "Appium",
   "platformVersion": "8.0",
   "deviceName": "emulator-5554",
-  "app": "[アプリまでのパス]"
+  "app": "/xxx.apk"
+}
+
+{
+  "appPackage": "org.pepese",
+  "appActivity": "org.pepese.MainActivity",
+  "platformName": "Android",
+  "platformVersion": "8.1.0",
+  "deviceName": "Android Emulator",
+  "app": "/xxx.apk"
 }
 ```
 
