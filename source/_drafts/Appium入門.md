@@ -11,9 +11,15 @@ Appium は Selenium WebDriver の一種。
 Node.js 上でサーバーとして動作し、HTTP 経由で WebDriver API を通して操作を受け付けるという仕組み。  
 Appium の背後には iOS 用, Android 用, Win 用などのドライバがある。
 
+- [API Reference](http://appium.io/slate/en/master/)
+- [Tutorial Android](http://appium.io/slate/en/tutorial/android.html)
+- [Tutorial iOS](http://appium.io/slate/en/tutorial/ios.html)
+
 <!-- more -->
 
 # 環境設定
+
+ruby 、 Homebrew の導入は省略している。
 
 ## Appium
 
@@ -47,6 +53,8 @@ $ appium-doctor --ios # インストール、設定が正しいかチェック
 
 ### シミュレータ
 
+特に必要無いが、シミュレータの画面サイズが大きいのでやってもいい。
+
 - Xcode を起動
 - Xcode -> Open Developper Tool -> Simulator
 - Window -> Scale -> 50%
@@ -68,7 +76,14 @@ $ brew cask install android-sdk
 ```
 export JAVA_HOME=`/usr/libexec/java_home`
 export ANDROID_HOME=/usr/local/share/android-sdk
-export PATH=$JAVA_HOME/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+export ANDROID_SDK=$ANDROID_HOME
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+PATH=$PATH:$JAVA_HOME/bin
+PATH=$PATH:$ANDROID_HOME/build-tools
+PATH=$PATH:$ANDROID_HOME/platform-tools
+PATH=$PATH:$ANDROID_HOME/tools
+
+export PATH
 ```
 
 ```sh
@@ -99,9 +114,11 @@ Android エミュレータは iOS シミュレータと異なり、エミュレ�
     - CPU/ABI : Google APIs ARM EABI v7a System Image (system-images;android-25;google_apis;armeabi-v7a)
         - system-images;android-27;google_apis;x86
 
+#### コマンド
 
-以下はコマンド。（かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された模様）  
-**GUIとコマンドは併用すべきではない！**
+かつては `android` コマンドであったが、 `sdkmanager` と `avdmanager` に移行された。  
+なんかバグるので **GUIとコマンドは併用すべきではない！**  
+以下はメモ程度。
 
 ```sh
 $ sdkmanager --list
@@ -122,7 +139,7 @@ Android 実機での自動テスト手順は以下。
 
 1. Android 実機を USB で PC に繋ぎ、実機側で USB デバッグを許可
 2. `$ adb devices` で device 番号が表示されることを
-3. 実機でアプリを起動して、パッケージ名などを確認
+3. 実機でアプリを起動して、パッケージ名などを確認（アプリインストールの確認）
     - `$ adb shell pm list packages | grep pepese`
         - `package:org.pepese`
     - `$ adb shell dumpsys activity | grep pepese | grep Intent`
@@ -134,19 +151,24 @@ Android 実機での自動テスト手順は以下。
 
 appium-desktop を使用することにより以下のことが可能になる。
 
-- Appiumサーバー起動（ `$ appium &` ）
-- 実機やエニュレータと接続
+- Appiumサーバー起動（ `$ appium &` コマンド打たなくていい）
+- 実機やエミュレータと接続
 - インスペクターを利用してアプリ画面内の要素の確認やその操作
+- 操作のテストコード出力
 
 以下のように導入する。
 
 1. [ここ](https://github.com/appium/appium-desktop/releases/) から最新版を取得してインストール。
 2. 「 Simple 」で「 Start Server vx.x.x 」を押下
 3. 右上の左のボタン「 Start Inspector Session 」を押下
-4. 上のタブを「 Automatic Server 」、下のタブを「 Desired Capability 」の状態で、右下の「 JSON Representation 」にエニュレータや実機へ接続するための設定を記載する
+4. 上のタブを「 Automatic Server 」、下のタブを「 Desired Capability 」の状態で、右下の「 JSON Representation 」にエミュレータや実機へ接続するための設定を記載する
     - [公式：設定ドキュメント](https://appium.io/slate/en/master/?ruby#appium-server-capabilities)
 
-iOS シミュレータの場合の例は以下。
+### iOS シミュレータと接続
+
+iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。  
+（ `"automationName": "Appium"` でも動く？）  
+（ Android とは異なり、 `appPackage` `appActivity` の設定は不要）
 
 ```javascript
 {
@@ -158,8 +180,11 @@ iOS シミュレータの場合の例は以下。
 }
 ```
 
-iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。  
-Android 実機の場合の例は以下。
+実機の場合は `$ adb devices` で device 番号を取得し、 `deviceName` へ設定する？
+
+### Android エミュレータと接続
+
+Android エミュレータの場合は、あらかじめエミュレータを起動しておく。
 
 ```javascript
 {
@@ -167,42 +192,27 @@ Android 実機の場合の例は以下。
   "appActivity": "org.pepese.MainActivity",
   "platformName": "Android",
   "automationName": "Appium",
-  "platformVersion": "8.0",
-  "deviceName": "emulator-5554",
-  "app": "/xxx.apk"
-}
-
-{
-  "appPackage": "org.pepese",
-  "appActivity": "org.pepese.MainActivity",
-  "platformName": "Android",
   "platformVersion": "8.1.0",
   "deviceName": "Android Emulator",
   "app": "/xxx.apk"
 }
 ```
 
-Android エミュレータを起動して `$ adb devices` して deviceName を取得しておく。
+実機の場合は `$ adb devices` で device 番号を取得し、 `deviceName` へ設定する？
 
-### トラブルシューティング
+#### トラブルシューティング
 
-#### `adb install` で `INSTALL_FAILED_NO_MATCHING_ABIS` が出た
+- `adb install` で `INSTALL_FAILED_NO_MATCHING_ABIS` が出た
+    - appium-desktop とエミュレータ接続時、アプリケーションがインストールされるのだが、アプリと ABI の組み合わせが悪いときに発生。
+    - CPU/ABI に「 ARM(armeabi-v7a) 」を選択する。
 
-アプリと ABI の組み合わせが悪いときに発生。  
-「 ARM(armeabi-v7a) 」を選択する。
-
-#### エミュレータが起動すると `Process system isn't responding` と表示される
-
-device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生。  
-「 Nexus 5 」と「 armeabi-v7a 」の時は出なかった。
-
-https://stackoverflow.com/questions/43779596/process-system-isnt-responding-in-android-emulator
-
-RAM を増やすのが正解？
-
-https://stackoverflow.com/questions/43097141/process-system-isnt-responding-on-android-device-emulator
-
-まだ解決してない
+- エミュレータが起動すると `Process system isn't responding` と表示される
+    - device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生。  
+    - 「 Nexus 5 」と「 armeabi-v7a 」の時は出なかった？（未確認）
+        - https://stackoverflow.com/questions/43779596/process-system-isnt-responding-in-android-emulator
+    - RAM を増やすのが正解？（未確認）
+        - https://stackoverflow.com/questions/43097141/process-system-isnt-responding-on-android-device-emulator
+    - まだ解決してない。
 
 # サンプルを実行
 
@@ -239,6 +249,8 @@ $ py.test ios_simple.py
 
 
 ## Android
+
+エミュレータは起動しておく。
 
 ```sh
 $ py.test android_simple.py
