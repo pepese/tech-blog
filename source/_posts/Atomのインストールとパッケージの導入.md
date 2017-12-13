@@ -64,7 +64,9 @@ $ atom .
         - 画面を切り替えてターミナル開くのが面倒になった人にオススメ
     - 下部の「+」をクリックするか、 `Ctrl + Shift + @` でターミナルが開く
     - しかしながら、2017/01/19時点では動かなかったため、terminal-plusをforkして作成された **platformio-ide-terminal** がいい
-
+- markdown-preview-enhanced
+    - マークダウン表示機能の拡張
+    - Pandoc を導入（ `brew install pandoc` ）することで、 Tex 形式のマークダウンも表示可能になる
 
 # ATOM IDE
 
