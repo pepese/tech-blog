@@ -48,6 +48,32 @@ $ curl -s "https://get.sdkman.io" | bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
 
+init を叩かないと `sdk` コマンドのパスが通らないため、 `.bash_profile` にいれておく。
+
+```
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+```
+
+# 各ツールの導入
+
+USAGE は以下。  
+ツール名を「 xxxx 」とする。
+
+```sh
+$ sdk help                     # help を表示
+$ sdk version                  # SDKMAN 自体のバージョン
+$ sdk selfupdate force         # SDKMAN 自体のバージョンアップ
+$ sdk install xxxx             # xxxx をインストール
+$ sdk install xxxx [version]   # xxxx を version 指定でインストール
+$ sdk uninstall xxxx [version] # xxxx を version 指定でアンインストール
+$ sdk list xxxx                # xxxx の version の一覧を表示
+$ sdk use xxxx [version]       # xxxx の現ターミナルの version を指定
+$ sdk default xxxx [version]   # xxxx のデフォルトの version を指定
+$ sdk current xxxx             # xxxx の現在の version を表示
+```
+
+[公式](http://sdkman.io/usage.html)
+
 ## Java
 
 ```sh
