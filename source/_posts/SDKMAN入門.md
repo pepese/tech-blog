@@ -1,7 +1,12 @@
 ---
 title: SDKMAN入門
+date: 2017-12-15 08:09:58
 tags:
-id:
+- SDKMAN
+- Java
+- Maven
+- Gradle
+id: sdkman-basics
 ---
 
 Java 系の anyenv 、 [SDKMAN](http://sdkman.io/index.html) をさわってみる。
@@ -48,7 +53,7 @@ $ curl -s "https://get.sdkman.io" | bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
 
-init を叩かないと `sdk` コマンドのパスが通らないため、 `.bash_profile` にいれておく。
+init を叩かないと `sdk` コマンドのパスが通らないため、 `~/.bash_profile` に以下をいれておく。
 
 ```
 source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -101,7 +106,7 @@ $ sdk default java 8u151-oracle
 ```
 
 `-zulu` は OpenJDK 、 `-oracle` は Oracle Java を指す。  
-`/usr/libexec/java_home` もちゃんと有効。
+`/usr/libexec/java_home` もちゃんと有効だった。
 
 ## Maven
 

@@ -50,6 +50,24 @@ $ atom .
 - 「Install」メニューを選択し、欲しいパッケージを検索して「Install」ボタンを押すS
 - 設定が反映されない場合はAtomを再起動する
 
+# アップデート
+
+## Atom
+
+メニューの「 Atom 」 -> 「 Restart and Install Update 」。
+
+## パッケージ
+
+メニューの「パッケージ」 -> 「 Settings View 」 -> 「 Updates 」。
+
+## トラブルシューティング
+
+アップデートできない人は以下を実行。
+
+```sh
+$ sudo chown -R $(whoami) /Applications/Atom.app/
+```
+
 # オススメのパッケージ
 
 - japanese-menu

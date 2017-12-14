@@ -103,7 +103,17 @@ Gitの使い方は以下。
     - Node.js、Python、Rubyの環境構築はこちら参照
 - [公式](https://github.com/riywo/anyenv)
 
+## SDKMAN をインストール
+
+Java 系ツールのインストール・バージョン管理ができるようになる。  
+以下を参照。
+
+- [SDKMAN入門](https://pepese.github.io/blog/sdkman-basics/)
+- [公式](http://sdkman.io/)
+
 ## Oracle Javaをインストール
+
+SDKMAN が好みじゃないひとはこっち。
 
 ```sh
 $ brew cask install java
@@ -134,6 +144,8 @@ $ rm -rf /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
 ```
 
 ## Mavenをインストール
+
+SDKMAN が好みじゃないひとはこっち。
 
 ```sh
 $ brew search maven
