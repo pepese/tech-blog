@@ -19,7 +19,7 @@ Appium の背後には iOS 用, Android 用, Win 用などのドライバがあ�
 
 # 環境設定
 
-ruby 、 Homebrew の導入は省略している。
+ruby 、 Homebrew 、 Java の導入は省略している。
 
 ## Appium
 
@@ -62,7 +62,13 @@ $ appium-doctor --ios # インストール、設定が正しいかチェック
 
 ### 実機
 
-TBD
+iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。  
+また、実機用のアプリは development のプロビジョニングでビルドされている必要があり、かつ実機端末の UDID の指定も合わせて必要。
+
+1. 実機に接続する MacOS PC に Apple Store から **Apple Configurator** をインストール
+2. USB で実機を MacOS PC に接続し、端末を選ぶと、再度バーにAppsというメニューが出てくるのでクリック
+3. `.ipa` ファイルをドラッグ＆ドロップすることでアプリを端末にインストールできる
+4. appium-desktop との接続は後述
 
 ## Android
 
@@ -92,7 +98,8 @@ $ brew cask install android-studio # 3.0.1.0
 ```
 
 Android Studio を起動し、 Standard を選択してダウンロード。  
-「[ダウンロードしたアプリケーションの実行許可]の下の方に intel なんたらかんたら」って出たら、Mac の「システム環境設定　> セキュリティとプライバシー」を開いて許可する。
+「[ダウンロードしたアプリケーションの実行許可]の下の方に intel なんたらかんたら」って出たら、Mac の「システム環境設定　> セキュリティとプライバシー」を開いて許可する。  
+Android Studio のドキュメントは [ここ](https://developer.android.com/studio/index.html) 。
 
 ### エミュレータ
 
@@ -204,15 +211,17 @@ Android エミュレータの場合は、あらかじめエミュレータを起
 
 - `adb install` で `INSTALL_FAILED_NO_MATCHING_ABIS` が出た
     - appium-desktop とエミュレータ接続時、アプリケーションがインストールされるのだが、アプリと ABI の組み合わせが悪いときに発生。
-    - CPU/ABI に「 ARM(armeabi-v7a) 」を選択する。
+        - アプリが「 x86 」用にビルドされてない、とか「 ARM 」用にビルドされてないとか
+    - CPU/ABI に「 x86 」がダメなら「 ARM(armeabi-v7a) 」を、「 ARM 」がダメなら「 x86 」を選択する。
 
 - エミュレータが起動すると `Process system isn't responding` と表示される
     - device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生。  
-    - 「 Nexus 5 」と「 armeabi-v7a 」の時は出なかった？（未確認）
+    - 「 Nexus 6 」と「 armeabi-v7a 」の時は出なかった？（未確認）
         - https://stackoverflow.com/questions/43779596/process-system-isnt-responding-in-android-emulator
     - RAM を増やすのが正解？（未確認）
         - https://stackoverflow.com/questions/43097141/process-system-isnt-responding-on-android-device-emulator
     - まだ解決してない。
+- `adb install` でタイムアウトする
 
 # サンプルを実行
 
