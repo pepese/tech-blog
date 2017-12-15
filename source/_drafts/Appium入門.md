@@ -21,11 +21,19 @@ Appium の背後には iOS 用, Android 用, Win 用などのドライバがあ�
 
 ruby 、 Homebrew 、 Java の導入は省略している。
 
+## Selenium
+
+```sh
+# $ brew install selenium-server-standalone
+$ brew install chromedriver
+```
+
 ## Appium
 
 ```sh
 $ brew install node
-$ yarn global add appium appium-doctor wd
+$ npm install --global appium appium-doctor wd
+# $ yarn global add appium appium-doctor wd
 ```
 
 Appium は以下で起動。
@@ -46,10 +54,16 @@ $ sudo chown -R $(whoami):admin /usr/local/Frameworks
 $ brew install carthage
 $ brew link carthage
 $ appium-doctor --ios # インストール、設定が正しいかチェック
+$ brew install libimobiledevice --HEAD # 実機接続用のモジュール
+$ npm install --global --unsafe-perm ios-deploy
+# $ yarn global add ios-deploy
+$ sudo xcode-select --switch /Applications/Xcode.app # Xcode のバージョンを指定
 ```
 
 `brew install carthage` を実行する際、権限不足で `/usr/local/Frameworks` ディレクトリ作成に失敗する。  
  そのため、 `brew link carthage` に失敗するので、あらかじめディレクトリを作ってあげてからインストールする。
+
+ その他、こまごました設定は[ここ](https://github.com/appium/appium-xcuitest-driver/blob/master/docs/real-device-config.md)を参照。
 
 ### シミュレータ
 
@@ -69,6 +83,12 @@ iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレー�
 2. USB で実機を MacOS PC に接続し、端末を選ぶと、再度バーにAppsというメニューが出てくるのでクリック
 3. `.ipa` ファイルをドラッグ＆ドロップすることでアプリを端末にインストールできる
 4. appium-desktop との接続は後述
+
+iOS 実機へ WebDriver をインストールするコマンドは以下。（なお、成功はしていない）
+
+```sh
+$ xcodebuild build test -project /usr/local/lib/node_modules/appium/node_modules/appium-xcuitest-driver/WebDriverAgent/WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination id=xxxx -configuration Debug
+```
 
 ## Android
 
@@ -173,8 +193,7 @@ appium-desktop を使用することにより以下のことが可能になる�
 
 ### iOS シミュレータと接続
 
-iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。  
-（ `"automationName": "Appium"` でも動く？）  
+iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレータ＋アプリは `.app` ファイルが必要となる。
 （ Android とは異なり、 `appPackage` `appActivity` の設定は不要）
 
 ```javascript
@@ -187,7 +206,23 @@ iOS の場合は、実機＋アプリは `.ipa` ファイル、エミュレー�
 }
 ```
 
-実機の場合は `$ adb devices` で device 番号を取得し、 `deviceName` へ設定する？
+### iOS 実機と接続
+
+`udid` は MacOS PC へ実機を接続した後、 **Apple Configurator** で確認する。
+
+```javascript
+{
+    "platformName": "iOS",
+    "platformVersion": "11.1",
+    "deviceName": "iPhone Simulator",
+    "automationName": "XCUITest",
+    "app": "[アプリまでのパス]",
+    "udid": "",
+    "xcodeOrgId": "<Team ID>",
+    "xcodeSigningId": "iPhone Developer",
+    "updatedWDABundleId": "io.appium.WebDriverAgentRunner"
+}
+```
 
 ### Android エミュレータと接続
 
@@ -205,6 +240,8 @@ Android エミュレータの場合は、あらかじめエミュレータを起
 }
 ```
 
+### Android 実機と接続
+
 実機の場合は `$ adb devices` で device 番号を取得し、 `deviceName` へ設定する？
 
 #### トラブルシューティング
@@ -215,7 +252,8 @@ Android エミュレータの場合は、あらかじめエミュレータを起
     - CPU/ABI に「 x86 」がダメなら「 ARM(armeabi-v7a) 」を、「 ARM 」がダメなら「 x86 」を選択する。
 
 - エミュレータが起動すると `Process system isn't responding` と表示される
-    - device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生。  
+    - device （ Nexus 6 とか）と CPU/ABI の組み合わせが悪いときに発生
+    - ひたすら「 wait 」する
     - 「 Nexus 6 」と「 armeabi-v7a 」の時は出なかった？（未確認）
         - https://stackoverflow.com/questions/43779596/process-system-isnt-responding-in-android-emulator
     - RAM を増やすのが正解？（未確認）
