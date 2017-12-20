@@ -8,15 +8,36 @@ id: android-kotlin-basics
 
 [公式ドキュメント](https://developer.android.com/studio/intro/index.html)
 
-# 環境設定
+# Android Studio の設定
 
-Java 1.8 はインストール済みな前提。
+Java 1.8 はインストール済みな前提。  
+バージョンは 3.0.1 for Mac 。
+
+## インストール
 
 ```sh
 $ brew update
 $ brew cask install android-studio
 ```
+
+## 初回起動時の設定
+
 android-studio でインストールした android-sdk 系のツールは `~/Library/Android/sdk` 配下に配備される。  
+以下の初回起動時の設定後にダウンロードされる。
+
+1. Android Studio 起動
+2. 「 Do not import settings 」 -> 「 OK 」
+3. 「 Next 」
+4. 「 custom 」 -> 「 Next 」
+5. 「 Default 」 -> 「 Next 」
+6. 以下を選択して「 Next 」
+    - Android SDK
+    - Android SDK Platform
+    - Performance (Intel HAXM)
+    - Android Virtual Device
+7. 任意の Emulator Settings して「 Next 」 -> 「 Finish 」
+
+「[ダウンロードしたアプリケーションの実行許可]の下の方に intel なんたらかんたら」って出たら、Mac の「システム環境設定　> セキュリティとプライバシー」を開いて許可する。  
 `~/.bash_profile` に以下を加筆した後 `source ~/.bash_profile` を実行。
 
 ```
@@ -29,23 +50,36 @@ PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH
 ```
 
+`$ adb devices` 、 `$ sdkmanager -h` が実行できることを確認しておく。
+
+## アンインストール
+
+```
+$ brew cask uninstall android-studio
+$ rm -Rf ~/Library/Preferences/AndroidStudio*
+$ rm -Rf ~/Library/Logs/AndroidStudio*
+$ rm -Rf ~/Library/Caches/AndroidStudio*
+$ rm ~/Library/Preferences/com.android.Emulator.plist
+$ rm -Rf ~/Library/Android*
+$ rm -Rf ~/AndroidStudioProjects
+$ rm -Rf ~/.gradle
+$ rm -Rf ~/.android
+```
+
 # Android Studio の使い方
 
-バージョンは 3.0.1 for Mac 。
-
 1. Android Studio 起動
-2. Start a new Android Project
+2. 「 Start a new Android Project 」
 3. アプリ名、ドメイン名、「 Include Kotlin Support 」にチェックを入れて「 Next 」
 4. アプリのプラットフォームを選択して「 Next 」
 5. コンポーネント（ Basic Activity でよい）を選択して「 Next 」
-6. メインとなる Activity の名前などを設定して「 Finish 」
+6. メインとなる Activity の名前などを設定して「 Next 」->「 Finish 」
     - この時点でプロジェクトの初期設定環境
+    - エラーメッセージが出た場合は、メッセージに従い SDK Manager などからツールをダウンロードする
 6. エミュレータの作成
 7. 右上の再生ボタンでアプリを実行可能
 
 「 Shift 」を2回押すと、 Search Everywhere が起動する。
-
-**「missing platform(s) and sync project」とでてAVDmanagerが使えない。。。**
 
 # プロジェクト構造
 
