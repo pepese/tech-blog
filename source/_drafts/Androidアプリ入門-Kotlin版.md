@@ -50,7 +50,7 @@ PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH
 ```
 
-`$ adb devices` 、 `$ sdkmanager -h` が実行できることを確認しておく。
+`$ adb devices` 、 `$ sdkmanager --help` が実行できることを確認しておく。
 
 ## アンインストール
 
