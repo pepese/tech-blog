@@ -19,7 +19,7 @@ Appium の背後には iOS 用, Android 用, Win 用などのドライバがあ�
 
 # 環境設定
 
-ruby 、 Homebrew 、 Java の導入は省略している。
+Homebrew 、 Java 1.8 の導入は省略している。
 
 ## Selenium
 
@@ -33,7 +33,6 @@ $ brew install chromedriver
 ```sh
 $ brew install node
 $ npm install --global appium appium-doctor wd
-# $ yarn global add appium appium-doctor wd
 ```
 
 Appium は以下で起動。
@@ -52,7 +51,7 @@ Xcode を App Store でインストールしてから以下を実行。
 $ sudo mkdir /usr/local/Frameworks
 $ sudo chown -R $(whoami):admin /usr/local/Frameworks
 $ brew install carthage
-$ brew link carthage
+# $ brew link carthage
 $ appium-doctor --ios # インストール、設定が正しいかチェック
 $ brew install libimobiledevice --HEAD # 実機接続用のモジュール
 $ npm install --global --unsafe-perm ios-deploy
@@ -105,9 +104,9 @@ export ANDROID_HOME=/usr/local/share/android-sdk
 export ANDROID_SDK=$ANDROID_HOME
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 PATH=$PATH:$JAVA_HOME/bin
-PATH=$PATH:$ANDROID_HOME/build-tools
-PATH=$PATH:$ANDROID_HOME/platform-tools
-PATH=$PATH:$ANDROID_HOME/tools
+PATH=$PATH:$ANDROID_HOME/build-tools/bin
+PATH=$PATH:$ANDROID_HOME/platform-tools/bin
+PATH=$PATH:$ANDROID_HOME/tools/bin
 
 export PATH
 ```
@@ -186,6 +185,7 @@ appium-desktop を使用することにより以下のことが可能になる�
 以下のように導入する。
 
 1. [ここ](https://github.com/appium/appium-desktop/releases/) から最新版を取得してインストール。
+    - `appium-desktop-x.x.x.dmg`
 2. 「 Simple 」で「 Start Server vx.x.x 」を押下
 3. 右上の左のボタン「 Start Inspector Session 」を押下
 4. 上のタブを「 Automatic Server 」、下のタブを「 Desired Capability 」の状態で、右下の「 JSON Representation 」にエミュレータや実機へ接続するための設定を記載する
@@ -271,8 +271,8 @@ Android エミュレータの場合は、あらかじめエミュレータを起
 $ xcode-select --install
 $ sudo xcode-select --switch /Applications/Xcode.app
 $ xcodebuild -version
-Xcode 9.1
-Build version 9B55
+Xcode 9.2
+Build version 9C40b
 ```
 
 サンプルアプリとテストを取得してセットアップ。
@@ -294,6 +294,17 @@ $ cd sample-code/sample-code/examples/python
 $ py.test ios_simple.py
 ```
 
+### appium-desktop との接続
+
+```
+{
+  "platformName": "iOS",
+  "platformVersion": "11.2",
+  "deviceName": "iPhone Simulator",
+  "automationName": "XCUITest",
+  "app": "/path/to/ios-test-app/build/Release-iphonesimulator/TestApp.app"
+}
+```
 
 ## Android
 
@@ -307,6 +318,19 @@ $ py.test android_simple.py
 
 https://qiita.com/natsuki_summer/items/2d8d60114cdb95929dcb
 
+### appium-desktop との接続
+
+```
+{
+  "appPackage": "com.example",
+  "appActivity": "com.example.toggletest.MainActivity",
+  "platformName": "Android",
+  "automationName": "Appium",
+  "platformVersion": "8.1.0",
+  "deviceName": "Android Emulator",
+  "app": "/path/to/sample-code/sample-code/apps/ApiDemos/bin/ApiDemos-debug.apk"
+}
+```
 
 # 参考
 

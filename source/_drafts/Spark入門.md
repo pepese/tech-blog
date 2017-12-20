@@ -1,6 +1,8 @@
 ---
 title: Spark入門
 tags:
+- Spark
+- Hadoop
 id: spark-basics
 ---
 

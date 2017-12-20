@@ -10,6 +10,25 @@ id: android-kotlin-basics
 
 # 環境設定
 
+Java 1.8 はインストール済みな前提。
+
+```sh
+$ brew update
+$ brew cask install android-studio
+```
+android-studio でインストールした android-sdk 系のツールは `~/Library/Android/sdk` 配下に配備される。  
+`~/.bash_profile` に以下を加筆した後 `source ~/.bash_profile` を実行。
+
+```
+export JAVA_HOME=`/usr/libexec/java_home`
+export ANDROID_HOME=$HOME/Library/Android/sdk
+PATH=$PATH:$JAVA_HOME/bin
+PATH=$PATH:$ANDROID_HOME/platform-tools
+PATH=$PATH:$ANDROID_HOME/tools/bin
+
+export PATH
+```
+
 # Android Studio の使い方
 
 バージョンは 3.0.1 for Mac 。
@@ -25,6 +44,8 @@ id: android-kotlin-basics
 7. 右上の再生ボタンでアプリを実行可能
 
 「 Shift 」を2回押すと、 Search Everywhere が起動する。
+
+**「missing platform(s) and sync project」とでてAVDmanagerが使えない。。。**
 
 # プロジェクト構造
 
