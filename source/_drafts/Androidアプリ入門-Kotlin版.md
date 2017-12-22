@@ -75,9 +75,9 @@ $ rm -Rf ~/.android
 5. コンポーネント（ Basic Activity でよい）を選択して「 Next 」
 6. メインとなる Activity の名前などを設定して「 Next 」->「 Finish 」
     - この時点でプロジェクトの初期設定環境
-    - エラーメッセージが出た場合は、メッセージに従い SDK Manager などからツールをダウンロードする
-6. エミュレータの作成
-7. 右上の再生ボタンでアプリを実行可能
+    - エラーメッセージが出た場合は、メッセージに従い SDK Manager からツールをダウンロードする
+7. エミュレータの作成
+8. 右上の再生ボタンでアプリを実行可能
 
 「 Shift 」を2回押すと、 Search Everywhere が起動する。
 
@@ -96,10 +96,18 @@ Android プロジェクト構造は以下。
         - mipmap ： 拡大縮小アニメーションに対応した画像
         - values ： 文字列や値を XML で管理
 - Gradle Script ： ビルドファイルがある
-    - build.gradle (Project: xxxx)
-    - build.gradle (Module: app)
+    - build.gradle (Project: xxxx) ： プロジェクトのすべてのモジュールに適用されるビルド設定
+    - build.gradle (Module: app) ： `<project>/<module>/` ディレクトリにあるモジュールレベルのビルド設定
     - gradle-wrapper.properties
-    - proguard-rules.pro
-    - gradle.properties
-    - settings.gradle
-    - local.properties
+    - proguard-rules.pro ： ProGuard はビルド時にアプリのソースコードを難読化するツール
+    - gradle.properties ： Gradle デーモンの最大ヒープサイズなど、プロジェクト全体にわたる Gradle 設定
+    - settings.gradle ： アプリをビルドするときに含めるモジュールを Gradle に通知するファイル
+    - local.properties ： SDK インストールへのパスなど、ビルドシステムのローカル環境プロパティを設定
+
+[公式ドキュメント：ビルドシステム](https://developer.android.com/studio/build/index.html)
+
+## マニフェスト
+
+[公式ドキュメント：アプリ マニフェスト](https://developer.android.com/guide/topics/manifest/manifest-intro.html)
+
+`AndroidManifest.xml`
