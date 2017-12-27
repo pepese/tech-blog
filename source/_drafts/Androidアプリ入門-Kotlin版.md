@@ -121,8 +121,59 @@ Android NDK （ Native Development Kit ）は、C や C++ などのネイティ�
 3. 「 SDK Tools 」から「 NDK 」「 CMake 」「 LLDB 」を選択してインストール
 4. NDK を利用するプロジェクトでは「 Include C++ support 」をチェックしておく必要がある
 
-`Application.mk`、`Android.mk`
+NDK に関するビルドの設定は、モジュールレベルの `build.gradle` で行う。  
+例えば以下は、cpp のビルドターゲットの .so を armeabi 、 armeabi-v7a に限定する設定。
 
-普通にビルドすると armeabi 、 x86 両方の .so ファイルが作成される。
+```groovy
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "sample.pepese.org.audiosample"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+        ndk { // ★★★★★★★このあたり！！！！★★★★★★★
+            // Specifies the ABI configurations of your native
+            // libraries Gradle should build and package with your APK.
+            abiFilters 'armeabi', 'armeabi-v7a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+```
 
 - [録音データをリアルタイムにJNIで処理する最もシンプルなサンプル](https://qiita.com/MJeeeey/items/04beebe490f5cc48b749)
