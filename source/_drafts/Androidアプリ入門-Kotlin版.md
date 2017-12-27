@@ -111,3 +111,18 @@ Android プロジェクト構造は以下。
 [公式ドキュメント：アプリ マニフェスト](https://developer.android.com/guide/topics/manifest/manifest-intro.html)
 
 `AndroidManifest.xml`
+
+# NDK の導入
+
+Android NDK （ Native Development Kit ）は、C や C++ などのネイティブ コード言語を使用して、アプリの一部を実装するためのツールセット。
+
+1. Android Studio 起動
+2. SDK Manager 起動
+3. 「 SDK Tools 」から「 NDK 」「 CMake 」「 LLDB 」を選択してインストール
+4. NDK を利用するプロジェクトでは「 Include C++ support 」をチェックしておく必要がある
+
+`Application.mk`、`Android.mk`
+
+普通にビルドすると armeabi 、 x86 両方の .so ファイルが作成される。
+
+- [録音データをリアルタイムにJNIで処理する最もシンプルなサンプル](https://qiita.com/MJeeeey/items/04beebe490f5cc48b749)

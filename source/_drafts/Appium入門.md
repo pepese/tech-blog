@@ -332,6 +332,18 @@ https://qiita.com/natsuki_summer/items/2d8d60114cdb95929dcb
 }
 ```
 
+```
+{
+  "appPackage": "org.pepese.sample.audiosample",
+  "appActivity": "org.pepese.sample.audiosample.MainActivity",
+  "platformName": "Android",
+  "automationName": "Appium",
+  "platformVersion": "8.1.0",
+  "deviceName": "Android Emulator",
+  "app": "~/AndroidStudioProjects/AudioSample/app/build/outputs/apk/debug/app-debug.apk"
+}
+```
+
 # 参考
 
 [Android Studio 公式 Doc](https://developer.android.com/studio/intro/index.html)
