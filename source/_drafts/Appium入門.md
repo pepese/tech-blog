@@ -45,7 +45,9 @@ $ appium &
 
 ## iOS
 
-Xcode を App Store でインストールしてから以下を実行。
+Xcode を App Store でインストールしてから以下を実行。  
+また、 `brew install carthage` を実行する際、権限不足で `/usr/local/Frameworks` ディレクトリ作成に失敗する。  
+ そのため、 `brew link carthage` に失敗するので、あらかじめディレクトリを作ってあげてからインストールする。
 
 ```sh
 $ sudo mkdir /usr/local/Frameworks
@@ -59,10 +61,7 @@ $ npm install --global --unsafe-perm ios-deploy
 $ sudo xcode-select --switch /Applications/Xcode.app # Xcode のバージョンを指定
 ```
 
-`brew install carthage` を実行する際、権限不足で `/usr/local/Frameworks` ディレクトリ作成に失敗する。  
- そのため、 `brew link carthage` に失敗するので、あらかじめディレクトリを作ってあげてからインストールする。
-
- その他、こまごました設定は[ここ](https://github.com/appium/appium-xcuitest-driver/blob/master/docs/real-device-config.md)を参照。
+ その他 iOS に関する細々した設定は[ここ](https://github.com/appium/appium-xcuitest-driver/blob/master/docs/real-device-config.md)を参照。
 
 ### シミュレータ
 

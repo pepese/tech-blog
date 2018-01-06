@@ -1,12 +1,19 @@
 ---
-title: Androidアプリ入門 Kotlin版
+title: Androidアプリ入門 Macで環境構築編
+date: 2018-01-06 14:34:36
 tags:
+- Mac
 - Android
 - Kotlin
-id: android-kotlin-basics
+id: android-env-on-mac
 ---
 
+Mac で Android アプリを開発する際の環境構築についてまとめる。  
+なお、プログラミング言語は [Kotlin](https://kotlinlang.org/) を選択する。
+
 [公式ドキュメント](https://developer.android.com/studio/intro/index.html)
+
+<!-- more -->
 
 # Android Studio の設定
 
@@ -19,6 +26,8 @@ Java 1.8 はインストール済みな前提。
 $ brew update
 $ brew cask install android-studio
 ```
+
+Homebrew については [Homebrew 入門](https://pepese.github.io/blog/homebrew-basics/) を参照。
 
 ## 初回起動時の設定
 
@@ -41,7 +50,7 @@ android-studio でインストールした android-sdk 系のツールは `~/Lib
 `~/.bash_profile` に以下を加筆した後 `source ~/.bash_profile` を実行。
 
 ```
-export JAVA_HOME=`/usr/libexec/java_home`
+export JAVA_HOME=`/usr/libexec/java_home -v1.8`
 export ANDROID_HOME=$HOME/Library/Android/sdk
 PATH=$PATH:$JAVA_HOME/bin
 PATH=$PATH:$ANDROID_HOME/platform-tools
@@ -54,7 +63,7 @@ export PATH
 
 ## アンインストール
 
-```
+```sh
 $ brew cask uninstall android-studio
 $ rm -Rf ~/Library/Preferences/AndroidStudio*
 $ rm -Rf ~/Library/Logs/AndroidStudio*
@@ -77,6 +86,7 @@ $ rm -Rf ~/.android
     - この時点でプロジェクトの初期設定環境
     - エラーメッセージが出た場合は、メッセージに従い SDK Manager からツールをダウンロードする
 7. エミュレータの作成
+    - AVD Manager から作成できる
 8. 右上の再生ボタンでアプリを実行可能
 
 「 Shift 」を2回押すと、 Search Everywhere が起動する。
@@ -108,9 +118,10 @@ Android プロジェクト構造は以下。
 
 ## マニフェスト
 
-[公式ドキュメント：アプリ マニフェスト](https://developer.android.com/guide/topics/manifest/manifest-intro.html)
+`AndroidManifest.xml` のこと。  
+記載方法は以下を参照。
 
-`AndroidManifest.xml`
+[公式ドキュメント：アプリ マニフェスト](https://developer.android.com/guide/topics/manifest/manifest-intro.html)
 
 # NDK の導入
 
@@ -175,5 +186,3 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 ```
-
-- [録音データをリアルタイムにJNIで処理する最もシンプルなサンプル](https://qiita.com/MJeeeey/items/04beebe490f5cc48b749)
