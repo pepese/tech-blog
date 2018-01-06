@@ -1,6 +1,9 @@
 ---
 title: iOSアプリ開発入門
 tags:
+- Mac
+- iOS
+- Xcode
 id: ios-app-basics
 ---
 
