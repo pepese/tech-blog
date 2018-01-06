@@ -8,7 +8,7 @@ tags:
 id: appium-basics
 ---
 
-Appium は Selenium WebDriver の一種。  
+Appium は Selenium WebDriver の一種で、ネイティブアプリの自動テストを可能にする。  
 Node.js 上でサーバーとして動作し、HTTP 経由で WebDriver API を通して操作を受け付けるという仕組み。  
 Appium の背後には iOS 用, Android 用, Win 用などのドライバがある。
 
