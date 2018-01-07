@@ -1,15 +1,25 @@
 ---
 title: Python入門
 tags:
+- Python
 id: python-basics
 ---
 
 自分にとって最低限のことだけまとめる。
 
-- Windows での環境構築
-- モジュールとパッケージ
-- 起動モジュール
+- [Windows での環境構築](#Windowsでの環境構築)
+- [モジュールとパッケージ](#モジュールとパッケージ)
+- [起動モジュール](#起動モジュール)
 
+<!-- more -->
+
+公式ドキュメントは以下。
+
+- [公式サイト](https://www.python.org/)
+- [公式ドキュメント一覧](https://docs.python.jp/3/index.html)
+
+<a id="Windowsでの環境構築"></a>
+<a href="#Windowsでの環境構築"></a>
 # Windows での環境構築
 
 1. Anaconda の導入
@@ -18,6 +28,8 @@ id: python-basics
     - [直リンク](http://go.microsoft.com/fwlink/?LinkId=691126&fixForIE=.exe.)
     - [公式](http://landinghub.visualstudio.com/visual-cpp-build-tools)
 
+<a id="モジュールとパッケージ"></a>
+<a href="#モジュールとパッケージ"></a>
 # モジュールとパッケージ
 
 ## モジュール
@@ -45,6 +57,9 @@ import パッケージ名(.サブパッケージ名).モジュール名
 
 http://note.crohaco.net/2014/python-module/
 
+
+<a id="起動モジュール"></a>
+<a href="#起動モジュール"></a>
 # 起動モジュール
 
 ```python
@@ -65,6 +80,35 @@ if __name__ == "__main__":
 ```
 
 `if __name__ == "__main__":` は、「このモジュールが(他のプログラムから呼び出されたのではなく)自身が実行された場合」という意味で、上記のモジュールを直接実行したい際の所謂 **メイン関数** となる。
+
+# 組み込み系
+
+Python には標準で以下が組み込まれている。
+
+- [組み込み関数](https://docs.python.jp/3/library/functions.html)
+- [組み込み定数](https://docs.python.jp/3/library/constants.html)
+- [組み込み型](https://docs.python.jp/3/library/stdtypes.html)
+- [組み込み例外](https://docs.python.jp/3/library/exceptions.html)
+
+# 制御文
+
+## 三項演算子
+
+```
+条件がTrueのときの値 if 条件 else 条件がFalseのときの値
+```
+
+# 関数
+
+## アンパック
+
+関数の引数にリストやディクショナリの要素を渡したい場合、 `*` `**` で **アンパック** して渡すことができる。
+
+## 関数アノテーション（ Function Annotations ）
+
+関数の引数と返り値の **型アノテーション** 。  
+「 def 関数名(引数1<font color="red">: 型</font>, 引数2<font color="red">: 型</font>,...) <font color="red">-> 返り値の型</font>: 」。  
+型アノテーションを理解する IDE などで警告がでるようになる。
 
 # 内包表記（comprehension）
 
@@ -133,6 +177,22 @@ lambda 引数のリスト : 引数を使った式
 >>> f'Hello, {input("名前を入力してください: ")}' # 関数の呼び出し
 名前を入力してください: ぺーぺーSE
 'Hello, ぺーぺーSE'
+```
+
+## raw 文字列
+
+エスケープシーケンスを無効にしたい場合の書き方。  
+例えば、 `\n` を出力したい場合 `\\n` とエスケープしなければならないが、 raw 文字列を使用すると、 `\n` のみでよい。  
+先頭に `r` をつけると raw 文字列になる。
+
+```
+>>> print("Hello\\nPython")
+Hello\nPython
+>>> print("Hello\nPython")
+Hello
+Python
+>>> print(r"Hello\nPython")
+Hello\nPython
 ```
 
 ## 文字列置換
@@ -204,23 +264,28 @@ Python has 2 quote types.
 'Coordinates: 37.24N, -115.81W'
 ```
 
+## 文字列と真偽値の演算
+
+任意の文字列と `False` との積は空文字になる。
+
+```
+>>> "hoge" * True
+'hoge'
+>>> "hoge" * False
+''
+```
+
+
 # `locals()` と `globals()`
 
 `locals()` は自身のローカル領域の変数の値を全て辞書形式で返してくれる。
 
 ```
-def addspam(fn):
-    def new(*args):
-        print("spam. spam. spam")
-                print(locals())
-        return fn(*args)
-    return new
-
-@addspam
-def useful(a, b):
-    print(a**2 + b**2)
-
-useful(3,4) # spam, spam, spam\n{'args': (3, 4)}
+>>> def hoge(str, num):
+...     print(locals())
+...
+>>> hoge("moji", 123)
+{'num': 123, 'str': 'moji'}
 ```
 
 グローバル領域バージョンが `globals()` 。
@@ -228,8 +293,9 @@ useful(3,4) # spam, spam, spam\n{'args': (3, 4)}
 ```
 >>> y = 30
 >>> globals()
-{..., 'y': 30} #Pythonが自動的に作るグローバル変数が他にも表示されるが省略
-```
+{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <class '_frozen_importlib.BuiltinImporter'>, '__spec__':
+ None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, 'y': 30}
+ ```
 
 # `__xxx__` 系
 
@@ -239,23 +305,22 @@ useful(3,4) # spam, spam, spam\n{'args': (3, 4)}
 概要の設定方法は、クラスやメソッドの直下にダブルクオート 3 つで囲んだ文字列を記載するだけ。
 
 ```
-class TestClass:
-    """This is TestClass.
-    """
+>>> class TestClass:
+...     """This is TestClass.
+...     """
+...     def testMethod(self):
+...         """This is testMethod
+...         """
+...         print( "hello" )
+...         # comment2
+...         """comment3
+...         """
+...
+>>> print( TestClass.__doc__ )
+This is TestClass.
 
-    def testMethod(self):
-        """This is testMethod
-        """
-        print( "hello" )
-        # comment2
-        """comment3
-        """
-
-print( TestClass.__doc__ )
-  #=> This is TestClass.
-
-print( TestClass.testMethod.__doc__ )
-  #=> This is testMethod
+>>> print( TestClass.testMethod.__doc__ )
+This is testMethod
 ```
 
 ## `__call__`
@@ -266,12 +331,12 @@ print( TestClass.testMethod.__doc__ )
 もちろん、 `__call__` に返り値をつければ,インスタンスから得られた値を別の変数に使ったりもできるということ。
 
 ```
-class cls:
-    __call__ = "Hi. My name is {} and I'm {} years old".format
-
-say_hi = cls()
-say_hi("Alex", 32)
-# "Hi. My name is Alex and I'm 32 years old"
+>>> class cls:
+...     __call__ = "Hi. My name is {} and I'm {} years old".format
+...
+>>> say_hi = cls()
+>>> say_hi("Alex", 32)
+"Hi. My name is Alex and I'm 32 years old"
 ```
 
 # 標準ライブラリ
