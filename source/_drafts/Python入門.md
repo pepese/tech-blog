@@ -83,14 +83,38 @@ if __name__ == "__main__":
 
 # 組み込み系
 
-Python には標準で以下が組み込まれている。
+## [組み込み関数](https://docs.python.jp/3/library/functions.html)
 
-- [組み込み関数](https://docs.python.jp/3/library/functions.html)
-- [組み込み定数](https://docs.python.jp/3/library/constants.html)
-- [組み込み型](https://docs.python.jp/3/library/stdtypes.html)
-- [組み込み例外](https://docs.python.jp/3/library/exceptions.html)
+## [組み込み定数](https://docs.python.jp/3/library/constants.html)
 
-## リストから
+## [組み込み型](https://docs.python.jp/3/library/stdtypes.html)
+
+- 真偽値型
+- 数値型
+    - 整数( `int` )
+        - 真偽値型は整数型のサブタイプ
+    - 浮動小数点数( `fload` )
+    - 複素数( `complex` )
+- イテレータ型
+- ジェネレータ型
+- シーケンス型
+    - list, tuple, range
+- テキストシーケンス型
+    - シングルクォート: '"ダブル" クォートを埋め込むことができます'
+    - ダブルクォート: "'シングル' クォートを埋め込むことができます"
+    - 三重引用符: '''三つのシングルクォート''', """三つのダブルクォート"""
+        - 改行を含めることができる
+- バイナリシーケンス型
+    - bytes, bytearray, memoryview
+- set（集合）型
+    - set, frozenset
+    - 集合演算が可能
+        - 和集合（union）、差集合（difference）、積集合（intersection）など
+- マッピング型
+    - dict
+- コンテキストマネージャ型
+
+## [組み込み例外](https://docs.python.jp/3/library/exceptions.html)
 
 # 制御文
 
@@ -364,6 +388,13 @@ Python has 2 quote types.
 >>> "hoge" * False
 ''
 ```
+
+## 文字コード変換（ `chr()` 、 `ord()` ）
+
+Unicode コードポイントが整数 i である文字を表す文字列を返す。  
+例えば chr(97) は文字列 'a' を、 chr(8364) は文字列 '€' を返す。  
+`ord()` は `chr()` の逆。  
+Python2 では `chr()` が ASCII で、 `unichr()` が Unicode だったが、 Python3 から `chr()` へ統合された？
 
 
 # `locals()` と `globals()`
