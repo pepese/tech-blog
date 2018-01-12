@@ -479,6 +479,40 @@ This is testMethod
 
 - https://docs.python.jp/3/tutorial/stdlib2.html
 
+# ファイル操作
+
+## 読み込み
+
+```python
+f = open("input.txt", "r")
+for row in f:
+    print(row, end="")
+f.close()
+```
+
+`close()` 忘れ防止のために `with` を使う。
+
+```python
+with open("input.txt", "r") as f:
+    for row in f:
+        print(row, end="")
+```
+
+## 書き込み（上書き）
+
+```python
+with open("test.txt", "w") as f:
+    #f.write("hoge")
+    print("hoge", file=f)
+```
+
+## 追記
+
+```python
+with open("test.txt", "a") as f:
+    print("fuge", file=f)
+```
+
 # その他
 
 - [Pythonのvars()とdir()の違い](http://minus9d.hatenablog.com/entry/2016/11/13/222629)
