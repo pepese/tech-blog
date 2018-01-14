@@ -483,6 +483,8 @@ This is testMethod
 
 ## 読み込み
 
+一行ずつ読み込みは以下。
+
 ```python
 f = open("input.txt", "r")
 for row in f:
@@ -496,6 +498,13 @@ f.close()
 with open("input.txt", "r") as f:
     for row in f:
         print(row, end="")
+```
+
+全読み込みは `read()` を使う。
+
+```python
+with open("input.txt", "r") as f:
+    print(f.read())
 ```
 
 ## 書き込み（上書き）

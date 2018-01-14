@@ -178,6 +178,14 @@ $ brew cask install sts
 
 # その他ツール
 
+## Rest Client
+
+Mac 用の Rest Client ツール [Cocoa Rest Client](https://mmattozzi.github.io/cocoa-rest-client/)。
+
+```sh
+brew cask install cocoarestclient
+```
+
 ## FileZilla
 
 FTP、FTPS、SFTPのGUIクライアント。
