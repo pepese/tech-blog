@@ -16,6 +16,17 @@ id: pandas-basics
 
 https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
 
+## 基本操作
+
+列へのアクセス。  
+一列取得した場合は **Series** になる。
+
+```
+df.Attribute
+df["Attribute"]
+df["Attribute", "Attribute"]
+```
+
 ## 属性（Attributes）
 
 |属性|説明|
@@ -302,4 +313,10 @@ df[df.A > 0]
 
 # 値が 0 より大きい値のみを取得
 df[df > 0]
+```
+
+
+# Kaggle Titanic
+
+```
 ```
