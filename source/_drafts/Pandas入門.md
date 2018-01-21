@@ -6,6 +6,14 @@ tags:
 id: pandas-basics
 ---
 
+# Pandas のオブジェクト
+
+|オブジェクト|説明|
+|:---|:---|
+|pd.Series|インデックス付きの1次元データ|
+|pd.DataFrame|インデックス付きの2次元データ|
+|pd.Panel|インデックス付きの3次元データ|
+
 # Series
 
 一次元配列。
@@ -18,7 +26,22 @@ https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
 
 ## 基本操作
 
-列へのアクセス。  
+### 削除
+
+```python
+df.drop(index, axis=0)  # 行削除
+df.drop(colomn, axis=1) # 列削除
+```
+
+### 追加
+
+```python
+df.append(df2) # 行追加
+df["Attribute"] = Series # 列追加
+```
+
+### 列取得
+
 一列取得した場合は **Series** になる。
 
 ```
@@ -318,5 +341,17 @@ df[df > 0]
 
 # Kaggle Titanic
 
-```
-```
+|パラメータ|説明|
+|:---|:---|
+|PassengerID|乗客ID|
+|Survived|生存結果 (1: 生存, 2: 死亡)|
+|Pclass|乗客の階級 1が一番位が高いそう|
+|Name|乗客の名前|
+|Sex|性別|
+|Age|年齢|
+|SibSp|兄弟、配偶者の数。|
+|Parch|両親、子供の数。|
+|Ticket|チケット番号。|
+|Fare|乗船料金。|
+|Cabin|部屋番号|
+|Embarked|乗船した港　Cherbourg、Queenstown、Southamptonの３種類があります|
