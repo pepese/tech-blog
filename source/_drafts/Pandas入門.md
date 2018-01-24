@@ -26,6 +26,29 @@ https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
 
 ## 基本操作
 
+### データのロード
+
+`read_csv()` と `read_table()` はデフォルトの区切り文字が違うだけで中身は同じ。  
+`read_csv()` はカンマ、 `read_table()` はタブ。
+
+```python
+df = pd.read_csv("data.csv")
+df = pd.read_table("data.tsv")
+```
+
+`sep` オプションを使用することで区切り文字を指定できる。
+
+```python
+df = pd.read_csv("data.csv", sep = "¥t")
+```
+
+`dtype` オプションを指定することで、読み込み時のデータ型を指定できる。
+
+```python
+df = pd.read_csv("data.csv", dtype = {"name" : "object", "age" : "object"}) # 列を指定して文字列で読み込み
+df = pd.read_csv("data.csv", dtype = "object") # 全ての列を文字列で読み込み
+```
+
 ### 削除
 
 ```python
