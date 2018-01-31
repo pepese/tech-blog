@@ -11,11 +11,6 @@ id: pandas-data-analytics
 Pandas はデータを全てメモリに展開して処理するため、メモリに乗り切らない大規模なデータを扱う場合は SQL などで前処理してから。  
 （Apache Impala とか使える？）
 
-また、ローカルマシンのメモリが小さく、別途メモリサイズの大きいサーバを用意して Jupyter Notebook を起動して外部からアクセスしたい場合は以下。
-
-Jupyter Notebook で外部から接続を許可する方法について。  
-サーバにて以下のコマンドで Jupyter Notebook を起動する。
-
 - 小規模データ（ローカルマシンのメモリにデータが乗る）
     - Python、Pandas などを利用
 - 中規模データ（ローカルマシンのメモリにデータがギリ乗らない）
@@ -23,6 +18,11 @@ Jupyter Notebook で外部から接続を許可する方法について。
     - Mac の場合：Base（ Libre Office にある）
 - 大規模データ（数十 GB 以上のデータ）
     - Hadoop、Apache Impala など、ガッツリ
+
+また、ローカルマシンのメモリが小さく、別途メモリサイズの大きいサーバを用意して Jupyter Notebook を起動して外部からアクセスしたい場合は以下。
+
+Jupyter Notebook で外部から接続を許可する方法について。  
+サーバにて以下のコマンドで Jupyter Notebook を起動する。
 
 ```
 $ jupyter notebook --ip=* --no-browser
@@ -36,6 +36,11 @@ http://localhost:8888/?token=5a497cc7665e9fa60f20097e166c13c904958e0fe2e08cbb
 
 基本操作参考：  
 https://qiita.com/tanemaki/items/2ed05e258ef4c9e6caac
+
+- Jupyter Notebook の拡張
+    - [extensionを追加してもっと快適なJupyter環境を構築する](https://qiita.com/sasaki77/items/30a19d2be7d94116b237)
+    - [Jupyter Notebookの拡張機能を使ってみる](http://cartman0.hatenablog.com/entry/2016/03/28/170319)
+    - [Jupyter Notebookの次世代版「JupyterLab」を紹介する](http://www.monthly-hack.com/entry/2016/07/15/152726)
 
 Pandas を用いたデータ分析を行う際のメモ。  
 以下について記載する。
