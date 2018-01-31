@@ -1,7 +1,8 @@
 ---
 title: Pythonで機械学習 ダミー変数編
 tags:
-id:
+- Python
+id: python-ml-dummy-variables
 ---
 
 # 参考
