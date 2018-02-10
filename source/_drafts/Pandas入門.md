@@ -6,6 +6,8 @@ tags:
 id: pandas-basics
 ---
 
+Python ライブラリの Pandas の機能をまとめる。
+
 # Pandas のオブジェクト
 
 |オブジェクト|説明|
@@ -73,29 +75,33 @@ df["Attribute"]
 df["Attribute", "Attribute"]
 ```
 
+### 検索
+
+https://qiita.com/tanemaki/items/2ed05e258ef4c9e6caac
+
 ## 属性（Attributes）
 
 |属性|説明|
 |:---|:---|
 |T|転置行列|
-|at|Fast label-based scalar accessor|
+|at|後述|
 |axes|行ラベルと列ラベルの情報|
-|blocks|Internal property, property synonym for as_blocks()|
+|blocks|辞書形式の内部属性|
 |columns|列ラベル|
-|dtypes|Return the dtypes in this object.|
-|empty|True if NDFrame is entirely empty [no items], meaning any of the axes are of length 0.|
-|ftypes|Return the ftypes (indication of sparse/dense and dtype) in this object.|
-|iat|Fast integer location scalar accessor.|
-|iloc|Purely integer-location based indexing for selection by position.|
+|dtypes|オブジェクトのデータタイプ|
+|empty|中身が完全に空の時、Trueを返す|
+|ftypes|オブジェクトの ftypes を Series 形式で返却|
+|iat|後述|
+|iloc|後述|
 |index|行ラベル|
-|is_copy||
-|ix|A primarily label-location based indexer, with integer position fallback.（非推奨）|
-|loc|Purely label-location based indexer for selection by label.|
-|ndim|Number of axes / array dimensions 次元|
+|is_copy|不明|
+|ix|非推奨|
+|loc|後述|
+|ndim|何次元配列か返却|
 |shape|行と列のサイズ|
-|size|行列の要素数（行サイズは `len(df.index)` ）|
-|style|Property returning a Styler object containing methods for building a styled HTML representation for the DataFrame.|
-|values|Numpy representation of NDFrame|
+|size|行列の要素数（行サイズは `len(df.index)` 、列サイズは `len(df.columns)` ）|
+|style|Stylerオブジェクトを返却|
+|values|numpy.ndarray 形式で値を取得|
 
 ### `at` 、 `iat` 、 `loc` 、 `iloc`
 
