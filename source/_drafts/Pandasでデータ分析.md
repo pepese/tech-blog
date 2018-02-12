@@ -16,6 +16,7 @@ Pandas はデータを全てメモリに展開して処理するため、メモ�
 - 中規模データ（ローカルマシンのメモリにデータがギリ乗らない）
     - Windows の場合：MS Access
     - Mac の場合：Base（ Libre Office にある）
+        - HSQLDB Embedded
 - 大規模データ（数十 GB 以上のデータ）
     - Hadoop、Apache Impala など、ガッツリ
 
