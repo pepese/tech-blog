@@ -146,6 +146,8 @@ Python 3.6.1
 $ pip -V
 pip 9.0.1
 $ pip install jupyter scikit-learn matplotlib scipy numpy scikit-surprise
+$ pip freeze | grep scikit-surprise
+scikit-surprise==1.0.5
 ```
 
 ## データセット
@@ -283,7 +285,7 @@ sim_options = {
     'user_based': True # False にするとアイテムベースに
 }
 algo = KNNBasic(k=5, min_k=1,sim_options=sim_options)
-algo.train(trainset)
+algo.fit(trainset)
 ```
 
 上記で、 **k近傍法** の学習が完了する。  
@@ -321,8 +323,19 @@ print('Predicted rating(User: {0}, Item: {1}): {2:.2f}'.format(pred.uid, pred.ii
 from surprise import SVD
 
 algo = SVD()
-algo.train(trainset)
+algo.fit(trainset)
 ```
+
+## 精度評価
+
+精度の評価には以下のものがある。
+
+- MAE（Mean Abusolute Error）
+    - 予測値と実測値の差の絶対値を算出し、平均したもの
+- MSE (Mean Squared Error)
+    - MSEは予測値と実測値の差を二乗した値の平均値
+- RMSE（Root Mean Squared Error）
+    - MSEの平方根
 
 # 参考
 
