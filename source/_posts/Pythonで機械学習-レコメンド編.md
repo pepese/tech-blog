@@ -63,7 +63,7 @@ id: python-ml-recommendation
             - 特異値分解（SVD：Singular Value Decomposition）
             - 非負値行列因子分解（NMF：Non-negative Matrix Factorization）
                 - SVDと異なり、分解した行列の要素が全て正の数
-                - 交互最小二乗法（ALS：Alternative Least Squares）を用いて実施することが多い
+                - 交互最小二乗法（ALS：Alternative Least Squares）や確率的勾配降下法（SGD：Stochastic Gradient Descent）を用いて実施
         - クラスタモデル
             - 嗜好が類似した利用者のグループごとに推薦をする
         - 関数モデル
