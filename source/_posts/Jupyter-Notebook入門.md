@@ -12,6 +12,8 @@ Jupyter Notebook 、ついでに JupyterHub について軽くまとめる。
 - [公式](http://jupyter.org/)
 - [公式ドキュメント](http://jupyter.org/documentation)
 
+<!-- more -->
+
 # Jupyter Notebook
 
 ## インストール
