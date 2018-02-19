@@ -333,7 +333,7 @@ algo.fit(trainset)
 - MAE（Mean Abusolute Error）
     - 予測値と実測値の差の絶対値を算出し、平均したもの
 - MSE (Mean Squared Error)
-    - MSEは予測値と実測値の差を二乗した値の平均値
+    - 予測値と実測値の差を二乗した値の平均値
 - RMSE（Root Mean Squared Error）
     - MSEの平方根
 
