@@ -74,7 +74,9 @@ $ jupyter notebook
 JupyterHub を導入することで以下が可能になる。
 
 - マルチユーザ
+- ユーザ管理・認証
 - 高スペックサーバでリモートから利用
+- などなど
 
 <img src="https://jupyterhub.readthedocs.io/en/stable/_images/jhub-parts.png" />
 
