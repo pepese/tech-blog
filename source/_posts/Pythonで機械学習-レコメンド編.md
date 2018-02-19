@@ -344,3 +344,9 @@ algo.fit(trainset)
     - P.134：協調フィルタリング、メモリベースのチューニングのヒント
     - p.137：モデルベースの種類
     - P.215：ショートヘッド、ロングテールについて
+- 精度評価
+    - [レコメンドつれづれ ～第3回 レコメンド精度の評価方法を学ぶ～](http://blog.brainpad.co.jp/entry/2017/08/25/140000)
+    - [レコメンド研究のあれこれ](https://www.slideshare.net/MasahiroSato2/ss-65646039)
+    - [レコメンドアルゴリズムの基本と周辺知識と実装方法](https://www.slideshare.net/takemikami/ss-76817490)
+    - [推薦システムの基本的な評価指標について整理してみた](https://datahotel.io/archives/4778)
+    - [MatrixFacorization を使った評価予測](https://ameblo.jp/principia-ca/entry-10980281840.html)
