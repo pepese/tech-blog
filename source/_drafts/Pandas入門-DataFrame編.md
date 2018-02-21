@@ -15,6 +15,20 @@ Python ライブラリである Pandas の DataFrame についてまとめる。
 
 # 基本操作
 
+## DataFrame の作成
+
+```python
+df = pd.DataFrame([["Taro", 10], ["Jiro", 20], ["Goro", None]], columns=["name", "age"])
+
+    age  name
+0  Taro  10.0
+1  Jiro  20.0
+2  Goro   NaN
+```
+
+リストや NumPy の ndarray をそのまま DataFrame にできる。  
+以降のプログラム例では、上記の DataFrame を操作する例とする。
+
 ## データのロード
 
 `read_csv()` と `read_table()` はデフォルトの区切り文字が違うだけで中身は同じ。  
@@ -41,14 +55,37 @@ df = pd.read_csv("data.csv", dtype = "object") # 全ての列を文字列で読�
 
 ## 検索
 
-`[]` 内に `True` または `False` を返す式を指定する。
+`[]` 内に `True` または `False` を返す式を指定する。  
+検索でヒットしたセルにそのまま値を代入できる。
 
 ```
-# "A" 列の値が 0 より大きい行を取得
-df[df.A > 0]
+# "age" 列の値が 10 より大きい行を取得
+df[df.age > 10]
 
+   name   age
+1  Jiro  20.0
+```
+
+```python
 # 値が 0 より大きい値のみを取得
 df[df > 0]
+
+   name   age
+0  Taro   NaN
+1  Jiro  20.0
+2  Goro   NaN
+```
+
+```python
+# 検索でヒットしたセルに値を代入
+df.age[df.age > 10] = 100
+
+   name    age
+0  Taro   10.0
+1  Jiro  100.0
+2  Goro    NaN
+# SettingWithCopyWarning が出るが値は代入されている
+# Warning が出ないようにするには後述の loc を使う
 ```
 
 後述の `isnull()` や `isin()` メソッドを使った検索も可能。
@@ -56,25 +93,58 @@ df[df > 0]
 ## 削除
 
 ```python
-df.drop(index, axis=0)  # 行削除
-df.drop(colomn, axis=1) # 列削除
+# 行削除
+df.drop(index = 0)
+
+   name   age
+1  Jiro  20.0
+2  Goro   NaN
 ```
 
-検索条件にひっかかる行の削除は以下。
+```python
+# 列削除
+df.drop(columns = "age", inplace = True)
+
+   name
+0  Taro
+1  Jiro
+2  Goro
+```
+
+`inplace = True` を指定するとオブジェクトが上書きされる。  
+また、検索条件にひっかけることで行の削除が可能。
 
 ```python
 # age列が10以下の行を削除 = age列が10より大きい列のみ抽出
-df = df[df["age"]>10]
+df = df[df.age > 10]
+
+   name   age
+1  Jiro  20.0
 ```
 
 ## 追加
 
 ```python
+df2 = pd.DataFrame([["Rokuro", 60]], columns=["name", "age"])
 # 行追加
-df.append(df2)
+df = df.append(df2)
 
+     name   age
+0    Taro  10.0
+1    Jiro  20.0
+2    Goro   NaN
+0  Rokuro  60.0
+```
+
+```python
+se = pd.Series(["male", "female", "male"])
 # 列追加
-df["Attribute"] = Series
+df["sex"] = se
+
+   name   age     sex
+0  Taro  10.0    male
+1  Jiro  20.0  female
+2  Goro   NaN    male
 ```
 
 ## 列取得
