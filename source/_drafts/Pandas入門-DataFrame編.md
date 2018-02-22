@@ -53,6 +53,16 @@ df = pd.read_csv("data.csv", dtype = {0: "object", 1: "object"}) # カラム番�
 df = pd.read_csv("data.csv", dtype = "object") # 全ての列を文字列で読み込み
 ```
 
+なお、 DataFrame ではデフォルトで欠損値を `NaN` で扱う。
+
+## 変換
+
+Series を DataFrame へ変換する。
+
+```python
+df = pd.DataFrame(se)
+```
+
 ## 検索
 
 `[]` 内に `True` または `False` を返す式を指定する。  
@@ -151,11 +161,25 @@ df["sex"] = se
 
 一列取得した場合は **Series** になる。
 
+```python
+df.name
+# print(df["name"]) も同じ
+
+0      Taro
+1      Jiro
+2      Goro
+Name: name, dtype: object
 ```
-df.Attribute
-df["Attribute"]
-df["Attribute", "Attribute"]
+
+```python
+print(df[["name", "age"]])
+
+   name   age
+0  Taro  10.0
+1  Jiro  20.0
+2  Goro   NaN
 ```
+
 
 ## 検索
 
@@ -205,17 +229,26 @@ df.iloc[行条件, 列条件]
 
 `at` は行ラベルと列ラベルで位置を指定する。
 
-```
-print(df.at[1, 'age'])
-print(df.at[3, 'state'])
-df.at[1, 'age'] = 60
+```python
+df.at[1, "age"]
+# 20.0
+# numpy.float64
+
+df.at[2, "name"]
+# 'Goro'
+# str
+
+df.at[1, "age"] = 60 # 代入も可能
 ```
 
 `iat` は行番号と列番号で位置を指定する。行番号・列番号は `0` はじまり。
 
-```
-print(df.iat[1, 1])
-print(df.iat[3, 2])
+```python
+df.iat[0, 0]
+# 'Taro'
+
+df.iat[2, 1]
+# nan
 ```
 
 `loc` はスライス `x:y` やリスト `[x, y]` でデータの範囲・位置を指定する。参照される値は pandas.Series または pandas.DataFrame になる。  
@@ -224,14 +257,12 @@ print(df.iat[3, 2])
 また、行の指定には `df.age>10` のような **検索条件** を指定することもできる。  
 `loc` で取得したセルに対して **値を代入** することができる。
 
-```
-print(df.loc[1:3, 'age':'point'])
-print(type(df.loc[1:3, 'age':'point']))
+```python
+df.loc[0:1, "name":"age"]
 
-print(df.loc[[1, 3], ['age', 'point']])
-print(type(df.loc[1:3, ['age', 'point']]))
+df.loc[[0, 2], ["name", "age"]]
 
-df.loc[1:3, 'age'] = [20, 30, 40]
+df.loc[0:2, "age"] = [20, 30, 40] # 代入
 
 df.loc[df.age>10, "age"] = 20 # 検索結果が複数行でも代入可能
 ```
@@ -240,14 +271,41 @@ df.loc[df.age>10, "age"] = 20 # 検索結果が複数行でも代入可能
 
 |メソッド|説明|
 |:---|:---|
+| `apply(関数・Lambda)` |各列に任意の処理を適用|
+| `astype({辞書型})` |型変換|
 | `replace("置換対象文字", "置換文字")` |文字の置換|
 | `rename(columns={辞書型}, inplace=True)` |カラム名の変更|
 | `isin(リスト)` |セルの値がリストに含まれていれば True 、そうでなければ False の DataFrame を返却する|
 | `isnull()` |セルが None であれば True 、そうでなければ False の DataFrame を返却する|
+| `drop_duplicates()` |重複を削除|
+| `pivot_table(index=[], columns=[],values=[, aggfunc='sum')` |ピボットテーブル|
+| `sort_values(by=)` |ソート|
 
 # SQL ライクな操作
 
+- [公式ドキュメント](https://pandas.pydata.org/pandas-docs/stable/comparison_with_sql.html)
+
+## `wherer`
+
+条件式が成り立つものをとってきて，それ以外はNaNで埋める。
+
+- [公式ドキュメント](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.where.html)
+
 ## `groupby`
+
+`groupby` でカラムを指定し、様々な集計関数を適用することができる。
+
+|項目|説明|
+|:---|:---|
+| `df.groupby('a').mean()` |平均|
+| `df.groupby('a').max()` |最大値|
+| `df.groupby('a').min()` |最小値|
+| `df.groupby('a').count()` |出現回数|
+| `df.groupby('a').sum()` |合計値|
+| `df.groupby('a').std()` |標準偏差|
+| `df.groupby('a').sum()` |合計値|
+
+集計のキーをインデックスとして扱いたくない場合はオプション `as_index=False` を指定する。
 
 - [公式ドキュメント](https://pandas.pydata.org/pandas-docs/stable/api.html#groupby)
 
