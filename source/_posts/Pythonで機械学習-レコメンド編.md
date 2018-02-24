@@ -224,6 +224,8 @@ dataset = Dataset.load_from_file(output_file_name, reader=reader)
 trainset = dataset.build_full_trainset()
 ```
 
+`dataset` から `trainset` へ変換される際、元の `user_id` `item_id` から読み込んだ順に 0 からインクリメントされた内部 ID へ変換される。
+
 `dataset` には以下のようなフィールドがある。（面倒なので説明は一部のみ）
 
 - build_full_trainset
@@ -259,10 +261,10 @@ trainset = dataset.build_full_trainset()
 - n_users : ユーザ数
 - offset
 - rating_scale
-- to_inner_iid : trainset 内部で管理しているアイテム ID へ変換するメソッド
-- to_inner_uid
-- to_raw_iid
-- to_raw_uid
+- to_inner_iid : 元の `item_id` を入力すると `trainset` 内部管理の ID を返却する
+- to_inner_uid：元の `user_id` を入力すると `trainset` 内部管理の ID を返却する
+- to_raw_iid： `trainset` 内部管理の ID を入力すると元の `item_id` を返却する
+- to_raw_uid： `trainset` 内部管理の ID を入力すると元の `user_id` を返却する
 - ur : アイテム ID をインデクスとした各ユーザの評価値のタプル
 
 ## 協調フィルタリング
