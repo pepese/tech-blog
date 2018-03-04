@@ -148,7 +148,9 @@ RDB のパフォーマンスを決める要因は主に以下の 2 つ。
 
 # SQL
 
-## CASE 式
+**SQLは集合で考える** 。
+
+## case 式
 
 ```
 case when sex = '1' then '男'
@@ -162,3 +164,44 @@ else 'その他' end
 2. `end` 、 `else` を忘れない
 
 集計関数内や `check` 句、条件別の `update` などにも利用できて便利。
+
+## 自己結合
+
+```
+select p1.name as name_1, p2.name as name_2
+  from Products p1, Products p2
+ where p1.name <> p2.name;
+# where p1.name > p2.name;
+# where p1.name < p2.name;
+```
+
+## having 句
+
+`group by` 句によりグループ化された情報に対して条件を設定する場合は、 `having` 句を用いる。
+
+### 際頻値
+
+```
+select namek count(*) as cnt
+  from Products
+ group by name
+having count(*) >= all ( select count(*)
+                           from products
+                          group by name);
+```
+
+- `all`
+    - どの値よりも大きい
+- `any`
+    - 少なくともどれか 1 つの値よりも大きい
+
+## SQL パフォーマンス
+
+- `in` より `exists` を使う
+    - `exists` は要素を発見した時点で検索を終了する
+- ソートを回避する
+    - `group by` 、 `order by` 、 集合関数 、 `distinct` 、 `集合演算子 、 OLAP 関数
+    - `all` オプションをうまく使う
+    - `distinct` を `exists` で代用する
+- インデックスを使う
+- 中間テーブルを使う
