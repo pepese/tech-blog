@@ -180,12 +180,15 @@ bin	config
 $ export PATH=`pwd`/bin:$PATH
 ```
 
-# サンプル
+# チュートリアル
 
-[サンプル](https://github.com/hyperledger/fabric-samples) を入手して実行してみる。  
-内容は以下と同じ。
+以下のチュートリアルサイトを実施する。
 
-- [Building Your First Network](http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html)
+- https://hyperledger-fabric.readthedocs.io/en/release-1.1/tutorials.html
+
+## [Building Your First Network](http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html)
+
+[サンプル](https://github.com/hyperledger/fabric-samples) を入手して実行する。
 
 ```bash
 $ git clone -b master https://github.com/hyperledger/fabric-samples.git
@@ -240,27 +243,22 @@ Taking all defaults:
 
 ## ネットワークの生成
 
+以下のコマンドを実行する。（ログは一部省略している）
+
 ```bash
 $ ./byfn.sh -m generate
 
 Generating certs and genesis block for with channel 'mychannel' and CLI timeout of '10' seconds and CLI delay of '3' seconds
 Continue? [Y/n] y
-proceeding ...
-/Users/tanakakns/Documents/workspace/fabric_sample/bin/cryptogen
 
-##########################################################
-##### Generate certificates using cryptogen tool #########
-##########################################################
+# Generate certificates using cryptogen tool
 + cryptogen generate --config=./crypto-config.yaml
 org1.example.com
 org2.example.com
 + res=0
 + set +x
 
-/Users/tanakakns/Documents/workspace/fabric_sample/bin/configtxgen
-##########################################################
-#########  Generating Orderer Genesis block ##############
-##########################################################
+#  Generating Orderer Genesis block
 + configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
 2018-03-18 16:35:08.285 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.296 JST [msp] getMspConfig -> INFO 002 Loading NodeOUs
@@ -270,9 +268,7 @@ org2.example.com
 + res=0
 + set +x
 
-#################################################################
-### Generating channel configuration transaction 'channel.tx' ###
-#################################################################
+# Generating channel configuration transaction 'channel.tx'
 + configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel
 2018-03-18 16:35:08.319 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.330 JST [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 002 Generating new channel configtx
@@ -282,9 +278,7 @@ org2.example.com
 + res=0
 + set +x
 
-#################################################################
-#######    Generating anchor peer update for Org1MSP   ##########
-#################################################################
+# Generating anchor peer update for Org1MSP
 + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP
 2018-03-18 16:35:08.375 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.387 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
@@ -292,9 +286,7 @@ org2.example.com
 + res=0
 + set +x
 
-#################################################################
-#######    Generating anchor peer update for Org2MSP   ##########
-#################################################################
+# Generating anchor peer update for Org2MSP
 + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP
 2018-03-18 16:35:08.408 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.420 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
@@ -302,6 +294,20 @@ org2.example.com
 + res=0
 + set +x
 ```
+
+`mychannel` チャンネルで証明書と **genesis block** を作成する。  
+以下のコマンドが実行されている。
+
+1. `cryptogen generate --config=./crypto-config.yaml`
+    - Orderer と Peer の証明書を作成
+    - [`cryptogen`](https://hyperledger-fabric.readthedocs.io/en/release-1.1/commands/cryptogen-commands.html) は Membership Service Providers(MSP) をコントロールするコマンド
+    - `crypto-config.yaml` ファイルで組織のドメイン(MSP ID)を定義
+2. `configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block`
+    - 2 つの組織に対して Orderer の Genesit Block を作成
+    - [`configtxgen`](https://hyperledger-fabric.readthedocs.io/en/release-1.1/commands/configtxgen.html) は artifacts に関連するチャンネル設定の作成と検査を実行するコマンド
+3. `configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel`
+4. `configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP`
+5. `configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP`
 
 `org1.example.com` と `org2.example.com` の 2 つの組織が作られる？
 
