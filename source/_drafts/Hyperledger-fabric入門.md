@@ -186,9 +186,11 @@ $ export PATH=`pwd`/bin:$PATH
 
 - https://hyperledger-fabric.readthedocs.io/en/release-1.1/tutorials.html
 
+上記のうちで Building Your First Network を実施する。
+
 ## [Building Your First Network](http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html)
 
-[サンプル](https://github.com/hyperledger/fabric-samples) を入手して実行する。
+[サンプル](https://github.com/hyperledger/fabric-samples) を入手する。
 
 ```bash
 $ git clone -b master https://github.com/hyperledger/fabric-samples.git
@@ -197,51 +199,29 @@ $ git checkout v1.1.0
 $ cd first-network
 ```
 
-`byfn.sh` というスクリプトがあり、 4 つの Peer （2 つの異なる組織） 、 1 つの Orderer を含む Hyperledger Fabric network を作成するラッパースクリプトになっている。
+`byfn.sh` というスクリプトがあり、 4 つの Peer （2 つの異なる組織） 、 1 つの Orderer を含む Hyperledger Fabric network を作成してクエリを発行するラッパースクリプトになっている。
 
 ```bash
 $ ./byfn.sh --help
-Usage: 
-  byfn.sh up|down|restart|generate|upgrade [-c <channel name>] [-t <timeout>] [-d <delay>] [-f <docker-compose-file>] [-s <dbtype>] [-i <imagetag>]
-  byfn.sh -h|--help (print this message)
-    <mode> - one of 'up', 'down', 'restart' or 'generate'
-      - 'up' - bring up the network with docker-compose up
-      - 'down' - clear the network with docker-compose down
-      - 'restart' - restart the network
-      - 'generate' - generate required certificates and genesis block
-      - 'upgrade'  - upgrade the network from v1.0.x to v1.1
-    -c <channel name> - channel name to use (defaults to "mychannel")
-    -t <timeout> - CLI timeout duration in seconds (defaults to 10)
-    -d <delay> - delay duration in seconds (defaults to 3)
-    -f <docker-compose-file> - specify which docker-compose file use (defaults to docker-compose-cli.yaml)
-    -s <dbtype> - the database backend to use: goleveldb (default) or couchdb
-    -l <language> - the chaincode language: golang (default) or node
-    -i <imagetag> - the tag to be used to launch the network (defaults to "latest")
-
-Typically, one would first generate the required certificates and 
-genesis block, then bring up the network. e.g.:
-
-	byfn.sh generate -c mychannel
-	byfn.sh up -c mychannel -s couchdb
-        byfn.sh up -c mychannel -s couchdb -i 1.1.0-alpha
-	byfn.sh up -l node
-	byfn.sh down -c mychannel
-        byfn.sh upgrade -c mychannel
-
-Taking all defaults:
-	byfn.sh generate
-	byfn.sh up
-	byfn.sh down
+# Usage が表示される
 ```
+
+このスクリプトを利用することで簡易に Hyperledger Fabric の network を作成して、クエリが発行されている様子が見てとれるが詳細は理解できない。  
+そこでここでは、以下にわけて記載する。
+
+- `byfn.sh` を使用してサンプルを実行
+- `byfn.sh` を使用しないでサンプルを実行
+
+### `byfn.sh` を使用してサンプルを実行
 
 サンプル実行の流れは以下。
 
 1. ネットワークの生成 / Generate Network Artifacts
 2. ネットワークの起動 / Bring Up the Network
+    - ついでにクエリも発行されている
 3. ネットワークの停止 / Bring Down the Network
-4. クエリの発行
 
-## ネットワークの生成
+#### 1. ネットワークの生成
 
 以下のコマンドを実行する。（ログは一部省略している）
 
@@ -255,8 +235,6 @@ Continue? [Y/n] y
 + cryptogen generate --config=./crypto-config.yaml
 org1.example.com
 org2.example.com
-+ res=0
-+ set +x
 
 #  Generating Orderer Genesis block
 + configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
@@ -265,8 +243,6 @@ org2.example.com
 2018-03-18 16:35:08.297 JST [msp] getMspConfig -> INFO 003 Loading NodeOUs
 2018-03-18 16:35:08.297 JST [common/tools/configtxgen] doOutputBlock -> INFO 004 Generating genesis block
 2018-03-18 16:35:08.298 JST [common/tools/configtxgen] doOutputBlock -> INFO 005 Writing genesis block
-+ res=0
-+ set +x
 
 # Generating channel configuration transaction 'channel.tx'
 + configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel
@@ -275,24 +251,18 @@ org2.example.com
 2018-03-18 16:35:08.331 JST [msp] getMspConfig -> INFO 003 Loading NodeOUs
 2018-03-18 16:35:08.331 JST [msp] getMspConfig -> INFO 004 Loading NodeOUs
 2018-03-18 16:35:08.354 JST [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 005 Writing new channel tx
-+ res=0
-+ set +x
 
 # Generating anchor peer update for Org1MSP
 + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP
 2018-03-18 16:35:08.375 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.387 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
 2018-03-18 16:35:08.387 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
-+ res=0
-+ set +x
 
 # Generating anchor peer update for Org2MSP
 + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP
 2018-03-18 16:35:08.408 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
 2018-03-18 16:35:08.420 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
 2018-03-18 16:35:08.420 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
-+ res=0
-+ set +x
 ```
 
 `mychannel` チャンネルで証明書と **genesis block** を作成する。  
@@ -304,14 +274,16 @@ org2.example.com
     - `crypto-config.yaml` ファイルで組織のドメイン(MSP ID)を定義
 2. `configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block`
     - 2 つの組織に対して Orderer の Genesit Block を作成
-    - [`configtxgen`](https://hyperledger-fabric.readthedocs.io/en/release-1.1/commands/configtxgen.html) は artifacts に関連するチャンネル設定の作成と検査を実行するコマンド
+    - [`configtxgen`](https://hyperledger-fabric.readthedocs.io/en/release-1.1/commands/configtxgen.html) は `configtx.yaml` ファイルを参照して、 artifacts に関連するチャンネル設定の作成と検査を実行するコマンド
 3. `configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel`
 4. `configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP`
 5. `configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP`
 
 `org1.example.com` と `org2.example.com` の 2 つの組織が作られる？
 
-## ネットワークの起動
+#### 2.ネットワークの起動
+
+以下のコマンドを実行する。（ログは一部省略している）
 
 ```bash
 $ ./byfn.sh -m up
@@ -649,17 +621,236 @@ a180a341e56d        hyperledger/fabric-peer:latest                              
 
 1 つの `fabric-tools` 、 4 つの `fabric-peer` 、 1 つの `fabric-orderer` が起動しているのがわかる。
 
-## ネットワークの停止
+#### 3.ネットワークの停止
 
 ```bash
 $ ./byfn.sh -m down
 ```
 
-## クエリの発行
+### `byfn.sh` を使用しないでサンプルを実行
+
+#### 1.ネットワークの生成
+
+「コマンドの実行」「出力」「コマンドと出力の説明」の順で記載していく。
 
 ```bash
-$ 
+$ cryptogen generate --config=./crypto-config.yaml
+
+org1.example.com
+org2.example.com
+# カレントディレクトリに `crypto-config` ディレクトリが作成される
+# 証明書と鍵が出力されている
+# Orderer には「example.com」単位で、 Peer には「org1.example.com」「org2.example.com」単位で作成される
+
+$ export FABRIC_CFG_PATH=`pwd`
+# `configtx.yaml` の位置を知らせるために上記の環境変数を設定
+
+$ configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+
+2018-04-16 19:18:20.642 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-04-16 19:18:20.653 JST [msp] getMspConfig -> INFO 002 Loading NodeOUs
+2018-04-16 19:18:20.653 JST [msp] getMspConfig -> INFO 003 Loading NodeOUs
+2018-04-16 19:18:20.653 JST [common/tools/configtxgen] doOutputBlock -> INFO 004 Generating genesis block
+2018-04-16 19:18:20.655 JST [common/tools/configtxgen] doOutputBlock -> INFO 005 Writing genesis block
+# 上記で `channel-artifacts` ディレクトリ配下に Orderer の genesis block が作成される
+
+$ export CHANNEL_NAME=mychannel
+# 環境変数にチャンネル名を登録する
+
+$ configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
+
+2018-04-16 19:24:13.431 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-04-16 19:24:13.440 JST [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 002 Generating new channel configtx
+2018-04-16 19:24:13.441 JST [msp] getMspConfig -> INFO 003 Loading NodeOUs
+2018-04-16 19:24:13.441 JST [msp] getMspConfig -> INFO 004 Loading NodeOUs
+2018-04-16 19:24:13.466 JST [common/tools/configtxgen] doOutputChannelCreateTx -> INFO 005 Writing new channel tx
+# 上記で `channel-artifacts` ディレクトリ配下に mychannel の channel transaction artifact が作成される（ `./channel-artifacts/channel.tx` ）
+
+$ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+
+2018-04-16 19:28:21.391 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-04-16 19:28:21.401 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
+2018-04-16 19:28:21.401 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
+# 上記で、 mychannel 上の Org1 の anchor peer を定義するトランザクションを作成する（ `./channel-artifacts/Org1MSPanchors.tx` ）
+
+$ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
+
+2018-04-16 19:32:11.947 JST [common/tools/configtxgen] main -> INFO 001 Loading configuration
+2018-04-16 19:32:11.956 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 002 Generating anchor peer update
+2018-04-16 19:32:11.956 JST [common/tools/configtxgen] doOutputAnchorPeersUpdate -> INFO 003 Writing anchor peer update
+# 上記で、 mychannel 上の Org2 の anchor peer を定義するトランザクションを作成する（ `./channel-artifacts/Org2MSPanchors.tx` ）
 ```
+
+#### 2.ネットワークの起動
+
+```bash
+$ docker-compose -f docker-compose-cli.yaml up -d
+
+Creating network "net_byfn" with the default driver
+Creating volume "net_peer0.org2.example.com" with default driver
+Creating volume "net_peer1.org2.example.com" with default driver
+Creating volume "net_peer1.org1.example.com" with default driver
+Creating volume "net_peer0.org1.example.com" with default driver
+Creating volume "net_orderer.example.com" with default driver
+Creating orderer.example.com ... 
+Creating peer1.org1.example.com ... 
+Creating peer1.org2.example.com ... 
+Creating peer0.org1.example.com ... 
+Creating peer0.org2.example.com ... 
+Creating peer1.org1.example.com
+Creating orderer.example.com
+Creating peer1.org2.example.com
+Creating peer0.org2.example.com
+Creating peer0.org1.example.com ... done
+Creating cli ... 
+Creating cli ... done
+# 上記で Docker Compose が `./channel-artifacts/genesis.block` を参照・使用して `byfn` ネットワーク上に以下のコンテナを構築する
+# orderer.example.com
+# peer0.org1.example.com
+# peer1.org1.example.com
+# peer0.org2.example.com
+# peer1.org2.example.com
+# cli ってコンテナもあるように見える、、、なんぞ、fabric-toolsイメージから作られてる模様
+## cliコンテナは、1000秒間アイドル状態に留まります。 
+## 必要なときに消えた場合は、簡単なコマンドで再起動できます：
+## $ docker start cli
+
+$ docker exec -it cli bash
+# cli コンテナへログイン
+# ログインすると以下のコマンドラインが以下のようになる
+# root@a96cfc7bb90b:/opt/gopath/src/github.com/hyperledger/fabric/peer#
+# ここでは省略のため cli へログイン中は「@cli$」と記載する
+
+@cli$ export CHANNEL_NAME=mychannel
+# チャンネル名を環境変数へ設定
+
+@cli$ peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-04-16 11:01:26.879 UTC [channelCmd] InitCmdFactory -> INFO 001 Endorser and orderer connections initialized
+2018-04-16 11:01:26.921 UTC [channelCmd] InitCmdFactory -> INFO 002 Endorser and orderer connections initialized
+2018-04-16 11:01:27.126 UTC [main] main -> INFO 003 Exiting.....
+# Orderer に対して Orderer の証明書を用いて mychannel を作成する命令を発行
+# このコマンドを実行すると、`<channel-ID.block>` の形式で genesis block が返却される（ここでは `mychannel.block` ）
+# このブロックには設定情報が定義された `channel.tx` が含まれている
+
+@cli$ peer channel join -b mychannel.block
+
+2018-04-16 11:09:25.354 UTC [channelCmd] InitCmdFactory -> INFO 001 Endorser and orderer connections initialized
+2018-04-16 11:09:25.400 UTC [channelCmd] executeJoin -> INFO 002 Successfully submitted proposal to join channel
+2018-04-16 11:09:25.400 UTC [main] main -> INFO 003 Exiting.....
+# このコマンドで `peer0.org1.example.com` を mychannel へ参加させる
+# これは以下の環境変数が登録されているため。
+## CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+## CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+## CORE_PEER_LOCALMSPID=Org1MSP
+## CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+# この環境変数を変更することで他の Peer を登録できる
+
+@cli$ CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt peer channel join -b mychannel.block
+
+2018-04-16 11:21:19.765 UTC [channelCmd] InitCmdFactory -> INFO 001 Endorser and orderer connections initialized
+2018-04-16 11:21:19.805 UTC [channelCmd] executeJoin -> INFO 002 Successfully submitted proposal to join channel
+2018-04-16 11:21:19.805 UTC [main] main -> INFO 003 Exiting.....
+# 上記は環境変数を指定しつつコマンドを実行して `peer0.org1.example.com` を mychannel へ参加させている。
+
+@cli$ peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org1MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-04-16 11:24:00.231 UTC [channelCmd] InitCmdFactory -> INFO 001 Endorser and orderer connections initialized
+2018-04-16 11:24:00.244 UTC [channelCmd] update -> INFO 002 Successfully submitted channel update
+2018-04-16 11:24:00.244 UTC [main] main -> INFO 003 Exiting.....
+# 上記で `peer0.org1.example.com` を Org1 の anchor peer に設定する
+# ここでも以下の環境変数があることにより `peer0.org1.example.com` が anchor peer に設定される
+## CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+## CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+## CORE_PEER_LOCALMSPID=Org1MSP
+## CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+
+@cli$ CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org2MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-04-16 11:29:39.143 UTC [channelCmd] InitCmdFactory -> INFO 001 Endorser and orderer connections initialized
+2018-04-16 11:29:39.157 UTC [channelCmd] update -> INFO 002 Successfully submitted channel update
+2018-04-16 11:29:39.157 UTC [main] main -> INFO 003 Exiting.....
+# 上記は環境変数を指定しつつコマンドを実行して `peer0.org2.example.com` を anchor peer へ変更させている。
+```
+
+Peer への chaincode の配布は以下。
+
+```bash
+@cli$ peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go/
+
+2018-04-16 11:31:30.329 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:31:30.329 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-16 11:31:30.888 UTC [main] main -> INFO 003 Exiting.....
+# 上記は Golang で実装した chaincode を配布する場合
+
+@cli$ peer chaincode install -n mycc -v 1.0 -l node -p /opt/gopath/src/github.com/chaincode/chaincode_example02/node/
+# 上記は Node で実装した chaincode を配布する場合
+
+@cli$ peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org1MSP.peer','Org2MSP.peer')"
+
+2018-04-16 11:36:34.063 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:36:34.064 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-16 11:36:52.042 UTC [main] main -> INFO 003 Exiting.....
+# 上記のコマンドで配布した chaincode をインスタンス化する
+# `-P "OR ('Org1MSP.peer','Org2MSP.peer')"` の部分で endorsement（承認）のポリシーを設定している
+# Org1 か Org2 のどちらかが OK すればよい（ AND も指定できる）
+# また、 `a` の値を 100、 `b` の値を 200 に設定している
+
+@cli$ peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n mycc -l node -v 1.0 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org1MSP.peer','Org2MSP.peer')"
+# Node の場合は上記
+```
+
+chaincode の実行は以下。
+
+```bash
+@cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+
+2018-04-16 11:48:08.602 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:48:08.602 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: 100
+2018-04-16 11:48:08.607 UTC [main] main -> INFO 003 Exiting.....
+# `a` の値を参照して、 100 が得られている
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050  --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem  -C $CHANNEL_NAME -n mycc -c '{"Args":["invoke","a","b","10"]}'
+
+2018-04-16 11:49:35.900 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:49:35.901 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-16 11:49:35.906 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-16 11:49:35.907 UTC [main] main -> INFO 004 Exiting.....
+# a から b へ 10 送金する
+
+@cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+
+2018-04-16 11:50:11.039 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:50:11.039 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: 90
+2018-04-16 11:50:11.044 UTC [main] main -> INFO 003 Exiting.....
+# a の値が 100 から 90 になっているのがわかる
+
+@cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","b"]}'
+
+2018-04-16 11:52:44.594 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-16 11:52:44.594 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: 210
+2018-04-16 11:52:44.598 UTC [main] main -> INFO 003 Exiting.....
+# b の値が 200 から 210 になっているのがわかる
+```
+
+
+続きは以下。
+
+- http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html#what-s-happening-behind-the-scenes
+
+なお、ネットワークの停止は `byfn.sh` でやる。
+
+
+
+
+
+
+
+
+
 
 # リクエストの流れ
 
