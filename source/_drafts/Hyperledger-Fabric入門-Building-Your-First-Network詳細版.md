@@ -26,7 +26,7 @@ id: hyperledger-fabric-basics-building-your-first-network-detail
 4. 各コンテナの設定
 5. chaincode の配布
 6. chaincode の実行
-7. ネットワークの停止
+7. ログの確認
 
 ## 1. 証明書・鍵の作成
 
@@ -440,24 +440,37 @@ Peer への chaincode の配布は以下。
 ```bash
 @cli$ peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go/
 
-2018-04-17 12:33:12.393 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:33:12.393 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-2018-04-17 12:33:12.947 UTC [main] main -> INFO 003 Exiting.....
+2018-04-18 12:08:41.998 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:08:41.998 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:08:42.608 UTC [main] main -> INFO 003 Exiting.....
 # 上記は Golang で実装した chaincode を `peer0.org1.example.com` へ配布する
 
-@cli$ peer chaincode instantiate -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org1MSP.peer','Org2MSP.peer')"
+@cli$ 
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 peer chaincode install -n mycc -v 1.0 -l golang -p github.com/chaincode/chaincode_example02/go/
 
-2018-04-17 12:33:39.969 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:33:39.970 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-2018-04-17 12:33:58.287 UTC [main] main -> INFO 003 Exiting.....
-# 上記のコマンドで配布した chaincode をインスタンス化する
+2018-04-18 12:11:58.600 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:11:58.600 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:11:58.803 UTC [main] main -> INFO 003 Exiting.....
+# 環境変数を指定して Golang で実装した chaincode を `peer0.org2.example.com` へ配布する
+
+
+@cli$
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 peer chaincode instantiate -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a", "100", "b","200"]}' -P "OR ('Org1MSP.peer','Org2MSP.peer')"
+
+2018-04-18 12:14:19.776 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:14:19.776 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:14:37.943 UTC [main] main -> INFO 003 Exiting.....
+# 上記のコマンドで chaincode を配布した `peer0.org2.example.com` の chaincode をインスタンス化する
 # `-P "OR ('Org1MSP.peer','Org2MSP.peer')"` の部分で endorsement（承認）のポリシーを設定している
 # Org1 か Org2 のどちらかが OK すればよい（ AND も指定できる）
 # また、 `a` の値を 100、 `b` の値を 200 に設定している
+
+# `peer0.org1.example.com` の chaincode はインスタンス化していないが chaincode を配布済みのため実行することができる
+# ただし、 `peer1.org1.example.com` `peer1.org2.example.com` には chaincode を配布していないので実行することができない
 ```
 
-ここでは、 `peer0.org1.example.com` にのみしか chaincode の配布・インスタンス化を実施していないが、 `peer1.org1.example.com` `peer0.org2.example.com` `peer1.org2.example.com` にも必要か要確認。  
-ちなみに試しに他に投げてみたが、実行できなかった。。。？
+`mycc` は chaincode 名。  
+chaincode はチャンネル毎にインスタンス化する必要あり。
 
 上記は Go の chaincode を配布・インスタンス化したが、 Node の場合は以下。
 
@@ -469,6 +482,7 @@ Peer への chaincode の配布は以下。
 # Node の場合のインスタンス化
 ```
 
+
 ## 6. chaincode の実行
 
 chaincode の実行は以下。
@@ -476,36 +490,98 @@ chaincode の実行は以下。
 ```bash
 @cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
 
-2018-04-17 12:34:35.362 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:34:35.362 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:20:57.898 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:20:57.898 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
 Query Result: 100
-2018-04-17 12:34:35.367 UTC [main] main -> INFO 003 Exiting.....
+2018-04-18 12:21:15.610 UTC [main] main -> INFO 003 Exiting.....
 # `a` の値を参照して、 100 が得られている
+# また、上記は `peer0.org1.example.com` に対してクエリを発行している
+# インスタンス化したのは `peer0.org2.example.com` だが、実行できることがわかる
+# chaincode を配布していない `peer1.org1.example.com` `peer1.org2.example.com` へクエリを発行してもエラーとなる
 
 @cli$ peer chaincode invoke -o orderer.example.com:7050  --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem  -C $CHANNEL_NAME -n mycc -c '{"Args":["invoke","a","b","10"]}'
 
-2018-04-17 12:35:00.231 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:35:00.231 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-2018-04-17 12:35:00.238 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
-2018-04-17 12:35:00.239 UTC [main] main -> INFO 004 Exiting.....
-# a から b へ 10 送金する
+2018-04-18 12:22:06.706 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:22:06.708 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:22:06.721 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-18 12:22:06.722 UTC [main] main -> INFO 004 Exiting.....
+# Invoke して a から b へ 10 送金する
+# なお、 `peer0.org1.example.com` へ送信している
 
 @cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
 
-2018-04-17 12:35:28.617 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:35:28.617 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:23:21.070 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:23:21.070 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
 Query Result: 90
-2018-04-17 12:35:28.622 UTC [main] main -> INFO 003 Exiting.....
+2018-04-18 12:23:21.075 UTC [main] main -> INFO 003 Exiting.....
 # a の値が 100 から 90 になっているのがわかる
+# なお、 `peer0.org1.example.com` へ送信している
 
 @cli$ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","b"]}'
 
-2018-04-17 12:36:04.170 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2018-04-17 12:36:04.170 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:24:00.126 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:24:00.126 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
 Query Result: 210
-2018-04-17 12:36:04.174 UTC [main] main -> INFO 003 Exiting.....
+2018-04-18 12:24:00.130 UTC [main] main -> INFO 003 Exiting.....
 # b の値が 200 から 210 になっているのがわかる
+# なお、 `peer0.org1.example.com` へ送信している
+
+@cli$ CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+
+2018-04-18 12:25:33.163 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:25:33.164 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: 90
+2018-04-18 12:25:33.169 UTC [main] main -> INFO 003 Exiting.....
+# `peer0.org2.example.com` へクエリを発行しても同様に a = 90 が得られる
+
+@cli$ CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer1.org2.example.com:7051 peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+
+2018-04-18 12:27:15.236 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:27:15.236 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Error: Error endorsing query: rpc error: code = Unknown desc = cannot retrieve package for chaincode mycc/1.0, error open /var/hyperledger/production/chaincodes/mycc.1.0: no such file or directory - <nil>
+# chaincode が配布されていない `peer1.org2.example.com` へクエリを発行してもエラーが発生する
+
+@cli$ CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer1.org2.example.com:7051 peer chaincode install -n mycc -v 1.0 -l golang -p github.com/chaincode/chaincode_example02/go/
+
+2018-04-18 12:29:07.613 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:29:07.613 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-18 12:29:07.980 UTC [main] main -> INFO 003 Exiting.....
+# `peer1.org2.example.com` へ chaincode を配布する
+# インスタンス化は行なっていない
+
+@cli$ CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer1.org2.example.com:7051 peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+
+2018-04-18 12:30:17.055 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-18 12:30:17.055 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: 90
+2018-04-18 12:30:34.774 UTC [main] main -> INFO 003 Exiting.....
+# `peer1.org2.example.com` へ chaincode を配布してからクエリを実行すると正しく結果が返却されたことがわかる
 ```
+
+## 7. ログの確認
+
+```bash
+@cli$ exit
+$ docker logs -f cli # 簡易版じゃないと見えれないくさい
+```
+
+## 疑問
+
+```bash
+$ docker ps
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+f737b18f1dc9        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "chaincode -peer.a..."   4 minutes ago       Up 4 minutes                                                           dev-peer1.org2.example.com-mycc-1.0
+69c887024bf1        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "chaincode -peer.a..."   13 minutes ago      Up 13 minutes                                                          dev-peer0.org1.example.com-mycc-1.0
+e7942020176e        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "chaincode -peer.a..."   20 minutes ago      Up 20 minutes                                                          dev-peer0.org2.example.com-mycc-1.0
+427e97f7d0aa        hyperledger/fabric-tools:latest                                                                        "/bin/bash"              28 minutes ago      Up 28 minutes                                                          cli
+3db8f43d05b2        hyperledger/fabric-peer:latest                                                                         "peer node start"        28 minutes ago      Up 28 minutes       0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
+50c425aae9ae        hyperledger/fabric-peer:latest                                                                         "peer node start"        28 minutes ago      Up 28 minutes       0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+70445348149b        hyperledger/fabric-orderer:latest                                                                      "orderer"                28 minutes ago      Up 28 minutes       0.0.0.0:7050->7050/tcp                             orderer.example.com
+b390d5194441        hyperledger/fabric-peer:latest                                                                         "peer node start"        28 minutes ago      Up 28 minutes       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+ea37514af045        hyperledger/fabric-peer:latest                                                                         "peer node start"        28 minutes ago      Up 28 minutes       0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+```
+
+`dev-peer1.org2.example.com-mycc-1.0` とかいうコンテナが出現している理由がわからない。。。
 
 
 続きは以下。
