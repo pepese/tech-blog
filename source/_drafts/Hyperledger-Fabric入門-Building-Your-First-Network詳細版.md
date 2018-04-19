@@ -347,6 +347,15 @@ Creating cli ... done
 ## cliコンテナは、1000秒間アイドル状態に留まります。 
 ## 必要なときに消えた場合は、簡単なコマンドで再起動できます：
 ## $ docker start cli
+
+$ docker ps -a
+CONTAINER ID        IMAGE                               COMMAND             CREATED             STATUS              PORTS                                              NAMES
+2c3a85d77efc        hyperledger/fabric-tools:latest     "/bin/bash"         11 seconds ago      Up 10 seconds                                                          cli
+17f625da35f1        hyperledger/fabric-peer:latest      "peer node start"   12 seconds ago      Up 11 seconds       0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+a234851b44c9        hyperledger/fabric-orderer:latest   "orderer"           12 seconds ago      Up 10 seconds       0.0.0.0:7050->7050/tcp                             orderer.example.com
+a8dafc97e0b6        hyperledger/fabric-peer:latest      "peer node start"   12 seconds ago      Up 11 seconds       0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+6593d9461ad5        hyperledger/fabric-peer:latest      "peer node start"   12 seconds ago      Up 10 seconds       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+95a680a1ac84        hyperledger/fabric-peer:latest      "peer node start"   12 seconds ago      Up 11 seconds       0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
 ```
 
 なお、 `hyperledger/fabric-tools` イメージから作成される `cli` コンテナは、 Orderer/Peer に対して設定用のトランザクションやクエリを発行する際に使用する。
@@ -467,6 +476,10 @@ CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/c
 
 # `peer0.org1.example.com` の chaincode はインスタンス化していないが chaincode を配布済みのため実行することができる
 # ただし、 `peer1.org1.example.com` `peer1.org2.example.com` には chaincode を配布していないので実行することができない
+
+# この時点で以下のコンテナが出現する
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+934ccf07c094        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "chaincode -peer.a..."   13 seconds ago      Up 13 seconds                                                          dev-peer0.org2.example.com-mycc-1.0
 ```
 
 `mycc` は chaincode 名。  
@@ -498,6 +511,10 @@ Query Result: 100
 # また、上記は `peer0.org1.example.com` に対してクエリを発行している
 # インスタンス化したのは `peer0.org2.example.com` だが、実行できることがわかる
 # chaincode を配布していない `peer1.org1.example.com` `peer1.org2.example.com` へクエリを発行してもエラーとなる
+
+# この時点で以下のコンテナが出現する
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+46a7b270dab3        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "chaincode -peer.a..."   11 seconds ago      Up 10 seconds                                                          dev-peer0.org1.example.com-mycc-1.0
 
 @cli$ peer chaincode invoke -o orderer.example.com:7050  --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem  -C $CHANNEL_NAME -n mycc -c '{"Args":["invoke","a","b","10"]}'
 
@@ -556,6 +573,10 @@ Error: Error endorsing query: rpc error: code = Unknown desc = cannot retrieve p
 Query Result: 90
 2018-04-18 12:30:34.774 UTC [main] main -> INFO 003 Exiting.....
 # `peer1.org2.example.com` へ chaincode を配布してからクエリを実行すると正しく結果が返却されたことがわかる
+
+# この時点で以下のコンテナが出現する
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+6100864a7cb5        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "chaincode -peer.a..."   9 seconds ago       Up 9 seconds                                                           dev-peer1.org2.example.com-mycc-1.0
 ```
 
 ## 7. ログの確認
@@ -582,11 +603,183 @@ ea37514af045        hyperledger/fabric-peer:latest                              
 ```
 
 `dev-peer1.org2.example.com-mycc-1.0` とかいうコンテナが出現している理由がわからない。。。
+```
+The chaincode is then “instantiated” on peer0.org2.example.com. Instantiation adds the chaincode to the channel, starts the container for the target peer, and initializes the key value pairs associated with the chaincode. The initial values for this example are [“a”,”100” “b”,”200”]. This “instantiation” results in a container by the name of dev-peer0.org2.example.com-mycc-1.0 starting.
+```
+これってもしかして **LevelDB** プロセス？
 
 
-続きは以下。
+# CouchDB でやってみる
 
-- http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html#what-s-happening-behind-the-scenes
+## 1. 証明書・鍵の作成
+
+同様。
+
+## 2. 設定用トランザクションの作成
+
+同様。
+
+## 3. コンテナの作成
+
+```bash
+$ docker-compose -f docker-compose-cli.yaml -f docker-compose-couch.yaml up -d
+
+Creating network "net_byfn" with the default driver
+Creating volume "net_peer0.org2.example.com" with default driver
+Creating volume "net_peer1.org2.example.com" with default driver
+Creating volume "net_peer1.org1.example.com" with default driver
+Creating volume "net_peer0.org1.example.com" with default driver
+Creating volume "net_orderer.example.com" with default driver
+Creating couchdb2 ... 
+Creating orderer.example.com ... 
+Creating orderer.example.com
+Creating couchdb3 ... 
+Creating couchdb0 ... 
+Creating couchdb1 ... 
+Creating couchdb2
+Creating couchdb0
+Creating couchdb3
+Creating couchdb2 ... done
+Creating peer0.org2.example.com ... 
+Creating couchdb0 ... done
+Creating peer0.org1.example.com ... 
+Creating couchdb3 ... done
+Creating peer1.org2.example.com ... 
+Creating peer1.org1.example.com ... 
+Creating peer1.org2.example.com
+Creating peer1.org1.example.com ... done
+Creating cli ... 
+Creating cli ... done
+
+$ docker ps -a
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+f6421edf9e70        hyperledger/fabric-tools:latest     "/bin/bash"              31 seconds ago      Up 30 seconds                                                          cli
+9a091ca026c2        hyperledger/fabric-peer:latest      "peer node start"        31 seconds ago      Up 31 seconds       0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
+38710929e0c7        hyperledger/fabric-peer:latest      "peer node start"        31 seconds ago      Up 31 seconds       0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+e9fc8f117800        hyperledger/fabric-peer:latest      "peer node start"        32 seconds ago      Up 31 seconds       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+3ccf85005fed        hyperledger/fabric-peer:latest      "peer node start"        32 seconds ago      Up 31 seconds       0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+a5c1674156ef        hyperledger/fabric-couchdb          "tini -- /docker-e..."   33 seconds ago      Up 31 seconds       4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp         couchdb3
+c164108eafd1        hyperledger/fabric-couchdb          "tini -- /docker-e..."   33 seconds ago      Up 31 seconds       4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp         couchdb1
+4bfa549c6242        hyperledger/fabric-couchdb          "tini -- /docker-e..."   33 seconds ago      Up 32 seconds       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp         couchdb0
+8dc770e2004f        hyperledger/fabric-couchdb          "tini -- /docker-e..."   33 seconds ago      Up 32 seconds       4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp         couchdb2
+20f473476693        hyperledger/fabric-orderer:latest   "orderer"                33 seconds ago      Up 32 seconds       0.0.0.0:7050->7050/tcp                             orderer.example.com
+# 4 つの Peer 分の 4 つの CouchDB コンテナが起動する
+```
+
+## 4. 各コンテナの設定
+
+同様。
+
+## 5. chaincode の配布
+
+**CouchDB** を使用する場合 CouchDB はドキュメント DB なので、値は JSON 形式である必要がある。  
+そのため、先ほどと異なる chaincode `fabric/examples/chaincode/go` を配布する。
+
+```bash
+@cli$ peer chaincode install -n marbles -v 1.0 -p github.com/chaincode/marbles02/go
+
+2018-04-19 09:06:57.640 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:06:57.640 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:06:58.093 UTC [main] main -> INFO 003 Exiting.....
+# `peer0.org1.example.com` へ chaincode を配布する
+
+@cli$ 
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.key CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.crt CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp CORE_PEER_ADDRESS=peer0.org2.example.com:7051 peer chaincode install -n marbles -v 1.0 -p github.com/chaincode/marbles02/go
+
+2018-04-19 09:10:25.585 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:10:25.585 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:10:25.882 UTC [main] main -> INFO 003 Exiting.....
+# `peer0.org2.example.com` へ chaincode を配布する
+
+
+@cli$ peer chaincode instantiate -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -v 1.0 -c '{"Args":["init"]}' -P "OR ('Org0MSP.peer','Org1MSP.peer')"
+
+2018-04-19 09:11:05.346 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:11:05.346 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:11:24.283 UTC [main] main -> INFO 003 Exiting.....
+# `peer0.org1.example.com` へ chaincode のインスタンス化を実行
+
+# この時点で以下のコンテナが生成される
+CONTAINER ID        IMAGE                                                                                                     COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+f6a6f86513fd        dev-peer0.org1.example.com-marbles-1.0-f57d84df5eaddfab2c22f5896ebc44f52af3829d7f9d8a271b41651a0d4cb353   "chaincode -peer.a..."   48 seconds ago      Up 48 seconds                                                          dev-peer0.org1.example.com-marbles-1.0
+```
+
+## 6. chaincode の実行
+
+```bash
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["initMarble","marble1","blue","35","tom"]}'
+
+2018-04-19 09:14:18.769 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:14:18.769 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:14:18.781 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-19 09:14:18.781 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["initMarble","marble2","red","50","tom"]}'
+
+2018-04-19 09:14:45.663 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:14:45.663 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:14:45.689 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-19 09:14:45.689 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["initMarble","marble3","blue","70","tom"]}'
+
+2018-04-19 09:15:15.529 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:15:15.529 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:15:15.544 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-19 09:15:15.545 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["transferMarble","marble2","jerry"]}'
+
+2018-04-19 09:15:51.163 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:15:51.163 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:15:51.173 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-19 09:15:51.174 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["transferMarblesBasedOnColor","blue","jerry"]}'
+
+2018-04-19 09:16:13.337 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:16:13.337 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:16:13.359 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 payload:"Transferred 2 blue marbles to jerry" 
+2018-04-19 09:16:13.360 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c '{"Args":["delete","marble1"]}'
+
+2018-04-19 09:16:38.328 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:16:38.328 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2018-04-19 09:16:38.341 UTC [chaincodeCmd] chaincodeInvokeOrQuery -> INFO 003 Chaincode invoke successful. result: status:200 
+2018-04-19 09:16:38.341 UTC [main] main -> INFO 004 Exiting.....
+
+@cli$ peer chaincode query -C $CHANNEL_NAME -n marbles -c '{"Args":["readMarble","marble2"]}'
+
+2018-04-19 09:19:41.449 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:19:41.449 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: {"color":"red","docType":"marble","name":"marble2","owner":"jerry","size":50}
+2018-04-19 09:19:41.458 UTC [main] main -> INFO 003 Exiting.....
+
+@cli$ peer chaincode query -C $CHANNEL_NAME -n marbles -c '{"Args":["getHistoryForMarble","marble1"]}'
+
+2018-04-19 09:20:15.702 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:20:15.702 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: [{"TxId":"4912fad318b7906a68018736db704a9e502cafe657c29189c9ee9413e51ded7c", "Value":{"docType":"marble","name":"marble1","color":"blue","size":35,"owner":"tom"}, "Timestamp":"2018-04-19 09:14:18.77004991 +0000 UTC", "IsDelete":"false"},{"TxId":"0b293d7efb30a129bd0c649054886197cbcbb78cbffb158c0b66d83aad004776", "Value":{"docType":"marble","name":"marble1","color":"blue","size":35,"owner":"jerry"}, "Timestamp":"2018-04-19 09:16:13.337399502 +0000 UTC", "IsDelete":"false"},{"TxId":"02d23e2976ef00d1c13a64bf1b02e65f386d2c5bfa290dfb210498b540f59c20", "Value":null, "Timestamp":"2018-04-19 09:16:38.328712661 +0000 UTC", "IsDelete":"true"}]
+2018-04-19 09:20:15.712 UTC [main] main -> INFO 003 Exiting.....
+
+@cli$ peer chaincode query -C $CHANNEL_NAME -n marbles -c '{"Args":["queryMarblesByOwner","jerry"]}'
+
+2018-04-19 09:20:46.549 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2018-04-19 09:20:46.549 UTC [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Query Result: [{"Key":"marble2", "Record":{"color":"red","docType":"marble","name":"marble2","owner":"jerry","size":50}},{"Key":"marble3", "Record":{"color":"blue","docType":"marble","name":"marble3","owner":"jerry","size":70}}]
+2018-04-19 09:20:46.595 UTC [main] main -> INFO 003 Exiting.....
+```
+
+## 7. ログの確認
+
+CouchDB のパスは以下？
+
+```
+http://localhost:5984/_utils
+```
+
+## 8. ネットワークの停止
 
 なお、ネットワークの停止は `byfn.sh` でやる。
 
