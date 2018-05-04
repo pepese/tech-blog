@@ -46,6 +46,8 @@ $ dep help
 
 # A Tour of Go
 
+https://go-tour-jp.appspot.com/welcome/1
+
 ## hello.go
 
 ```bash
@@ -184,6 +186,317 @@ func main() {
 }
 ```
 
+## Variables
+
+`var` は **変数宣言** 。
+
+```go:variables.go
+package main
+
+import "fmt"
+
+var c, python, java bool
+
+func main() {
+	var i int
+	fmt.Println(i, c, python, java)
+}
+```
+
+## Variables with initializers
+
+初期化子が与えられている場合、型を省略できる。
+
+```go:variables-with-initializers.go
+package main
+
+import "fmt"
+
+var i, j int = 1, 2
+
+func main() {
+	var c, python, java = true, false, "no!"
+	fmt.Println(i, j, c, python, java)
+}
+```
+
+## Short variable declarations
+
+関数の中では、 `var` 宣言の代わりに、短い `:=` の代入文を使い、暗黙的な型宣言ができる。  
+関数の外では、キーワードではじまる宣言( `var` , `func` など)が必要で、 `:=` での暗黙的な宣言は利用できない。
+
+```go:short-variable-declarations
+package main
+
+import "fmt"
+
+func main() {
+	var i, j int = 1, 2
+	k := 3
+	c, python, java := true, false, "no!"
+
+	fmt.Println(i, j, k, c, python, java)
+}
+```
+
+## Basic types
+
+- `bool`
+- `string`
+- `int` `int8` `int16` `int32` `int64`
+- `uint` `uint8` `uint16` `uint32` `uint64` `uintptr`
+- `byte`
+    - `uint8` の別名
+- `rune`
+    - `int32` の別名
+    - Unicode のコードポイントを表す
+	- rune とは古代文字を表す言葉( runes )、 Go では文字そのものを表すためにruneという言葉を使う
+- `float32` `float64`
+- `complex64` `complex128`
+
+```go:basic-types.go
+package main
+
+import (
+	"fmt"
+	"math/cmplx"
+)
+
+var (
+	ToBe   bool       = false
+	MaxInt uint64     = 1<<64 - 1
+	z      complex128 = cmplx.Sqrt(-5 + 12i)
+)
+
+func main() {
+	fmt.Printf("Type: %T Value: %v\n", ToBe, ToBe)
+	fmt.Printf("Type: %T Value: %v\n", MaxInt, MaxInt)
+	fmt.Printf("Type: %T Value: %v\n", z, z)
+}
+```
+
+## Zero values
+
+変数に初期値を与えずに宣言すると、ゼロ値( **zero value** )が与えられる。  
+ゼロ値は型によって以下のように与えられる。
+
+- 数値型(int,floatなど): 0
+- bool型: false
+- string型: "" (空文字列( empty string ))
+
+```go:zero.go
+package main
+
+import "fmt"
+
+func main() {
+	var i int
+	var f float64
+	var b bool
+	var s string
+	fmt.Printf("%v %v %v %q\n", i, f, b, s)
+}
+```
+
+## Type conversions
+
+従来の **キャスト** とほぼ同じ。
+
+```go
+var i int = 42
+var f float64 = float64(i)
+var u uint = uint(f)
+```
+
+ただし、C言語とは異なり、 *Goでの型変換は明示的な変換が必要* 。
+
+## Type inference
+
+明示的な型を指定せずに変数を宣言する場合( `:=` や `var =` のいずれか)、変数の型は右側の変数から型推論される。
+
+```go
+i := 42           // int
+f := 3.142        // float64
+g := 0.867 + 0.5i // complex128
+```
+
+## Constants
+
+定数は、 `const` キーワードを使って変数と同じように宣言。  
+定数は、文字(character)、文字列(string)、boolean、数値(numeric)のみで使える。  
+なお、定数は `:=` を使って宣言できない。
+
+## For
+
+C言語 や Java、JavaScriptの for ループとは異なり、 for ステートメントの3つの部分を括る括弧 `( )` はない。なお、中括弧 `{ }` は必要。
+
+```go:for.go
+package main
+
+import "fmt"
+
+func main() {
+	sum := 0
+	for i := 0; i < 10; i++ {
+		sum += i
+	}
+	fmt.Println(sum)
+}
+```
+
+## For is Go's "while"
+
+`for ` はセミコロン(;)を省略することもできる。  
+つまり、C言語などにある `while` は、Goでは `for` だけを使う。
+
+```go:for-is-gos-while.go
+package main
+
+import "fmt"
+
+func main() {
+	sum := 1
+	for sum < 1000 {
+		sum += sum
+	}
+	fmt.Println(sum)
+}
+```
+
+## If
+
+Go 言語の `if` ステートメントは、 `for` ループと同様に、括弧 `( )` は不要で、中括弧 `{ }` は必要。
+
+## If with a short statement
+
+`if` ステートメントは、 `for` のように、条件の前に、評価するための簡単なステートメントを書くことができる。  
+ここで宣言された変数は、 if のスコープ内だけで有効。
+
+```go:if-with-a-short-statement.go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func pow(x, n, lim float64) float64 {
+	if v := math.Pow(x, n); v < lim {
+		return v
+	}
+	return lim
+}
+
+func main() {
+	fmt.Println(
+		pow(3, 2, 10),
+		pow(3, 3, 20),
+	)
+}
+```
+
+## If and else
+
+`if` ステートメントで宣言された変数は、 `else` ブロック内でも使うことができる。
+
+```go:if-and-else.go
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func pow(x, n, lim float64) float64 {
+	if v := math.Pow(x, n); v < lim {
+		return v
+	} else {
+		fmt.Printf("%g >= %g\n", v, lim)
+	}
+	// can't use v here, though
+	return lim
+}
+
+func main() {
+	fmt.Println(
+		pow(3, 2, 10),
+		pow(3, 3, 20),
+	)
+}
+```
+
+## Switch
+
+Go の `switch` は C や C++、Java、JavaScript、PHP の `switch` と似ているが、 Go では選択された `case` だけを実行してそれに続く全ての `case` は実行されない。 これらの言語の各 `case` の最後に必要な `break` ステートメントが Go では *自動的に提供される* 。 もう一つの重要な違いは Go の `switch` の `case` は定数である必要はなく、 関係する値は整数である必要はない。
+
+```go:switch.go
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+func main() {
+	fmt.Print("Go runs on ")
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		fmt.Println("OS X.")
+	case "linux":
+		fmt.Println("Linux.")
+	default:
+		// freebsd, openbsd,
+		// plan9, windows...
+		fmt.Printf("%s.", os)
+	}
+}
+```
+
+## Defer
+
+`defer` ステートメントは、 `defer` へ渡した関数の実行を、呼び出し元の関数の終わり( `return` する)まで遅延させる。  
+`defer` へ渡した関数の引数は、すぐに評価されるが、その関数自体は呼び出し元の関数が `return` するまで実行されない。
+
+```go:defer.go
+package main
+
+import "fmt"
+
+func main() {
+	defer fmt.Println("world")
+
+	fmt.Println("hello")
+}
+// hello
+// world
+// と出力される
+```
+
+## Stacking defers
+
+`defer` へ渡した関数が複数ある場合、その呼び出しはスタックされ、 LIFO の順番で実行される。
+
+```go:defer-multi.go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("counting")
+
+	for i := 0; i < 10; i++ {
+		defer fmt.Println(i)
+	}
+
+	fmt.Println("done")
+}
+```
+
+[Defer, Panic, and Recover](https://blog.golang.org/defer-panic-and-recover)
+
+## つづき
+
+https://go-tour-jp.appspot.com/moretypes/1
 
 # 参考
 
