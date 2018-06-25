@@ -45,7 +45,7 @@ $ yarn init
 Angular CLI 等で既にプロジェクトを作成している場合は、上記は行わず以下から実行。
 
 ```sh
-$ yarn add express@5.0.0-alpha.5 body-parser cookie-parser debug morgan pug serve-favicon request fs file-stream-rotator node-sass-middleware
+$ yarn add express@5.0.0-alpha.6 body-parser cookie-parser debug morgan pug serve-favicon request fs file-stream-rotator node-sass-middleware
 $ touch .gitignore
 $ mkdir app                     // サーバサイドExpressアプリ用のソースディレクトリ作成
 $ touch app/app.js              // Expressアプリケーション起動ポイントの作成
