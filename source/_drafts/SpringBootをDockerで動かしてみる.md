@@ -50,3 +50,36 @@ $ docker container rm 001c7ffc3e52
 - [Spring Boot with Docker](https://spring.io/guides/gs/spring-boot-docker/)
 - [SpringBootの開発環境をdockerでつくる](https://qiita.com/wataling/items/fa8b74fa50d80b88aea3)
 - [Docker ドキュメント日本語化プロジェクト](http://docs.docker.jp/)
+
+# おまけ（ Express を Docker で動かしてみる
+
+## Dockerfile
+
+場所は Express アプリプロジェクト（ express-sample ）ルート。
+
+```
+FROM node:10.5.0-alpine
+ENV APP_ROOT /usr/src/sample-express
+
+# Create app directory
+WORKDIR $APP_ROOT
+
+# Copy app
+COPY . $APP_ROOT
+
+# Install dependencies
+RUN npm install -g yarn && yarn install
+
+CMD [ "node", "app/app.js" ]
+```
+
+## ビルド、実行
+
+```bash
+$ cd express-sample
+$ docker build .
+$ docker run -p 3000:3000 -d xxxxxxxxxxxx
+$ curl localhost:3000
+$ docker container stop xxxxxxxxxxxx
+$ docker container rm xxxxxxxxxxxx
+```

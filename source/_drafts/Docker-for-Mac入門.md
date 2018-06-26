@@ -297,6 +297,13 @@ $ docker load < イメージ名>.tar
 
 http://qiita.com/curseoff/items/a9e64ad01d673abb6866
 
+# Dockerfile
+
+## CMD と ENTRYPOINT の違い
+
+- [[docker] CMD とENTRYPOINT の違いを試してみた](https://qiita.com/hihihiroro/items/d7ceaadc9340a4dbeb8f)
+- [dockerのENTRYPOINTとCMDの書き方と使い分け、さらに併用](https://qiita.com/hnakamur/items/afddaa3dbe48ad2b8b5c)
+
 # ボリュームプラグイン/ストレージドライバ/データ保存用コンテナ
 
 ## ボリュームプラグイン

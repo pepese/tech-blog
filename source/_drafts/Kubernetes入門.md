@@ -70,7 +70,7 @@ id: kubernetes-basics
 - Kubefed
     - kubefed is the command line tool to help you administrate your federated clusters.
 - Minikube
-    - 1 台のローカル端末で シングル No-de の Kubernetes Cluster をお試しできるツール
+    - 1 台のローカル端末で シングル Node の Kubernetes Cluster をお試しできるツール
 - Dashboard
     - Dashboard, the web-based user interface of Kubernetes, allows you to deploy containerized applications to a Kubernetes cluster, troubleshoot them, and manage the cluster and its resources itself.
 
