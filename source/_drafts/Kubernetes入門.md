@@ -25,7 +25,7 @@ id: kubernetes-basics
     - 管理サーバ
     - ホストマシン 1 台
     - クライアントツールから API 経由でコントロール
-    - apiserver 、 controller-manager 、　scheduler などのプロセスが稼働
+    - apiserver 、 controller-manager(Replication Controller?) 、　scheduler などのプロセスが稼働
 - **Kubernetes Node** (旧名 Minion)
     - Master からコントロールされるワーカーサーバ
     - ホストマシン複数台で構成されるクラスタ
@@ -52,11 +52,11 @@ id: kubernetes-basics
     - コンテナ間の通信を可能にする
     - Kubernetes 管理下のコンテナに一意の IP を割り振る
 - etcd
-    - Node 上で動くプロセス
+    - Node 上で動くプロセス（違うかも、Masterからアクセスされる？）
     - flaneld が使用する共有データ（分散 KVS ）
     - 管理用コマンドは etcdctl
 - Label
-    コンポーネントを整理するための任意のメタデータ    
+    コンポーネントを整理するための任意のメタデータ
 
 「 **Node > Service > Pod > コンテナ** 」なイメージ。  
 [イメージ図](https://www.slideshare.net/yhokkey/kubernetes-google-container-engine-dockergke/42)
