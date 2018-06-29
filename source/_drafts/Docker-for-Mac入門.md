@@ -355,12 +355,32 @@ $ docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes
 なお、 **Docker for Mac** などを使用してVM上にDockerコンテナを起動している場合は、localhost(127.0.0.1)で接続できないことに注意。  
 `docker-machine` を使用している場合は `docker-machine ip default` （defaultはVM名）でIPを確認して接続する。
 
+# Docker Compose
+
+## Compose ファイル
+
+```yaml
+version: '3' # docker-composeのバージョン
+services:    # 以下、コンテナの定義
+  nginx:       # コンテナの名前（任意の文字列）
+    〜サービスの定義〜
+  php:         # コンテナの名前（任意の文字列）
+    〜サービスの定義〜
+```
+
+- サービス（ services ）
+- ネットワーク（ networks ）
+- ボリューム（ volumes ）
+
 # 参考
 
 - [Dockerについて基本から最近追加された機能までまとめ](http://qiita.com/tigberd/items/b94ae2bf7d78685cd6f5)
   - entrypointの話が味噌
 - [Dockerクラスタ swarm モード](http://qiita.com/zembutsu/items/8da9398d0be61e17aa4f)
 - [Dockerドキュメント日本語化プロジェクト](http://docs.docker.jp/)
+  - [Docker Compose](http://docs.docker.jp/compose/toc.html)
+    - [Compose ファイル・リファレンス](http://docs.docker.jp/compose/compose-file.html)
+    - [Docker Compose - docker-compose.yml リファレンス](https://qiita.com/zembutsu/items/9e9d80e05e36e882caaa)
 - [Docker入門](http://docker.yuichi.com/)
 - [Dockerの基礎・使い方がよくわかる記事・スライド11選](https://career.levtech.jp/guide/knowhow/article/68/)
 - [Dockerのライフサイクルを理解するハンズオン資料](http://qiita.com/zembutsu/items/d146295cfcf69c205c1e)
