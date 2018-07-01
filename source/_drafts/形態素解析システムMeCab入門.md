@@ -140,6 +140,12 @@ userdic = /usr/local/lib/mecab/dic/user-dic/user-dic.dic
 
 [参考](https://taku910.github.io/mecab/dic.html)
 
+## 分かち書き
+
+```bash
+$ mecab -Owakati input.txt > output_wakati.txt
+```
+
 # Node.js から Mecabを使う
 
 上記の手順で MeCab をセットアップしていることが前提。
