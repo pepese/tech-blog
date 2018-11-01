@@ -50,6 +50,8 @@ docker-machine version 0.14.0, build 89b8332
 
 CE つまり Community Edition がインストールされたのがわかる。
 
+`which docker` が見つからない場合は Docker が起動していないだけなので `open /Applications/Docker.app/` を実行する。
+
 # 動かしてみる
 
 ```bash

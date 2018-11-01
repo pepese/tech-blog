@@ -19,44 +19,48 @@ id: kubernetes-basics
 
 ## 構成・概念
 
-- ホストマシン
-    - 物理サーバ、もしくは仮想マシン、インスタンス
-- **Kubernetes Master**
-    - 管理サーバ
-    - ホストマシン 1 台
-    - クライアントツールから API 経由でコントロール
-    - apiserver 、 controller-manager(Replication Controller?) 、　scheduler などのプロセスが稼働
-- **Kubernetes Node** (旧名 Minion)
-    - Master からコントロールされるワーカーサーバ
-    - ホストマシン複数台で構成されるクラスタ
-    - コンテナがマウントされる
-    - kubelet 、 kube-proxy 、 flanneld 、 docker デーモンなどのプロセスが稼働
-    - 複数 Node をまとめて **Cluster** と呼ぶ
-- **Pod**
-    - 複数のコンテナ間で共有して使用する仮想 NIC とそれを利用するコンテナ（と Volume ）をまとめて Pod という
-    - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
-    - Pod の中は Localhost の扱い
-    - **Replication Controller** (rc) が Pod 内のコンテナの多重度をコントロールする
-        - 障害検知、オートスケール
-- **Service**
-    - 1 つのものとして振る舞う複数 Pod をまとまり
-    - L3ロードバランサのようなもの
-    - Pod へアクセスをプロキシする
-    - 「 IP + Port 」のアクセスを複数 Pod へ割り振る
-    - Node へは Service の単位で配備される
-- **コンテナ**
-    - 所謂 Docker コンテナ
-    - 1 つの Volume を複数コンテナで共有できる
-- flanneld
-    - Node 上で動くプロセス
-    - コンテナ間の通信を可能にする
-    - Kubernetes 管理下のコンテナに一意の IP を割り振る
-- etcd
-    - Node 上で動くプロセス（違うかも、Masterからアクセスされる？）
-    - flaneld が使用する共有データ（分散 KVS ）
-    - 管理用コマンドは etcdctl
-- Label
-    コンポーネントを整理するための任意のメタデータ
+- 物理レイヤ
+    - ホストマシン
+        - 物理サーバ、もしくは仮想マシン、インスタンス
+    - **Kubernetes Master**
+        - 管理サーバ
+        - ホストマシン 1 台
+        - クライアントツールから API 経由でコントロール
+        - apiserver 、 controller-manager(Replication Controller?) 、　scheduler などのプロセスが稼働
+    - **Kubernetes Node** (旧名 Minion)
+        - Master からコントロールされるワーカーサーバ
+        - ホストマシン複数台で構成されるクラスタ
+        - コンテナがマウントされる
+        - kubelet 、 kube-proxy 、 flanneld 、 docker デーモンなどのプロセスが稼働
+        - 複数 Node をまとめて **Cluster** と呼ぶ
+- Components
+- 仮想レイヤ
+    - **Pod**
+        - 複数のコンテナ間で共有して使用する仮想 NIC とそれを利用するコンテナ（と Volume ）をまとめて Pod という
+        - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
+        - Pod の中は Localhost の扱い
+        - **Replication Controller** (rc) が Pod 内のコンテナの多重度をコントロールする
+            - 障害検知、オートスケール
+    - **Service**
+        - 1 つのものとして振る舞う複数 Pod をまとまり
+        - L3ロードバランサのようなもの
+        - Pod へアクセスをプロキシする
+        - 「 IP + Port 」のアクセスを複数 Pod へ割り振る
+        - Node へは Service の単位で配備される
+    - **コンテナ**
+        - 所謂 Docker コンテナ
+        - 1 つの Volume を複数コンテナで共有できる
+- その他
+    - flanneld
+        - Node 上で動くプロセス
+        - コンテナ間の通信を可能にする
+        - Kubernetes 管理下のコンテナに一意の IP を割り振る
+    - etcd
+        - Node 上で動くプロセス（違うかも、Masterからアクセスされる？）
+        - flaneld が使用する共有データ（分散 KVS ）
+        - 管理用コマンドは etcdctl
+    - Label
+        コンポーネントを整理するための任意のメタデータ
 
 「 **Node > Service > Pod > コンテナ** 」なイメージ。  
 [イメージ図](https://www.slideshare.net/yhokkey/kubernetes-google-container-engine-dockergke/42)
@@ -85,7 +89,9 @@ id: kubernetes-basics
 
 # 環境設定
 
-Hypervisor (xhyve driver か VirtualBox か VMware Fusion) 、 **kuberctl** 、 **Minikuber** をインストールする。  
+## Minikube の場合
+
+Hypervisor (xhyve driver か VirtualBox か VMware Fusion) 、 **kuberctl** 、 **Minikube** をインストールする。  
 ここでは、Hypervisor に VirtualBox を選択する。
 
 ```sh
@@ -101,6 +107,42 @@ $ which minikube
 ```
 
 公式のインストールドキュメントは[ここ](https://kubernetes.io/docs/tasks/tools/install-kubectl/) 。
+
+## Docker for Mac の場合
+
+**Docker for Mac** をインストールしている場合は、dockerアプリからpreferencesを開き、kubernetesを有効にすると利用できるようになる。  
+`Kubernetes` と `Swarm` があるが、ここでは前者を選択する。
+
+```
+$ which kubectl
+/usr/local/bin/kubectl
+
+$ kubectl cluster-info
+Kubernetes master is running at https://localhost:6443
+KubeDNS is running at https://localhost:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+$ kubectl get node
+NAME                 STATUS    ROLES     AGE       VERSION
+docker-for-desktop   Ready     master    3m        v1.10.3
+```
+
+kubernetes master がローカルマシン（ docker-for-desktop ）であることがわかる。  
+デフォルトで起動している POD を確認してみる。
+
+```
+$ kubectl get po --all-namespaces
+NAMESPACE     NAME                                         READY     STATUS    RESTARTS   AGE
+docker        compose-7447646cf5-txjf9                     1/1       Running   0          27m
+docker        compose-api-6fbc44c575-8txhh                 1/1       Running   0          27m
+kube-system   etcd-docker-for-desktop                      1/1       Running   0          27m
+kube-system   kube-apiserver-docker-for-desktop            1/1       Running   0          27m
+kube-system   kube-controller-manager-docker-for-desktop   1/1       Running   0          27m
+kube-system   kube-dns-86f4d74b45-95ftq                    3/3       Running   0          27m
+kube-system   kube-proxy-6b26j                             1/1       Running   0          27m
+kube-system   kube-scheduler-docker-for-desktop            1/1       Running   0          26m
+```
 
 # 使い方
 
@@ -172,21 +214,39 @@ VM 上のゲスト OS も削除されているのがわかる。
     - Pod 内のコンテナのログを取得
 - `kubectl exec`
     - Pod 内のコンテナ上でコマンドを実行する
+- `kubectl config`
+    - kubeconfig ファイルを変更する
 
 ### クライアント、サーバのバージョンを確認
 
 ```sh
 $ kubectl version
-Client Version: version.Info{Major:"1", Minor:"8", GitVersion:"v1.8.4", GitCommit:"9befc2b8928a9426501d3bf62f72849d5cbcd5a3", GitTreeState:"clean", BuildDate:"2017-11-20T19:11:02Z", GoVersion:"go1.9.2", Compiler:"gc", Platform:"darwin/amd64"}
-Server Version: version.Info{Major:"1", Minor:"8", GitVersion:"v1.8.0", GitCommit:"0b9efaeb34a2fc51ff8e4d34ad9bc6375459c4a4", GitTreeState:"clean", BuildDate:"2017-11-29T22:43:34Z", GoVersion:"go1.9.1", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.3", GitCommit:"2bba0127d85d5a46ab4b778548be28623b32d0b0", GitTreeState:"clean", BuildDate:"2018-05-21T09:17:39Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.3", GitCommit:"2bba0127d85d5a46ab4b778548be28623b32d0b0", GitTreeState:"clean", BuildDate:"2018-05-21T09:05:37Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"linux/amd64"}
+```
+
+### 設定を確認
+
+コンテキストの確認。
+
+```
+$ kubectl config get-contexts
+CURRENT   NAME                 CLUSTER                      AUTHINFO             NAMESPACE
+*         docker-for-desktop   docker-for-desktop-cluster   docker-for-desktop
+```
+
+コンテキストを切り替える。
+
+```
+$ kubectl config use-context docker-for-desktop
 ```
 
 ### Node の一覧を取得
 
 ```sh
 $ kubectl get nodes
-NAME       STATUS    ROLES     AGE       VERSION
-minikube   Ready     <none>    10m       v1.8.0
+NAME                 STATUS    ROLES     AGE       VERSION
+docker-for-desktop   Ready     master    57m       v1.10.3
 ```
 
 ### コンテナをデプロイ
