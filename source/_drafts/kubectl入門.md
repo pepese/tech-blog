@@ -48,7 +48,10 @@ explain	kubectl explain [--include-extended-apis=true] [--recursive=false] [flag
     - `kubectl expose (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--port=port] [--protocol=TCP\|UDP] [--target-port=number-or-name] [--name=name] [--external-ip=external-ip-of-service] [--type=type] [flags]`
     - レプリケーションコントローラ、サービス、またはポッドを新しいKubernetesサービスとして公開する
 
-get	kubectl get (-f FILENAME \| TYPE [NAME \| /NAME \| -l label]) [--watch] [--sort-by=FIELD] [[-o \| --output]=OUTPUT_FORMAT] [flags]	List one or more resources.
+- get
+    - `kubectl get (-f FILENAME \| TYPE [NAME \| /NAME \| -l label]) [--watch] [--sort-by=FIELD] [[-o \| --output]=OUTPUT_FORMAT] [flags]`
+    - リソースの情報を表示する
+
 label	kubectl label (-f FILENAME \| TYPE NAME \| TYPE/NAME) KEY_1=VAL_1 ... KEY_N=VAL_N [--overwrite] [--all] [--resource-version=version] [flags]	Add or update the labels of one or more resources.
 logs	kubectl logs POD [-c CONTAINER] [--follow] [flags]	Print the logs for a container in a pod.
 patch	kubectl patch (-f FILENAME \| TYPE NAME \| TYPE/NAME) --patch PATCH [flags]	Update one or more fields of a resource by using the strategic merge patch process.
@@ -56,7 +59,124 @@ port-forward	kubectl port-forward POD [LOCAL_PORT:]REMOTE_PORT [...[LOCAL_PORT_N
 proxy	kubectl proxy [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [--api-prefix=prefix] [flags]	Run a proxy to the Kubernetes API server.
 replace	kubectl replace -f FILENAME	Replace a resource from a file or stdin.
 rolling-update	kubectl rolling-update OLD_CONTROLLER_NAME ([NEW_CONTROLLER_NAME] --image=NEW_CONTAINER_IMAGE \| -f NEW_CONTROLLER_SPEC) [flags]	Perform a rolling update by gradually replacing the specified replication controller and its pods.
-run	kubectl run NAME --image=image [--env="key=value"] [--port=port] [--replicas=replicas] [--dry-run=bool] [--overrides=inline-json] [flags]	Run a specified image on the cluster.
+
+- run
+    - `kubectl run NAME --image=image [--env="key=value"] [--port=port] [--replicas=replicas] [--dry-run=bool] [--overrides=inline-json] [flags]`
+    - Cluster 上でコンテナイメージを起動する（ Pod も作成される）
+
 scale	kubectl scale (-f FILENAME \| TYPE NAME \| TYPE/NAME) --replicas=COUNT [--resource-version=version] [--current-replicas=count] [flags]	Update the size of the specified replication controller.
 stop	kubectl stop	Deprecated: Instead, see kubectl delete.
 version	kubectl version [--client] [flags]	Display the Kubernetes version running on the client and server.
+
+# 一通り
+
+Nginx のコンテナを実行する。
+
+```
+$ kubectl run nginx --image=nginx:1.11.3
+
+$ kubectl get pods
+NAME                     READY     STATUS              RESTARTS   AGE
+nginx-74b65c798c-9zj44   0/1       ContainerCreating   0          14s
+
+$ kubectl get all
+NAME                         READY     STATUS    RESTARTS   AGE
+pod/nginx-74b65c798c-9zj44   1/1       Running   0          3s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
+
+NAME                    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1         1         1            1           3s
+
+NAME                               DESIRED   CURRENT   READY     AGE
+replicaset.apps/nginx-74b65c798c   1         1         1         3s
+```
+
+Pod 、 deployment 、 Replica Set が作成された。  
+上記で Pod が `ContainerCreating` になっているのがわかる。（ `Running` になるまで待つ。）  
+この状態では、 **Worker Node 上でコンテナが動いているだけ** なので、 `expose` コマンドで Service を作成して **公開** する。
+
+```
+$ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
+
+$ kubectl expose deployment nginx --port 80 --type LoadBalancer
+service "nginx" exposed
+
+$ kubectl get services
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1      <none>        443/TCP        10h
+nginx        LoadBalancer   10.111.65.40   localhost     80:30562/TCP   5s
+
+$ kubectl get all
+NAME                         READY     STATUS    RESTARTS   AGE
+pod/nginx-74b65c798c-9zj44   1/1       Running   0          1m
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        10h
+service/nginx        LoadBalancer   10.98.192.178   localhost     80:30033/TCP   4s
+
+NAME                    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1         1         1            1           1m
+
+NAME                               DESIRED   CURRENT   READY     AGE
+replicaset.apps/nginx-74b65c798c   1         1         1         1m
+```
+
+nginx という Service が作成されて、 80 番ポートで公開されていることがわかる。  
+試しにアクセスしてみる。
+
+```
+$ curl localhost
+〜省略〜
+<title>Welcome to nginx!</title>
+〜省略〜
+```
+
+終わったので `kubectl delete` コマンドで停止する。
+
+```
+$ kubectl get deployments
+NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+nginx     1         1         1            1           21m
+
+$ kubectl delete service nginx
+service "nginx" deleted
+
+$ kubectl delete deployment nginx
+deployment.extensions "nginx" deleted
+
+$ kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
+```
+
+## `kubectl expose` について
+
+`kubectl expse` では以下をコントロールできる。
+
+- deployment
+    - Replication Controller と pod の両方を一括で管理
+- service
+- replica set
+    - ReplicationControllerの後継？
+- replication controller
+- pod
+
+`--type` では Service の TYPE を選択できる。
+
+- ClusterIP (default)
+    - Kubernetes Cluster 内に閉じる Internal IP を公開する
+- NodePort
+    - 指定したPort に対して Node の NAT を構成する
+    - Kubernetes Cluster 外部に公開され、 `<NodeIP>:<NodePort>` でアクセスできる
+    - ClusterIP のスーパーセット
+- LoadBalancer
+    - Kubernetes Cluster 外部に公開されるロードバランサ
+    - 外部 IP アドレスが作成され、アクセス可能となる
+    - NodePort のスーパーセット
+- ExternalName
+    - 任意の名前と設定できる
+    - kube-dns の CNAME レコードとなる
