@@ -22,12 +22,16 @@ id: kubernetes-basics
 - 物理レイヤ
     - ホストマシン
         - 物理サーバ、もしくは仮想マシン、インスタンス
-    - **Kubernetes Master**
+    - **Master Node(s)**
         - 管理サーバ
-        - ホストマシン 1 台
-        - クライアントツールから API 経由でコントロール
-        - apiserver 、 controller-manager(Replication Controller?) 、　scheduler などのプロセスが稼働
-    - **Kubernetes Node** (旧名 Minion)
+        - クライアントツールからこのノードを経由して Worker をコントロールする
+        - 以下のプロセスがある
+            - Kubernetes API server
+            - etcd server client API
+            - Kubelet API
+            - kube-scheduler
+            - kube-controller-manager
+    - **Worker Node(s)**
         - Master からコントロールされるワーカーサーバ
         - ホストマシン複数台で構成されるクラスタ
         - コンテナがマウントされる
@@ -41,8 +45,9 @@ id: kubernetes-basics
         - Pod の中は Localhost の扱い
         - **Replication Controller** (rc) が Pod 内のコンテナの多重度をコントロールする
             - 障害検知、オートスケール
+        - 複数種類のコンテナを 1 つの Pod に入れることができる
     - **Service**
-        - 1 つのものとして振る舞う複数 Pod をまとまり
+        - Pod の集合に対して外部と通信を行うための通り道
         - L3ロードバランサのようなもの
         - Pod へアクセスをプロキシする
         - 「 IP + Port 」のアクセスを複数 Pod へ割り振る
@@ -68,11 +73,12 @@ id: kubernetes-basics
 ## ツール
 
 - Kubectl
-    - kubectl is the command line tool for Kubernetes. It controls the Kubernetes cluster manager.
+    - Kubernetes Cluster を管理するコマンド
 - Kubeadm
-    - kubeadm is the command line tool for easily provisioning a secure Kubernetes cluster on top of physical or cloud servers or virtual machines (currently in alpha).
+    - 物理・もしくは仮想サーバに対して Kubernetes の設定管理を行うコマンド
 - Kubefed
-    - kubefed is the command line tool to help you administrate your federated clusters.
+    - Federation を管理するコマンド
+    - Federationは複数のリージョンやクラウドに配置されているKubernetesのクラスタを一括で管理できるようにする機能
 - Minikube
     - 1 台のローカル端末で シングル Node の Kubernetes Cluster をお試しできるツール
 - Dashboard
@@ -362,10 +368,11 @@ NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   43m
 ```
 
-Service を作成してみる。
+上記の kubernetes は master から node に通信する用の Service 。  
+新しく Service を作成してみる。
 
 ```sh
-$ kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+$ kubectl expose deployment kubernetes-bootcamp --type="NodePort" --port 8080
 service "kubernetes-bootcamp" exposed
 $
 $ kubectl get services
@@ -373,7 +380,7 @@ NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        
 kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP          46m
 kubernetes-bootcamp   NodePort    10.102.125.240   <none>        8080:31130/TCP   10m
 $
-$ kubectl describe services/kubernetes-bootcamp
+$ kubectl describe services kubernetes-bootcamp
 Name:                     kubernetes-bootcamp
 Namespace:                default
 Labels:                   run=kubernetes-bootcamp
@@ -389,7 +396,7 @@ Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
 $
-$ kubectl get services/kubernetes-bootcamp
+$ kubectl get services kubernetes-bootcamp
 NAME                  TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 kubernetes-bootcamp   NodePort   10.102.125.240   <none>        8080:31130/TCP   13m
 ```
