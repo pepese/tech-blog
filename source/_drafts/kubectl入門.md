@@ -7,6 +7,53 @@ tags:
 id: kubectl-basics
 ---
 
+# Kubernetes のリソース
+
+https://thinkit.co.jp/article/13610
+
+- Workloads リソース
+    - コンテナの実行に関するリソース
+- Discovery＆LB リソース
+    - コンテナを外部公開するようなエンドポイントを提供するリソース
+- Config＆Storage リソース
+    - 設定・機密情報・永続化ボリュームなどに関するリソース
+- Cluster リソース
+    - セキュリティやクォータなどに関するリソース
+- Metadata リソース
+    - リソースを操作する系統のリソース
+
+## Workloads リソース
+
+- Pod
+    - 複数のコンテナ間で共有して使用する 1 つの仮想 NIC と、それを利用する複数のコンテナ（と Volume ）をまとめて Pod という
+    - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
+    - Pod の中は Localhost の扱い
+    - Pod 内には複数種類のコンテナを格納でき、メインのコンテナに加えて、補助的な役割を担うコンテナ（サブコンテナ）を加える構成のことを **サイドカー** と呼ぶ
+- ReplicationController
+- ReplicaSet
+- Deployment
+- DaemonSet
+- StatefulSet
+- Job
+- CronJob
+
+### 例
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample-pod
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:1.12
+      ports:
+      - containerPort: 80
+```
+
+# kubectl コマンド
+
 ```
 $ kubectl [command] [TYPE] [NAME] [flags]
 ```
@@ -157,12 +204,14 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
 
 `kubectl expse` では以下をコントロールできる。
 
-- deployment
-    - Replication Controller と pod の両方を一括で管理
+- Deployments
+    - Pods と ReplicaSets を一括で管理
 - service
 - replica set
-    - ReplicationControllerの後継？
-- replication controller
+    - ReplicationController の後継
+    - selector をサポートする点において ReplicationController と異なる
+- ReplicationController
+    - 複数の Pods を管理
 - pod
 
 `--type` では Service の TYPE を選択できる。
