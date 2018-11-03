@@ -9,12 +9,12 @@ id: kubectl-basics
 
 # Kubernetes のリソース
 
-https://thinkit.co.jp/article/13610
-
 - Workloads リソース
     - コンテナの実行に関するリソース
+    - https://thinkit.co.jp/article/13610
 - Discovery＆LB リソース
     - コンテナを外部公開するようなエンドポイントを提供するリソース
+    - https://thinkit.co.jp/article/13738
 - Config＆Storage リソース
     - 設定・機密情報・永続化ボリュームなどに関するリソース
 - Cluster リソース
@@ -29,13 +29,25 @@ https://thinkit.co.jp/article/13610
     - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
     - Pod の中は Localhost の扱い
     - Pod 内には複数種類のコンテナを格納でき、メインのコンテナに加えて、補助的な役割を担うコンテナ（サブコンテナ）を加える構成のことを **サイドカー** と呼ぶ
-- ReplicationController
 - ReplicaSet
-- Deployment
-- DaemonSet
-- StatefulSet
+    - ReplicationController の後継
+    - 複数の Pods を管理
+    - Podのレプリカを生成し、指定した数のPodを維持し続けるリソース（ **オートヒーリング** ）
+    - 監視は、特定の Label がつけられたPodの数をカウントする形で実現
+        - レプリカ数が不足している場合は template から Pod を生成し、レプリカ数が過剰な場合は Label にマッチする Pod のうち1つを削除
+    - selector をサポートする点において ReplicationController と異なる
+    - set-based selector
+    - ReplicaSet の特殊な形として「 DaemonSet 」「 StatefulSet 」がある
+- ReplicationController
+    - equality-based selector
+- Deployments
+    - Pods と ReplicaSets を一括で管理
+    - Deploymentは複数のReplicaSetを管理することで、ローリングアップデートやロールバックなどを実現可能にするリソース
 - Job
+    - コンテナを利用して一度限りの処理を実行させるリソース
 - CronJob
+    - ScheduledJob の後継
+    - スケジュールされた時間に Job を生成
 
 ### 例
 
@@ -51,6 +63,23 @@ spec:
       ports:
       - containerPort: 80
 ```
+
+## Discovery＆LB リソース
+
+- Service
+    - 1 つのマイクロサービスととらえることができる
+    - 「 Pod 宛トラフィックのロードバランシング」「サービスディスカバリと内部 DNS 」を実現
+- Ingress
+    - 省略
+
+- Service
+    - ClusterIP
+    - NodePort
+    - LoadBalancer
+    - ExternalIP
+    - ExternalName
+    - Headless（None）
+- Ingress
 
 # kubectl コマンド
 
@@ -202,18 +231,7 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
 
 ## `kubectl expose` について
 
-`kubectl expse` では以下をコントロールできる。
-
-- Deployments
-    - Pods と ReplicaSets を一括で管理
-- service
-- replica set
-    - ReplicationController の後継
-    - selector をサポートする点において ReplicationController と異なる
-- ReplicationController
-    - 複数の Pods を管理
-- pod
-
+`kubectl expse` では Workloads リソースをコントロールできる。  
 `--type` では Service の TYPE を選択できる。
 
 - ClusterIP (default)
