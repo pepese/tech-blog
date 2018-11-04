@@ -17,6 +17,7 @@ id: kubectl-basics
     - https://thinkit.co.jp/article/13738
 - Config＆Storage リソース
     - 設定・機密情報・永続化ボリュームなどに関するリソース
+    - https://thinkit.co.jp/article/14139
 - Cluster リソース
     - セキュリティやクォータなどに関するリソース
 - Metadata リソース
@@ -49,21 +50,6 @@ id: kubectl-basics
     - ScheduledJob の後継
     - スケジュールされた時間に Job を生成
 
-### 例
-
-```yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: sample-pod
-spec:
-  containers:
-    - name: nginx-container
-      image: nginx:1.12
-      ports:
-      - containerPort: 80
-```
-
 ## Discovery＆LB リソース
 
 - Service
@@ -80,6 +66,15 @@ spec:
     - ExternalName
     - Headless（None）
 - Ingress
+
+## Config＆Storage リソース
+
+コンテナに対して設定ファイル、パスワードなどの機密情報などをインジェクトしたり、永続化ボリュームを提供したりするためのリソース。  
+Kubernetesでは、個別のコンテナに対する設定の内容は環境変数やファイルが置かれた領域をマウントして渡すことが一般的
+
+- Secret
+- ConfigMap
+- PersistentVolumeClaim
 
 # kubectl コマンド
 
