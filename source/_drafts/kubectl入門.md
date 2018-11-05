@@ -43,12 +43,14 @@ id: kubectl-basics
     - equality-based selector
 - Deployments
     - Pods と ReplicaSets を一括で管理
-    - Deploymentは複数のReplicaSetを管理することで、ローリングアップデートやロールバックなどを実現可能にするリソース
+    - Deployment は複数の ReplicaSet を管理することで、ローリングアップデートやロールバックなどを実現可能にするリソース
 - Job
     - コンテナを利用して一度限りの処理を実行させるリソース
 - CronJob
     - ScheduledJob の後継
     - スケジュールされた時間に Job を生成
+
+Pod の管理・制御を行うリソース（オブジェクト）を **コントローラ** という。
 
 ## Discovery＆LB リソース
 
@@ -108,8 +110,15 @@ attach	kubectl attach POD -c CONTAINER [-i] [-t] [flags]	Attach to a running con
 autoscale	kubectl autoscale (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--min=MINPODS] --max=MAXPODS [--cpu-percent=CPU] [flags]	Automatically scale the set of pods that are managed by a replication controller.
 cluster-info	kubectl cluster-info [flags]	Display endpoint information about the master and services in the cluster.
 config	kubectl config SUBCOMMAND [flags]	Modifies kubeconfig files. See the individual subcommands for details.
-create	kubectl create -f FILENAME [flags]	Create one or more resources from a file or stdin.
-delete	kubectl delete (-f FILENAME \| TYPE [NAME \| /NAME \| -l label \| --all]) [flags]	Delete resources either from a file, stdin, or specifying label selectors, names, resource selectors, or resources.
+
+- create
+    - `kubectl create -f FILENAME [flags]`
+    - ファイルもしくは標準入力からリソース（オブジェクト？）を作成する
+
+- delete
+    - `kubectl delete (-f FILENAME \| TYPE [NAME \| /NAME \| -l label \| --all]) [flags]`
+    - Delete resources either from a file, stdin, or specifying label selectors, names, resource selectors, or resources.
+
 describe	kubectl describe (-f FILENAME \| TYPE [NAME_PREFIX \| /NAME \| -l label]) [flags]	Display the detailed state of one or more resources.
 edit	kubectl edit (-f FILENAME \| TYPE NAME \| TYPE/NAME) [flags]	Edit and update the definition of one or more resources on the server by using the default editor.
 exec	kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [-- COMMAND [args...]]	Execute a command against a container in a pod,
@@ -118,6 +127,7 @@ explain	kubectl explain [--include-extended-apis=true] [--recursive=false] [flag
 - expose
     - `kubectl expose (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--port=port] [--protocol=TCP\|UDP] [--target-port=number-or-name] [--name=name] [--external-ip=external-ip-of-service] [--type=type] [flags]`
     - レプリケーションコントローラ、サービス、またはポッドを新しいKubernetesサービスとして公開する
+    - すでに存在するリソースに対して操作する
 
 - get
     - `kubectl get (-f FILENAME \| TYPE [NAME \| /NAME \| -l label]) [--watch] [--sort-by=FIELD] [[-o \| --output]=OUTPUT_FORMAT] [flags]`
@@ -242,3 +252,37 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
 - ExternalName
     - 任意の名前と設定できる
     - kube-dns の CNAME レコードとなる
+
+# yaml ファイル
+
+```
+# pod_sample.yml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  containers:
+  - name: example-app
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+```
+
+全てのリソースは以下を含む。
+
+- kind
+    - リソースの種類
+- apiVersion
+    - API のバージョン
+- metadata
+    - リソースのメタデータ
+
+リソースが Pod の場合は `spec` 以下に Pod の内容を定義する。
+
+```
+$ kubectl create -f pod.yaml
+pod "example-app" created
+```
