@@ -60,6 +60,15 @@ $ killall Finder
 
 # 開発環境作成
 
+## Xcodeをインストール
+
+App Store から Xcode をダウンロード・インストール。  
+また、以下で Xcode の Command Line Tools をインストール。
+
+```bash
+$ xcode-select --install
+```
+
 ## Homebrewをインスール
 
 以下を参照。
@@ -111,7 +120,7 @@ Java 系ツールのインストール・バージョン管理ができるよう
 - [SDKMAN入門](https://pepese.github.io/blog/sdkman-basics/)
 - [公式](http://sdkman.io/)
 
-## Oracle Javaをインストール
+## Javaをインストール
 
 SDKMAN が好みじゃないひとはこっち。
 
@@ -123,24 +132,23 @@ $ brew cask install java
 
 ```java
 $ /usr/libexec/java_home -V
-Matching Java Virtual Machines (2):
-    1.8.0_112, x86_64:	"Java SE 8"	/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home
-    1.8.0_111, x86_64:	"Java SE 8"	/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home
+Matching Java Virtual Machines (1):
+    11.0.1, x86_64:     "OpenJDK 11.0.1"        /Library/Java/JavaVirtualMachines/openjdk-11.0.1.jdk/Contents/Home
 
-/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/openjdk-11.0.1.jdk/Contents/Home
 ```
 
 PATHが通ってなかったら `~/.bash_profile` に以下を加筆して `source ~/.bash_profile` 。
 
 ```sh
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+export JAVA_HOME=`/usr/libexec/java_home -v "11"`
 ```
 
-`1.8` の部分を `1.7` にするとJava7を使用できる。  
+`11` の部分を `1.8` にするとJava8を使用できる。（もちろんインストールしてから）  
 消す時は以下。
 
 ```sh
-$ rm -rf /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home
+$ rm -rf /Library/Java/JavaVirtualMachines/openjdk-11.0.1.jdk/Contents/Home
 ```
 
 ## Mavenをインストール
@@ -149,26 +157,27 @@ SDKMAN が好みじゃないひとはこっち。
 
 ```sh
 $ brew search maven
-maven                                    maven-shell
-homebrew/completions/maven-completion    homebrew/versions/maven32
-homebrew/versions/maven31                Caskroom/cask/mavensmate
-$ brew install homebrew/versions/maven32
+==> Formulae
+maven ✔                  maven-completion         maven-shell              maven@3.2                maven@3.3                maven@3.5
+
+==> Casks
+mavensmate                                                                  homebrew/cask-fonts/font-maven-pro
+$ brew install maven
 $ mvn -v
-Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-15T02:29:23+09:00)
-Maven home: /usr/local/Cellar/maven32/3.2.5/libexec
-Java version: 1.8.0_112, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre
+Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-25T03:41:47+09:00)
+Maven home: /usr/local/Cellar/maven/3.6.0/libexec
+Java version: 11.0.1, vendor: Oracle Corporation, runtime: /Library/Java/JavaVirtualMachines/openjdk-11.0.1.jdk/Contents/Home
 Default locale: ja_JP, platform encoding: UTF-8
-OS name: "mac os x", version: "10.12.2", arch: "x86_64", family: "mac"
+OS name: "mac os x", version: "10.14.1", arch: "x86_64", family: "mac"
 ```
 
 # エディタ・IDEの設定
 
-## Atom
+## Visual Studio Code
 
 以下を参照。
 
-- [Atomのインストールとパッケージの導入](https://pepese.github.io/blog/atom-install-packages/)
+- [Visual Studio Code入門](https://pepese.github.io/blog/vscode-basics/)
 
 ## STS (Spring Tool Suite)
 
