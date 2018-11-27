@@ -11,6 +11,18 @@ id: golang-basics
 $ brew install go
 ```
 
+## 環境変数の設定
+
+https://golang.org/doc/install/source#environment
+
+- `GOPATH`
+    - プロジェクトのパスを指定する
+    - どこでもいい
+- `GOOS`
+    - コンパイルして作成するバイナリの対象 OS を指定する
+- `GOARCH`
+    - コンパイルして作成するバイナリの対象 CPU を指定する
+
 `.bash_profile` に以下を追記。
 
 ```
@@ -23,18 +35,6 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 $ source .bash_profile
 ```
 
-# 環境変数
-
-https://golang.org/doc/install/source#environment
-
-- `GOPATH`
-    - プロジェクトのパスを指定する
-    - どこでもいい
-- `GOOS`
-    - コンパイルして作成するバイナリの対象 OS を指定する
-- `GOARCH`
-    - コンパイルして作成するバイナリの対象 CPU を指定する
-
 # 依存関係管理ツールdep
 
 https://qiita.com/Azizjan/items/66564b5dc7597717932b
@@ -42,6 +42,57 @@ https://qiita.com/Azizjan/items/66564b5dc7597717932b
 ```bash
 $ brew install dep
 $ dep help
+```
+
+# ディレクトリ構造
+
+```
+$GOPATH
+├─bin/
+├─pkg/
+│  └─darwin_amd64/
+│    ├─github.com/
+│    │  └─GitHubユーザ名
+│    │    ├─`*.a`ファイル[^1]
+│    │    └─GitHubレポジトリ名/`*.a`ファイル[^2]
+│    └─pkg.in/
+│      ├─パッケージ名/
+│      └─`*.a`ファイル
+└─src/
+  ├─gopkg.in/
+  │  └─パッケージ名/
+  │    └─LICENSEとか`*.go`とかREADMEとか
+  └─github.com/
+    ├─GitHubユーザ名
+    │  └─GitHubレポジトリ名/
+    │    └─LICENSEとか`*.go`とかREADMEとか
+    └─<あなたのGitHubユーザ名>
+      └─GitHubレポジトリ名/
+        ├─glide.yaml
+        ├─main.go
+        ├─その他、あなたが開発中のソフトウェアのコード
+        └─vendor/依存先パッケージのコード(depでとってきたやつ)
+```
+
+# プロジェクトの作成
+
+```bash
+$ mkdir -p $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
+$ cd $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
+```
+
+初回は以下のような感じ。
+
+```bash
+$ mkdir -p $GOPATH/src/github.com/<あなたの名前>
+$ cd $GOPATH/src/github.com/<あなたの名前>
+$ git clone <golangプロジェクト>
+$ cd <golangプロジェクト>
+$ echo "vendor/" > .gitignore
+$ dep init
+$ touch app.go # 依存ライブラリ含め好きなコード書く
+$ dep ensure -v
+$ go run app.go
 ```
 
 # A Tour of Go
