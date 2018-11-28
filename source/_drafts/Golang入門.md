@@ -15,9 +15,13 @@ $ brew install go
 
 https://golang.org/doc/install/source#environment
 
+- `GOROOT`
+    - go のバイナリのホームまでのパス
+	- `go env GOROOT`
 - `GOPATH`
-    - プロジェクトのパスを指定する
-    - どこでもいい
+    - `go env GOPATH`
+    - go のパスであってプロジェクトのパスでないことに注意
+    - プロジェクトのパスは `$GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>`
 - `GOOS`
     - コンパイルして作成するバイナリの対象 OS を指定する
 - `GOARCH`
@@ -35,7 +39,7 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 $ source .bash_profile
 ```
 
-# 依存関係管理ツールdep
+## 依存関係管理ツール dep
 
 https://qiita.com/Azizjan/items/66564b5dc7597717932b
 
@@ -44,7 +48,7 @@ $ brew install dep
 $ dep help
 ```
 
-# ディレクトリ構造
+## ディレクトリ構造
 
 ```
 $GOPATH
@@ -67,14 +71,14 @@ $GOPATH
     │  └─GitHubレポジトリ名/
     │    └─LICENSEとか`*.go`とかREADMEとか
     └─<あなたのGitHubユーザ名>
-      └─GitHubレポジトリ名/
+      └─GitHubレポジトリ名/ # プロジェクトディレクトリ（複数）
         ├─glide.yaml
         ├─main.go
         ├─その他、あなたが開発中のソフトウェアのコード
         └─vendor/依存先パッケージのコード(depでとってきたやつ)
 ```
 
-# プロジェクトの作成
+## プロジェクトの作成
 
 ```bash
 $ mkdir -p $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
@@ -86,14 +90,21 @@ $ cd $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
 ```bash
 $ mkdir -p $GOPATH/src/github.com/<あなたの名前>
 $ cd $GOPATH/src/github.com/<あなたの名前>
-$ git clone <golangプロジェクト>
+$ git clone <golangプロジェクト> # プロジェクトディレクトリの作成
 $ cd <golangプロジェクト>
 $ echo "vendor/" > .gitignore
-$ dep init
+$ dep init # dep の初期化
 $ touch app.go # 依存ライブラリ含め好きなコード書く
-$ dep ensure -v
+$ dep ensure -v # 依存ライブラリの解決
 $ go run app.go
 ```
+
+## デバッグ環境作成
+
+- デバッガツール delve のインストール
+    - `go get -u github.com/derekparker/delve/cmd/dlv`
+- VSCodeにGo言語の拡張機能をインストール
+    - `Rich Go language support for Visual Studio Code`
 
 # A Tour of Go
 
