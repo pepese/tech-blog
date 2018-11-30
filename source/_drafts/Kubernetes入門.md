@@ -72,11 +72,11 @@ id: kubernetes-basics
 
 ## ツール
 
-- Kubectl
+- kubectl
     - Kubernetes Cluster を管理するコマンド
-- Kubeadm
+- kubeadm
     - 物理・もしくは仮想サーバに対して Kubernetes の設定管理を行うコマンド
-- Kubefed
+- kubefed
     - Federation を管理するコマンド
     - Federationは複数のリージョンやクラウドに配置されているKubernetesのクラスタを一括で管理できるようにする機能
 - Minikube

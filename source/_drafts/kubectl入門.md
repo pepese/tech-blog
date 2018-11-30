@@ -121,7 +121,11 @@ config	kubectl config SUBCOMMAND [flags]	Modifies kubeconfig files. See the indi
 
 describe	kubectl describe (-f FILENAME \| TYPE [NAME_PREFIX \| /NAME \| -l label]) [flags]	Display the detailed state of one or more resources.
 edit	kubectl edit (-f FILENAME \| TYPE NAME \| TYPE/NAME) [flags]	Edit and update the definition of one or more resources on the server by using the default editor.
-exec	kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [-- COMMAND [args...]]	Execute a command against a container in a pod,
+
+- exec
+    - `kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [-- COMMAND [args...]]`
+    - Pod ないのコンテナに対してコマンドを実行する
+
 explain	kubectl explain [--include-extended-apis=true] [--recursive=false] [flags]	Get documentation of various resources. For instance pods, nodes, services, etc.
 
 - expose
@@ -147,6 +151,11 @@ rolling-update	kubectl rolling-update OLD_CONTROLLER_NAME ([NEW_CONTROLLER_NAME]
 
 scale	kubectl scale (-f FILENAME \| TYPE NAME \| TYPE/NAME) --replicas=COUNT [--resource-version=version] [--current-replicas=count] [flags]	Update the size of the specified replication controller.
 stop	kubectl stop	Deprecated: Instead, see kubectl delete.
+
+- top
+    - `kubectl top [node/pod] [options]`
+    - ノード、 Pod のリソール使用率を確認できる
+
 version	kubectl version [--client] [flags]	Display the Kubernetes version running on the client and server.
 
 # 一通り
@@ -236,7 +245,7 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
 
 ## `kubectl expose` について
 
-`kubectl expse` では Workloads リソースをコントロールできる。  
+`kubectl expose` では Workloads リソースをコントロールできる。  
 `--type` では Service の TYPE を選択できる。
 
 - ClusterIP (default)
@@ -253,36 +262,68 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   10h
     - 任意の名前と設定できる
     - kube-dns の CNAME レコードとなる
 
-# yaml ファイル
+# コマンド整理
 
-```
-# pod_sample.yml
-kind: Pod
+## リソースの作成/削除/更新、create/delete/apply
+
+`kubectl create/delete/apply` コマンドと **マニフェスト** とよぶ YAML/JSON ファイルを使用することで、リソースの作成/削除/更新できる。
+
+```yaml:sample_pod.yml
 apiVersion: v1
+kind: Pod
 metadata:
-  name: example-app
-  labels:
-    app: example-app
+  name: sample_pod
 spec:
   containers:
-  - name: example-app
-    image: nginx:1.7.9
-    ports:
-    - containerPort: 80
+    - name: nginx
+      imege: nginx:1.7.9
+      ports:
+        - containerPort: 80
 ```
 
-全てのリソースは以下を含む。
+全てのマニフェストには以下の項目が含まれる。
 
-- kind
-    - リソースの種類
 - apiVersion
     - API のバージョン
+- kind
+    - リソースの種類
 - metadata
     - リソースのメタデータ
 
-リソースが Pod の場合は `spec` 以下に Pod の内容を定義する。
+Pod の場合は `spec` 以下に Pod の内容を定義する。
 
 ```
-$ kubectl create -f pod.yaml
-pod "example-app" created
+$ kubectl create -f sample_pod.yaml
+pod "sample_pod" created
+
+$ kubectl apply -f sample_pod.yaml
+pod "sample_pod" configured
+
+$ kubectl delete -f sample_pod.yaml
+pod "sample_pod" deleted
 ```
+
+`kubectl apply` はマニフェストに変更がある場合のみ変更処理を行う。  
+削除済みのマニフェストに対しても差分を検出するため、新規作成でも `apply` を使用するほうがよい。  
+また、マニフェストには複数のリソースを同時に記述することができ、 **`---`** で区切る。
+
+```yaml:sample_pod.yml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample_pod
+spec:
+  containers:
+    - name: nginx
+      imege: nginx:1.7.9
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+# LBの追加など
+```
+
+また、複数のマニフェストファイルを一気に適用したい場合は、ディレクトリにまとめ `-f` で指定して実行することができる。  
+その歳、ファイル名辞書順で実行されることに注意。
