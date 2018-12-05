@@ -78,6 +78,37 @@ $GOPATH
         └─vendor/依存先パッケージのコード(depでとってきたやつ)
 ```
 
+## コマンドラインツール
+
+- goimports
+    - 過不足のimportの自動補完
+	- `go get golang.org/x/tools/cmd/goimports`
+- gocode
+    - ヘルパー機能
+	- `go get -u -v github.com/nsf/gocode`
+- godef
+    - 呼び出し関数へのジャンプなど
+	- `go get -u -v github.com/rogpeppe/godef`
+- gogetdoc
+    - `go get -u -v github.com/zmb3/gogetdoc`
+- golint
+    - lint
+	- `go get -u -v github.com/golang/lint/golint`
+- go-outline
+    - `go get -u -v github.com/lukehoban/go-outline`
+- goreturns
+    - `go get -u -v sourcegraph.com/sqs/goreturns`
+- gorename
+    - `go get -u -v golang.org/x/tools/cmd/gorename`
+- gopkgs
+    - `go get -u -v github.com/tpng/gopkgs`
+- go-symbols
+    - `go get -u -v github.com/newhook/go-symbols`
+- guru
+    - `go get -u -v golang.org/x/tools/cmd/guru`
+- gotests
+    - `go get -u -v github.com/cweill/gotests/...`
+
 ## プロジェクトの作成
 
 ```bash
