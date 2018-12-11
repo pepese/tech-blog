@@ -623,6 +623,10 @@ $ go get -u github.com/spf13/cobra/cobra
 
 cobra はデフォルトで **viper** という設定ファイル読み込みライブラリが使用される。
 
+- cobra 参考
+    - https://qiita.com/tkit/items/3cdeafcde2bd98612428
+	- https://qiita.com/minamijoyo/items/cfd22e9e6d3581c5d81f
+
 # 参考
 
 - https://www.slideshare.net/takuyaueda967/2016-go
