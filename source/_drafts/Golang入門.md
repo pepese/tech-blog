@@ -591,6 +591,38 @@ func main() {
 
 https://go-tour-jp.appspot.com/moretypes/1
 
+# Cobra
+
+コマンドラインツール作成ライブラリ。
+
+```bash
+$ go get -u github.com/spf13/cobra/cobra
+```
+
+コマンドラインツール `cobra` が入る。  
+`cobra init` コマンドで以下の通りの雛形が作成される。
+
+```
+.
+├── LICENSE
+├── cmd
+│   └── root.go
+└── main.go
+```
+
+`cobra add version -p "rootCmd"` でサブコマンド `version` が追加される。
+
+```
+.
+├── LICENSE
+├── cmd
+│   ├── root.go
+│   └── version.go
+└── main.go
+```
+
+cobra はデフォルトで **viper** という設定ファイル読み込みライブラリが使用される。
+
 # 参考
 
 - https://www.slideshare.net/takuyaueda967/2016-go
