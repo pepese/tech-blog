@@ -21,8 +21,8 @@ k8s に貢献と書いているが、普通の Github OSS 貢献にもかなり�
 
 - スタンス
 - アーキテクチャ全体像、各コンポーネントの機能を理解する
-- Go の文法から設計思想を理解する
-- 詳細理解のための標準パッケージと用途・意図
+- Golang らしい書き方
+- 標準パッケージと使い所
 - 主要外部パッケージ
 - テスト
 - PR
@@ -36,17 +36,22 @@ k8s に貢献と書いているが、普通の Github OSS 貢献にもかなり�
 
 https://qiita.com/tkusumi/items/c2a92cd52bfdb9edd613
 
-## Go の文法から設計思想を理解する
+## Golang らしい書き方
 
 - interface
     - 例えば、 `pkg/kubelet/server/server.go` の `type HostInterface interface` の実装を追えば中身わかりそう
-
-## 詳細理解のための標準パッケージと用途・意図
-
-- flag
 - channel
     - API サーバの goroutine の使い方
     - 例えば kube-apiserver は `chan struct{}` の雨嵐になっている、なぜなのか
+    - [goroutine を安全に止める方法](https://qiita.com/castaneai/items/7815f3563b256ae9b18d)
+    - graceful stop
+        - https://gist.github.com/rcrowley/5474430
+    - signal を捕まえる処理
+        - https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apiserver/pkg/server/signal.go
+
+## 標準パッケージと使い所
+
+- flag
 - context
     - `golang context`
     - https://deeeet.com/writing/2016/07/22/context/
