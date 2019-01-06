@@ -192,7 +192,7 @@ filegroup(
 - `kube-apiserver`
     - kubectl から設定情報を受け付けて、 クラスタが保持すべき状態として情報を `etcd` へ保存する
     - apiserver 以外のコンポーネントは直接 etcd を参照せず、 apiserver を通してリソースにアクセスする
-- `etcd`
+- `etcd` （ Master Node ではなく独立したクラスタでもいい ）
     - 全てのクラスタデータを保持する
 - `kube-scheduler`
     - 新しい Pod を作成し、 Woker Node を選択・配置する
@@ -211,7 +211,7 @@ filegroup(
 - `hyperkube`
     - Kubernetes関連のバイナリを1つにまとめたall-in-oneバイナリ
 
-## Worker Node
+### Worker Node
 
 - `kubelet`
     - クラスタ内のそれぞれの Worker Node で稼働するエージェント（ Worker Node のメイン処理）
@@ -220,12 +220,24 @@ filegroup(
     - k8s クラスタのルーティングを担当
     - kube-apiserver をポーリングして設定変更を検知する
     - ホスト上のネットワークルールを維持し、接続転送を実行することによって、Kubernetesサービスの抽象化を可能にする
-- `kube-dns`
+    - iptable の nat table を設定して IP 変更やロードバランス（ClusterIP）の設定を行う
+- `kube-dns` （ Worker Node ではない？）
     - k8s クラスタの名前解決を担当
     - kube-apiserver をポーリングして設定変更を検知する
 - Container Runtime
     - コンテナの実行環境
     - `Docker` `rkt` `runc` など
+- cAdvisor
+    - 各ノード上にあるコンテナのCPU、メモリ、ファイル、ネットワーク使用量といった、リソースの使用量と性能の指標を監視・収集するエージェント
+
+## 処理の流れ
+
+1. kubectl で Deploment API を呼ぶ
+2. Deployment Controller が検知し、 ReplicaSet API を呼ぶ
+3. ReplicaSet Controller が検知し、 Pod API を呼ぶ
+4. Scheduler が検知し、配置先 Node を決定し、 Pod API を呼ぶ
+5. Kubelet が検知し、 Pod を作成
+- 各 Controller 、 Scheduler 、 Kubelet は常にそれぞれが Reconcilation Loop を回している
 
 ## Addons
 
