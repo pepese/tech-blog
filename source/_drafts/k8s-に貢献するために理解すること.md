@@ -230,6 +230,13 @@ filegroup(
 - cAdvisor
     - 各ノード上にあるコンテナのCPU、メモリ、ファイル、ネットワーク使用量といった、リソースの使用量と性能の指標を監視・収集するエージェント
 
+#### 重要な概念？
+
+- Sync Loop (SyncLoop)
+    - kube-apiserver に更新を確認するループ？
+        - kubelet の ConfigMap 更新だけ？ Pod の更新は？
+        - kubelet に `--node-status-update-frequency duration` というオプションがあり、デフォルト 10s で見てるっぽい
+
 ## 処理の流れ
 
 1. kubectl で Deploment API を呼ぶ
