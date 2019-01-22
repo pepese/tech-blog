@@ -185,66 +185,12 @@ filegroup(
 - `kubectl`
     - マニフェストの設定を `kube-apiserver`  へ送信する
 
-## サーバ
-
-### Master Node
-
-- `kube-apiserver`
-    - kubectl から設定情報を受け付けて、 クラスタが保持すべき状態として情報を `etcd` へ保存する
-    - apiserver 以外のコンポーネントは直接 etcd を参照せず、 apiserver を通してリソースにアクセスする
-- `etcd` （ Master Node ではなく独立したクラスタでもいい ）
-    - 全てのクラスタデータを保持する
-- `kube-scheduler`
-    - 新しい Pod を作成し、 Woker Node を選択・配置する
-- `kube-controller-manager`
-    - `etcd` の情報とクラスタの現在の状態を比較し、 `etcd` の状態へ更新する（ apiserver 経由での参照）
-    - controller は自作可能
-    - controller は複数プロセス存在するが、バイナリは 1 つにまとめられる
-        - Node Controller: Worker Node の停止を検出する
-        - Replication Controller: Pod の数を制御する
-            - Replication Controller はリソース名自体に"Controller"とつくため、コントローラーは"RepplicationManager"という名前
-        - Endpoints Controller: Service や Pod 内のエンドポイントオブジェクトを設定する
-        - Service Account & Token Controllers: namespace のデフォルトアカウント、API アクセストークンを作成する
-    - 各 controller は goroutine で起動
-- `cloud-controller-manager` （α版）
-    - クラウドプロバイダのリソースをコントロールする
-- `hyperkube`
-    - Kubernetes関連のバイナリを1つにまとめたall-in-oneバイナリ
-
-### Worker Node
-
-- `kubelet`
-    - クラスタ内のそれぞれの Worker Node で稼働するエージェント（ Worker Node のメイン処理）
-    - PodSpecs の設定を提供し、コンテナが Pod 内で稼働していることを管理する
-- `kube-proxy`
-    - k8s クラスタのルーティングを担当
-    - kube-apiserver をポーリングして設定変更を検知する
-    - ホスト上のネットワークルールを維持し、接続転送を実行することによって、Kubernetesサービスの抽象化を可能にする
-    - iptable の nat table を設定して IP 変更やロードバランス（ClusterIP）の設定を行う
-- `kube-dns` （ Worker Node ではない？）
-    - k8s クラスタの名前解決を担当
-    - kube-apiserver をポーリングして設定変更を検知する
-- Container Runtime
-    - コンテナの実行環境
-    - `Docker` `rkt` `runc` など
-- cAdvisor
-    - 各ノード上にあるコンテナのCPU、メモリ、ファイル、ネットワーク使用量といった、リソースの使用量と性能の指標を監視・収集するエージェント
-
 #### 重要な概念？
 
 - Sync Loop (SyncLoop)
     - kube-apiserver に更新を確認するループ？
         - kubelet の ConfigMap 更新だけ？ Pod の更新は？
         - kubelet に `--node-status-update-frequency duration` というオプションがあり、デフォルト 10s で見てるっぽい
-
-## 処理の流れ
-
-1. kubectl で Deploment API を呼ぶ
-2. Deployment Controller が検知し、 ReplicaSet API を呼ぶ
-3. ReplicaSet Controller が検知し、 Pod API を呼ぶ
-4. Scheduler が検知し、配置先 Node を決定し、 Pod API を呼ぶ
-5. Kubelet が検知し、 Pod を作成
-- 各 Controller 、 Scheduler 、 Kubelet は常にそれぞれが Reconcilation Loop を回している
 
 ## Addons
 
