@@ -92,12 +92,6 @@ https://github.com/kubernetes/community/blob/master/contributors/guide/README.md
 - みんなの PR をみる
     - https://github.com/kubernetes/kubernetes/pulls
 
-
-## その他未整理
-
-- kube-apiserver は etcd に更新があったときに kubelet に hook するっぽい。
-    - https://stackoverflow.com/questions/50689126/kubernetes-how-does-api-server-etcd-know-the-status-of-each-pod
-
 # やってることメモ
 
 ビルドはえぐそうなのでビルドのコードを追って以下のことがわかった。  
@@ -179,18 +173,6 @@ filegroup(
 
 上記の `main` のそれぞれの配置（クライアント、MasterNode、WorkerNode）、機能概要を調べて、どの `main` を読むか決める。  
 実際にコンテナ作ってるところが見たいなぁ、、、
-
-## クライアントツール
-
-- `kubectl`
-    - マニフェストの設定を `kube-apiserver`  へ送信する
-
-#### 重要な概念？
-
-- Sync Loop (SyncLoop)
-    - kube-apiserver に更新を確認するループ？
-        - kubelet の ConfigMap 更新だけ？ Pod の更新は？
-        - kubelet に `--node-status-update-frequency duration` というオプションがあり、デフォルト 10s で見てるっぽい
 
 ## Addons
 
