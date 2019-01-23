@@ -75,82 +75,95 @@ $ kubectl [command] [TYPE] [NAME] [flags]
 - flags
     - オプション
 
-一覧は後述するが、代表的なものは以下。
-
-- `kubectl get`
-    - Kubernetes の各種リソース情報の一覧を取得
-- `kubectl describe`
-    - Kubernetes の各種リソース情報の詳細を取得
-- `kubectl logs [pod_name]`
-    - Pod 内のコンテナのログを取得
-- `kubectl exec`
-    - Pod 内のコンテナ上でコマンドを実行する
-- `kubectl config`
-    - kubeconfig ファイルを変更する
-
 ## コマンド一覧
 
 https://kubernetes.io/docs/reference/kubectl/overview/#operations
 
-annotate	kubectl annotate (-f FILENAME \| TYPE NAME \| TYPE/NAME) KEY_1=VAL_1 ... KEY_N=VAL_N [--overwrite] [--all] [--resource-version=version] [flags]	Add or update the annotations of one or more resources.
+一応一覧するが、ボールドのものだけ見ればいい。
 
-api-versions	kubectl api-versions [flags]	List the API versions that are available.
-
-- apply
+- annotate
+    - `kubectl annotate (-f FILENAME \| TYPE NAME \| TYPE/NAME) KEY_1=VAL_1 ... KEY_N=VAL_N [--overwrite] [--all] [--resource-version=version] [flags]`
+    - リソースのアノテーションを追加・更新する
+- api-versions
+    - `kubectl api-versions [flags]`
+    - API の一覧とそのバージョンを表示する
+- **apply**
     - `kubectl apply -f FILENAME [flags]`
-    - ファイルもしくは標準入力からリソースの設定を行う
-
-attach	kubectl attach POD -c CONTAINER [-i] [-t] [flags]	Attach to a running container either to view the output stream or interact with the container (stdin).
-autoscale	kubectl autoscale (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--min=MINPODS] --max=MAXPODS [--cpu-percent=CPU] [flags]	Automatically scale the set of pods that are managed by a replication controller.
-cluster-info	kubectl cluster-info [flags]	Display endpoint information about the master and services in the cluster.
-config	kubectl config SUBCOMMAND [flags]	Modifies kubeconfig files. See the individual subcommands for details.
-
+    - マニフェストファイルもしくは標準入力からリソースの設定を行う
+- attach
+    - `kubectl attach POD -c CONTAINER [-i] [-t] [flags]`
+    - Attach to a running container either to view the output stream or interact with the container (stdin).
+- autoscale
+    - `kubectl autoscale (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--min=MINPODS] --max=MAXPODS [--cpu-percent=CPU] [flags]`
+    - Pod 数を自動調整する autoscaler を作成する
+- cluster-info
+    - `kubectl cluster-info [flags]`
+    - k8s クラスタの Master やその他サービスのエンドポイントを表示する
+- **config**
+    - `kubectl config SUBCOMMAND [flags]`
+    - **kubeconfig** ファイルを変更する
 - create
     - `kubectl create -f FILENAME [flags]`
-    - ファイルもしくは標準入力からリソース（オブジェクト？）を作成する
-
-- delete
+    - ファイルもしくは標準入力からリソースを作成する
+    - apply を利用するため create は利用しない
+- **delete**
     - `kubectl delete (-f FILENAME \| TYPE [NAME \| /NAME \| -l label \| --all]) [flags]`
-    - Delete resources either from a file, stdin, or specifying label selectors, names, resource selectors, or resources.
-
-describe	kubectl describe (-f FILENAME \| TYPE [NAME_PREFIX \| /NAME \| -l label]) [flags]	Display the detailed state of one or more resources.
-edit	kubectl edit (-f FILENAME \| TYPE NAME \| TYPE/NAME) [flags]	Edit and update the definition of one or more resources on the server by using the default editor.
-
-- exec
+    - マニフェストファイル名、リソース名、ラベル、セレクタなどを指定してリソースを削除する
+- **describe**
+    - `kubectl describe (-f FILENAME \| TYPE [NAME_PREFIX \| /NAME \| -l label]) [flags]`
+    - k8s の各種リソース情報の詳細を表示する
+- edit
+    - `kubectl edit (-f FILENAME \| TYPE NAME \| TYPE/NAME) [flags]`
+    - Edit and update the definition of one or more resources on the server by using the default editor.
+- **exec**
     - `kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [-- COMMAND [args...]]`
-    - Pod ないのコンテナに対してコマンドを実行する
-
-explain	kubectl explain [--include-extended-apis=true] [--recursive=false] [flags]	Get documentation of various resources. For instance pods, nodes, services, etc.
-
+    - Pod 内のコンテナ上でコマンドを実行する
+- explain
+    - `kubectl explain [--include-extended-apis=true] [--recursive=false] [flags]`
+    - リソースの説明ドキュメントを表示する（pods, nodes, services, etc.
 - expose
     - `kubectl expose (-f FILENAME \| TYPE NAME \| TYPE/NAME) [--port=port] [--protocol=TCP\|UDP] [--target-port=number-or-name] [--name=name] [--external-ip=external-ip-of-service] [--type=type] [flags]`
-    - レプリケーションコントローラ、サービス、またはポッドを新しいKubernetesサービスとして公開する
-    - すでに存在するリソースに対して操作する
-
-- get
+    - k8s Service を新しく作成して公開する（すでに存在するリソースに対しても可能）
+- **get**
     - `kubectl get (-f FILENAME \| TYPE [NAME \| /NAME \| -l label]) [--watch] [--sort-by=FIELD] [[-o \| --output]=OUTPUT_FORMAT] [flags]`
-    - リソースの情報を表示する
-
-label	kubectl label (-f FILENAME \| TYPE NAME \| TYPE/NAME) KEY_1=VAL_1 ... KEY_N=VAL_N [--overwrite] [--all] [--resource-version=version] [flags]	Add or update the labels of one or more resources.
-logs	kubectl logs POD [-c CONTAINER] [--follow] [flags]	Print the logs for a container in a pod.
-patch	kubectl patch (-f FILENAME \| TYPE NAME \| TYPE/NAME) --patch PATCH [flags]	Update one or more fields of a resource by using the strategic merge patch process.
-port-forward	kubectl port-forward POD [LOCAL_PORT:]REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N] [flags]	Forward one or more local ports to a pod.
-proxy	kubectl proxy [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [--api-prefix=prefix] [flags]	Run a proxy to the Kubernetes API server.
-replace	kubectl replace -f FILENAME	Replace a resource from a file or stdin.
-rolling-update	kubectl rolling-update OLD_CONTROLLER_NAME ([NEW_CONTROLLER_NAME] --image=NEW_CONTAINER_IMAGE \| -f NEW_CONTROLLER_SPEC) [flags]	Perform a rolling update by gradually replacing the specified replication controller and its pods.
-
+    - k8s の各種リソース情報のを表示する
+- label
+    - `kubectl label (-f FILENAME \| TYPE NAME \| TYPE/NAME) KEY_1=VAL_1 ... KEY_N=VAL_N [--overwrite] [--all] [--resource-version=version] [flags]`
+    - リソースにラベルを追加・更新する
+- **logs**
+    - `kubectl logs POD [-c CONTAINER] [--follow] [flags]`
+    - Pod 内のコンテナのログを取得する
+- patch
+    - `kubectl patch (-f FILENAME \| TYPE NAME \| TYPE/NAME) --patch PATCH [flags]`
+    - Update one or more fields of a resource by using the strategic merge patch process.
+- port-forward
+    - `kubectl port-forward POD [LOCAL_PORT:]REMOTE_PORT [...[LOCAL_PORT_N:]REMOTE_PORT_N] [flags]`
+    - Forward one or more local ports to a pod.
+- proxy
+    - `kubectl proxy [--port=PORT] [--www=static-dir] [--www-prefix=prefix] [--api-prefix=prefix] [flags]`
+    - Run a proxy to the Kubernetes API server.
+- replace
+    - `kubectl replace -f FILENAME`
+    - Replace a resource from a file or stdin.
+- rolling-update
+    - `kubectl rolling-update OLD_CONTROLLER_NAME ([NEW_CONTROLLER_NAME] --image=NEW_CONTAINER_IMAGE \| -f NEW_CONTROLLER_SPEC) [flags]`
+    - Perform a rolling update by gradually replacing the specified replication controller and its pods.
 - run
     - `kubectl run NAME --image=image [--env="key=value"] [--port=port] [--replicas=replicas] [--dry-run=bool] [--overrides=inline-json] [flags]`
     - Cluster 上でコンテナイメージを起動する（ Pod も作成される）
-
-scale	kubectl scale (-f FILENAME \| TYPE NAME \| TYPE/NAME) --replicas=COUNT [--resource-version=version] [--current-replicas=count] [flags]	Update the size of the specified replication controller.
-stop	kubectl stop	Deprecated: Instead, see kubectl delete.
-
+- scale
+    - `kubectl scale (-f FILENAME \| TYPE NAME \| TYPE/NAME) --replicas=COUNT [--resource-version=version] [--current-replicas=count] [flags]`
+    - Update the size of the specified replication controller.
+- stop
+    - Deprecated: delete を使う
 - top
     - `kubectl top [node/pod] [options]`
     - ノード、 Pod のリソール使用率を確認できる
+- version
+    - `kubectl version [--client] [flags]`
+    - クライアントとサーバで起動している k8s のバージョンを表示する
 
-version	kubectl version [--client] [flags]	Display the Kubernetes version running on the client and server.
+参考：https://qiita.com/hana_shin/items/ef1a20239001ac83a78d
 
 # 一通り
 
