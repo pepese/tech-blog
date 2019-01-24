@@ -11,6 +11,7 @@ id: k8s-concept
 - k8s で実現できること
 - 概念ざっくり
 - k8s のリソース
+- マニフェストファイル
 
 # k8s で実現できること
 
@@ -65,22 +66,20 @@ id: k8s-concept
 
 - Pod
     - 複数のコンテナ間で共有して使用する 1 つの仮想 NIC と、それを利用する複数のコンテナ（と Volume ）をまとめて Pod という
-    - Kubernetes ではコンテナを起動する際、 Pod 単位で起動する
-    - Pod の中は Localhost の扱い
+    - k8s ではコンテナを起動する際、 Pod 単位で起動する
+    - Pod 内の各コンテナは localhost の扱い
     - Pod 内には複数種類のコンテナを格納でき、メインのコンテナに加えて、補助的な役割を担うコンテナ（サブコンテナ）を加える構成のことを **サイドカー** と呼ぶ
 - ReplicaSet
-    - ReplicationController の後継
+    - ReplicationController （今後廃止）の後継
     - 複数の Pods を管理
-    - Podのレプリカを生成し、指定した数のPodを維持し続けるリソース（ **オートヒーリング** ）
-    - 監視は、特定の Label がつけられたPodの数をカウントする形で実現
+    - Podの レプリカを生成し、指定した数の Pod を維持し続けるリソース（ **セルフヒーリング** ）
+    - 監視は、特定の **Label** がつけられた Pod の数をカウントする形で実現
         - レプリカ数が不足している場合は template から Pod を生成し、レプリカ数が過剰な場合は Label にマッチする Pod のうち1つを削除
     - selector をサポートする点において ReplicationController と異なる
     - set-based selector
     - ReplicaSet の特殊な形として「 DaemonSet 」「 StatefulSet 」がある
-- ReplicationController
-    - equality-based selector
 - Deployments
-    - Pods と ReplicaSets を一括で管理する ReplicaSets の上位互換
+    - Pods と ReplicaSet を一括で管理する ReplicaSet の上位互換
     - Deployment は複数の ReplicaSet を管理することで、ローリングアップデートやロールバックなどを実現可能にするリソース
     - `kubectl` でリソース管理する際、基本的には ReplicaSet を直接操作することはなく Deployment を操作する
 - Job
@@ -99,14 +98,17 @@ Pod の管理・制御を行うリソース（オブジェクト）を **コン�
 - Ingress
     - 省略
 
-- Service
-    - ClusterIP
-    - NodePort
-    - LoadBalancer
-    - ExternalIP
-    - ExternalName
-    - Headless（None）
-- Ingress
+### Service
+
+Service には以下の種類がある。
+
+- ClusterIP
+    - k8s クラスタ内からのみ疎通可能な Service （なので、「Cluster」IP
+- NodePort
+- LoadBalancer
+- ExternalIP
+- ExternalName
+- Headless（None）
 
 ## Config＆Storage リソース
 
@@ -116,3 +118,40 @@ Kubernetesでは、個別のコンテナに対する設定の内容は環境変�
 - Secret
 - ConfigMap
 - PersistentVolumeClaim
+
+# マニフェストファイル
+
+参考：https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.13/
+
+## Deployment
+
+```yaml
+apiVersion: v1
+kind: Deployment
+metadata: // ObjectMeta
+  annotations:
+  labels:
+  name:
+  namespace:
+spec: // DeploymentSpec
+  replicas:
+  selector: // LabelSelector // replicas で指定した数冗長化する対象のラベルを指定
+  strategy: // DeploymentStrategy
+  template: // PodTemplateSpec
+    metadata: ObjectMeta
+    spec: // PodSpec
+      containers: // Container
+      - image:
+        name:
+        ports: // ContainerPort
+        resources: // ResourceRequirements
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      dnsConfig: // PodDNSConfig
+      volumes: // Volume
+status: // DeploymentStatus // あまりわからない、、、
+```
