@@ -97,18 +97,52 @@ Pod の管理・制御を行うリソース（オブジェクト）を **コン�
     - 「 Pod 宛トラフィックのロードバランシング」「サービスディスカバリと内部 DNS 」を実現
 - Ingress
     - 省略
+- Endpoints
 
 ### Service
 
-Service には以下の種類がある。
+Service は以下の種類の L4 ロードバランサを提供する。
 
 - ClusterIP
     - k8s クラスタ内からのみ疎通可能な Service （なので、「Cluster」IP
-- NodePort
-- LoadBalancer
+        - k8s クラスタ内でのみ疎通可能な仮想 IP
+    - k8s クラスタ外から通信を受け付ける必要のない箇所のロードバランサ
+    - 各ノードの `kube-proxy` 通信の転送を行う
+    - type は `ClusterIP`
 - ExternalIP
-- ExternalName
+    - 特定のノードの IP アドレスで受信した通信をコンテナに転送する Service
+    - k8s クラスタ外部からの通信を受け付ける
+    - type 自体は `ClusterIP` で、 `externalIPs` （ノードのIP）を指定する
+    - 「ノードのIPアドレス」で通信を受信する（ポートの指定はない）
+- NodePort
+    - ExternalIP に類似したサービス
+    - 違いは「ノードのIPアドレス:ポート」で通信を受信する点
+        - 厳密には「0.0.0.0:ポート」でバインドされ、k8s クラスタ内の全ノードの IP アドレスを意味する
+    - デフォルトで利用できるノードポートの範囲は「30000〜32767」であることに注意
+    - type は `NodePort`
+- LoadBalancer
+    - 商用環境で k8s クラスタ外部から通信を受ける際に良い Service
+    - k8s クラスタ外部（例えばロードバランサ）から疎通性のある仮想 IP を払い出せる
+    - ExternalIP や NodePort と異なり、ノードIP非依存である点で使い勝手がよい
+    - type は `LoadBalancer`
 - Headless（None）
+    - ロードバランシングする仮想 IP アドレスが払い出されない DNS ラウンドロビンのエンドポイントを提供する Service
+    - type 自体は `ClusterIP` だが、 `clusterIP` が `None`
+- ExternalName
+    - ？？
+- None-Selector
+    - ？？
+
+### Ingress
+
+Service とは異なり、 L7 ロードバランサを提供する。  
+`kind: Service` ではなく、 `kind: Ingress` で提供される。  
+大きく以下の種類がある。
+
+- k8s クラスタ外の LB を利用した Ingress
+- k8s クラスタ内に Ingress 用の Pod をデプロイする Ingress
+
+まだよくわかってない。
 
 ## Config＆Storage リソース
 
@@ -116,8 +150,17 @@ Service には以下の種類がある。
 Kubernetesでは、個別のコンテナに対する設定の内容は環境変数やファイルが置かれた領域をマウントして渡すことが一般的
 
 - Secret
+    - 機密情報（ID、Passwordなど）を含む環境変数を参照する場合に利用
+    - マニフェスト上で秘匿化部分は base64 化されているだけなので、暗号化したい場合は `kubesec` などを利用する
 - ConfigMap
+    - 単純な Key-Value の設定を参照する場合に利用
 - PersistentVolumeClaim
+
+### Secret
+
+以下の type がある。
+
+
 
 # マニフェストファイル
 
@@ -154,4 +197,20 @@ spec: // DeploymentSpec
       dnsConfig: // PodDNSConfig
       volumes: // Volume
 status: // DeploymentStatus // あまりわからない、、、
+```
+
+## Service
+
+## Deployment
+
+```yaml
+apiVersion: v1
+kind: Deployment
+metadata: // ObjectMeta
+  annotations:
+  labels:
+  name:
+  namespace:
+spec: // ServiceSpec
+status: // ServiceStatus
 ```
