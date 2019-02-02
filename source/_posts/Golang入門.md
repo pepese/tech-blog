@@ -166,6 +166,9 @@ $ go run hello.go
 Hello, 世界
 ```
 
+なお、[The Go Playground](https://play.golang.org/) というサービスを使うと Web でお試し実行できる。  
+[他](http://interprism.hatenablog.com/entry/2014/03/04/132551) にもいろいろあるみたい。
+
 ## 標準パッケージのインポート
 
 ```go
@@ -223,6 +226,18 @@ func add(x int, y int) int {
 
 func main() {
 	fmt.Println(add(42, 13))
+	
+	// 関数も値として扱える
+	sub := func(x, y int) int {
+		return x - y
+	}
+	fmt.Println(sub(42, 13))
+	
+	// 即時関数
+	v := func(x, y int) int {
+		return x * y
+	}(42, 13)
+	fmt.Println(v)
 }
 ```
 
@@ -542,9 +557,7 @@ func main() {
 // と出力される
 ```
 
-## Stacking defers
-
-`defer` へ渡した関数が複数ある場合、その呼び出しはスタックされ、 LIFO の順番で実行される。（後から順に実行される）
+`defer` が複数ある場合、その呼び出しはスタックされ、 LIFO の順番で実行される。（後から順に実行される）
 
 ```go
 package main
@@ -603,11 +616,162 @@ func main() {
 
 - https://qiita.com/nayuneko/items/3c0b3c0de9e8b27c9548
 
+## ポインタ
+
+Go では **ポインタ** （値が格納されているメモリのアドレス）を扱える。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	i := 10
+
+	p := &i         // i のポインタ
+	fmt.Println(p)  // i が格納されてるメモリのアドレス：0x416020
+	fmt.Println(*p) // ポインタ経由で i の値にアクセス：10
+	*p = 20         // ポインタ経由で i の値を変更
+	fmt.Println(i)  // もちろん i から参照しても値は変わってる：20
+}
+```
+
+## 構造体 struct
+
+`type` で作成する。  
+`type` 自体は `struct` 専用ではなく、独自の型を定義できるもの。
+
+```go
+package main
+
+import "fmt"
+
+type vertex struct {
+	x int // var 不要
+	y int
+}
+
+func main() {
+	v := vertex{1, 2} // vertex{x:1, y:2} でフィールド明記もできる
+
+	fmt.Println(v)   // {1 2}
+	fmt.Println(v.x) // ドットでフィールドアクセス：1
+	
+	pv := &v           // v のポインタ
+	p := &vertex{1, 2} // いきなりポインタで作成も可能
+	
+	fmt.Println((*pv).y)// 2
+	fmt.Println(p.y) // * を省略してもコンパイラが良しなに解釈してくれる：2
+}
+```
+
+## 配列とスライス
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var a [2]string // 配列
+	a[0] = "Hello"
+	a[1] = "World"
+	fmt.Println(a[0], a[1]) // Hello World
+	fmt.Println(a)          // [Hello World]
+
+	primes := [6]int{2, 3, 5, 7, 11, 13} // 配列の値付き宣言
+	fmt.Println(primes)                  // [2 3 5 7 11 13]
+	
+	var s []int = primes[1:4] // スライス
+	fmt.Println(s)            // [3 5 7]
+	
+	q := []int{2, 3, 5, 7, 11, 13} // スライスの値付き宣言
+	fmt.Println(q)                 // [2 3 5 7 11 13]
+	fmt.Println(q[1:3])            // Python のスライスっぽくアクセスできる：[3 5]
+	
+	// 構造体のスライス
+	ss := []struct {
+		i int
+		b bool
+	}{
+		{2, true},
+		{3, false},
+		{5, true},
+		{7, true},
+		{11, false},
+		{13, true},
+	}
+	fmt.Println(ss) // [{2 true} {3 false} {5 true} {7 true} {11 false} {13 true}]
+}
+```
+
+多次元配列・スライスも作成可能。  
+また、スライスは要素の追加（ `s = append(s, 0)` 、複数 `s = append(s, 2, 3, 4)` ）が可能。
+
+## range
+
+これも Python っぽい。
+
+```go
+package main
+
+import "fmt"
+
+var pow = []int{1, 2, 3}
+
+func main() {
+	for i, v := range pow { // インデックスと値
+		fmt.Printf("%d : %d\n", i, v)
+	}
+	for i := range pow {   // インデックスだけ
+		fmt.Println(i)
+	}
+	for _, v := range pow { // "_"で捨てて値だけ
+		fmt.Println(v)
+	}
+}
+```
+
+## map
+
+```go
+package main
+
+import "fmt"
+
+type vertex struct {
+	x, y int
+}
+
+func main() {
+	var m map[string]vertex     // mapの宣言
+	m = make(map[string]vertex) // mapはmakeで作る
+	m["hoge"] = vertex{
+		1, 2,
+	}
+	fmt.Println(m["hoge"]) // {1 2}
+	
+	mm := map[string]vertex{ // 値付きで宣言
+		"hoge": {1, 2},
+		"fuge": {3, 4},
+	}
+	fmt.Println(mm["fuge"]) // {3 4}
+	
+	delete(mm, "fuge")        // 要素の削除
+	v, ok := mm["fuge"]       // 要素の存在を確認
+	fmt.Println(v, ok)        // {0 0} false
+	mm["fuge"] = vertex{3, 4} // 要素の追加
+	v, ok = mm["fuge"]
+	fmt.Println(v, ok)        // {3 4} true
+}
+```
+
 ## つづき
 
 気が向いたらまとめるかも。
 
-https://go-tour-jp.appspot.com/moretypes/1
+https://go-tour-jp.appspot.com/moretypes/25
+関数の所に書く
 
 # 参考
 
