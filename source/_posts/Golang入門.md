@@ -1,9 +1,18 @@
 ---
 title: Golang入門
+date: 2019-02-02 10:54:59
 tags:
 - go
+- golang
 id: golang-basics
 ---
+
+golang の基本的なところをまとめる。
+
+- 環境構築
+- 基本文法
+
+<!-- more -->
 
 # 環境構築
 
@@ -21,7 +30,7 @@ https://golang.org/doc/install/source#environment
 - `GOPATH`
     - `go env GOPATH`
     - go のパスであってプロジェクトのパスでないことに注意
-    - プロジェクトのパスは `$GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>`
+    - プロジェクトのパスは `$GOPATH/src/github.com/<Githubアカウント名>/<プロジェクト名>`
 - `GOOS`
     - コンパイルして作成するバイナリの対象 OS を指定する
 - `GOARCH`
@@ -41,7 +50,7 @@ $ source .bash_profile
 
 ## 依存関係管理ツール dep
 
-https://qiita.com/Azizjan/items/66564b5dc7597717932b
+ライブラリの依存解決ツールはいくつかあるが、オフィシャル化に近そうなので `dep` を使用する。
 
 ```bash
 $ brew install dep
@@ -56,7 +65,7 @@ $GOPATH
 ├─pkg/
 │  └─darwin_amd64/
 │    ├─github.com/
-│    │  └─GitHubユーザ名
+│    │  └─GitHubアカウント名
 │    │    ├─`*.a`ファイル[^1]
 │    │    └─GitHubレポジトリ名/`*.a`ファイル[^2]
 │    └─pkg.in/
@@ -67,7 +76,7 @@ $GOPATH
   │  └─パッケージ名/
   │    └─LICENSEとか`*.go`とかREADMEとか
   └─github.com/
-    ├─GitHubユーザ名
+    ├─GitHubアカウント名
     │  └─GitHubレポジトリ名/
     │    └─LICENSEとか`*.go`とかREADMEとか
     └─<あなたのGitHubユーザ名>
@@ -112,15 +121,15 @@ $GOPATH
 ## プロジェクトの作成
 
 ```bash
-$ mkdir -p $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
-$ cd $GOPATH/src/github.com/<あなたの名前>/<プロジェクト名>
+$ mkdir -p $GOPATH/src/github.com/<あなたのGithubアカウント名>/<プロジェクト名>
+$ cd $GOPATH/src/github.com/<あなたのGithubアカウント名>/<プロジェクト名>
 ```
 
 初回は以下のような感じ。
 
 ```bash
-$ mkdir -p $GOPATH/src/github.com/<あなたの名前>
-$ cd $GOPATH/src/github.com/<あなたの名前>
+$ mkdir -p $GOPATH/src/github.com/<あなたのGithubアカウント名>
+$ cd $GOPATH/src/github.com/<あなたのGithubアカウント名>
 $ git clone <golangプロジェクト> # プロジェクトディレクトリの作成
 $ cd <golangプロジェクト>
 $ echo "vendor/" > .gitignore
@@ -137,20 +146,12 @@ $ go run app.go
 - VSCodeにGo言語の拡張機能をインストール
     - `Rich Go language support for Visual Studio Code`
 
-# A Tour of Go
+# 基本文法
 
-https://go-tour-jp.appspot.com/welcome/1
+[A Tour of Go](https://go-tour-jp.appspot.com/list)を一通りやるといい。  
+とりあえず、こんにちは世界。
 
-## hello.go
-
-```bash
-$ mkdir $GOPATH/src/github.com/tour
-$ cd $GOPATH/src/github.com/tour
-$ touch hello.go
-$ vi hello.go
-```
-
-```go:hello.go
+```go
 package main
 
 import "fmt"
@@ -163,55 +164,38 @@ func main() {
 ```bash
 $ go run hello.go
 Hello, 世界
-$ gofmt hello.go
-package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello, 世界")
-}
 ```
 
-## packages.go
+## 標準パッケージのインポート
 
-```go:packages.go
-package main
-
+```go
 import (
 	"fmt"
 	"math/rand"
 )
-
-func main() {
-	fmt.Println("My favorite number is", rand.Intn(10))
-}
 ```
 
-## import.go
-
-```go:import.go
-package main
-
-// import (
-// 	"fmt"
-// 	"math"
-// )
+```go
 import "fmt"
 import "math"
-
-func main() {
-	fmt.Printf("Now you have %g problems.", math.Sqrt(7))
-}
 ```
 
-## exported-names.go
+インポートしたら `fmt.Println` とかインポート名で使用できる。  
+また、インポート名を変更もできる。（ `f.Println` ）
+
+```go
+import (
+	f "fmt"
+)
+```
+
+## exported name
 
 Go では、最初の文字が大文字で始まる名前は、外部のパッケージから参照できる公開された名前( *exported name* )。  
 例えば、 `Pi` は `math` パッケージでエクスポートされている。  
 `pi` （小文字）ではないことに注意。
 
-```go:exported-name.go
+```go
 package main
 
 import (
@@ -225,14 +209,14 @@ func main() {
 }
 ```
 
-## functions.go
+## 関数
 
-```go:functions.go
+```go
 package main
 
 import "fmt"
 
-// func add(x , y int) int { // 省略可能
+// func add(x , y int) int { // 引数の型定義、省略可能
 func add(x int, y int) int {
 	return x + y
 }
@@ -242,9 +226,9 @@ func main() {
 }
 ```
 
-## multiple-results.go
+## 複数の return
 
-```go:multiple-results.go
+```go
 package main
 
 import "fmt"
@@ -259,11 +243,12 @@ func main() {
 }
 ```
 
-## named-results.go
+## result の変数名
 
-返り値となる変数に名前をつけることができる。
+返り値となる変数に名前をつけることができる。  
+そして、 `return` と書くだけでよくなる。
 
-```go:named-results.go
+```go
 package main
 
 import "fmt"
@@ -279,11 +264,11 @@ func main() {
 }
 ```
 
-## Variables
+## 変数宣言
 
 `var` は **変数宣言** 。
 
-```go:variables.go
+```go
 package main
 
 import "fmt"
@@ -296,11 +281,9 @@ func main() {
 }
 ```
 
-## Variables with initializers
-
 初期化子が与えられている場合、型を省略できる。
 
-```go:variables-with-initializers.go
+```go
 package main
 
 import "fmt"
@@ -313,12 +296,18 @@ func main() {
 }
 ```
 
-## Short variable declarations
-
 関数の中では、 `var` 宣言の代わりに、短い `:=` の代入文を使い、暗黙的な型宣言ができる。  
+この場合、変数の型は右側の変数から型推論される。  
+
+```go
+i := 42           // int
+f := 3.142        // float64
+g := 0.867 + 0.5i // complex128
+```
+
 関数の外では、キーワードではじまる宣言( `var` , `func` など)が必要で、 `:=` での暗黙的な宣言は利用できない。
 
-```go:short-variable-declarations
+```go
 package main
 
 import "fmt"
@@ -332,7 +321,7 @@ func main() {
 }
 ```
 
-## Basic types
+## 基本型
 
 - `bool`
 - `string`
@@ -347,7 +336,7 @@ func main() {
 - `float32` `float64`
 - `complex64` `complex128`
 
-```go:basic-types.go
+```go
 package main
 
 import (
@@ -368,7 +357,7 @@ func main() {
 }
 ```
 
-## Zero values
+## ゼロ値
 
 変数に初期値を与えずに宣言すると、ゼロ値( **zero value** )が与えられる。  
 ゼロ値は型によって以下のように与えられる。
@@ -377,7 +366,7 @@ func main() {
 - bool型: false
 - string型: "" (空文字列( empty string ))
 
-```go:zero.go
+```go
 package main
 
 import "fmt"
@@ -387,11 +376,11 @@ func main() {
 	var f float64
 	var b bool
 	var s string
-	fmt.Printf("%v %v %v %q\n", i, f, b, s)
+	fmt.Printf("%v %v %v %q\n", i, f, b, s) // 0 0 false ""
 }
 ```
 
-## Type conversions
+## 型変換
 
 従来の **キャスト** とほぼ同じ。
 
@@ -403,27 +392,18 @@ var u uint = uint(f)
 
 ただし、C言語とは異なり、 *Goでの型変換は明示的な変換が必要* 。
 
-## Type inference
-
-明示的な型を指定せずに変数を宣言する場合( `:=` や `var =` のいずれか)、変数の型は右側の変数から型推論される。
-
-```go
-i := 42           // int
-f := 3.142        // float64
-g := 0.867 + 0.5i // complex128
-```
-
-## Constants
+## 定数型
 
 定数は、 `const` キーワードを使って変数と同じように宣言。  
 定数は、文字(character)、文字列(string)、boolean、数値(numeric)のみで使える。  
 なお、定数は `:=` を使って宣言できない。
 
-## For
+## 繰り返し for
 
-C言語 や Java、JavaScriptの for ループとは異なり、 for ステートメントの3つの部分を括る括弧 `( )` はない。なお、中括弧 `{ }` は必要。
+所謂 `for` ループ。Go に `while` はない。  
+他言語とは異なり、 for ステートメントの3つの部分を括る括弧 `( )` はない。なお、中括弧 `{ }` は必要。
 
-```go:for.go
+```go
 package main
 
 import "fmt"
@@ -437,12 +417,12 @@ func main() {
 }
 ```
 
-## For is Go's "while"
+## while っぽい for
 
-`for ` はセミコロン(;)を省略することもできる。  
+`for ` はセミコロン( `;` )を省略することもできる。  
 つまり、C言語などにある `while` は、Goでは `for` だけを使う。
 
-```go:for-is-gos-while.go
+```go
 package main
 
 import "fmt"
@@ -456,16 +436,13 @@ func main() {
 }
 ```
 
-## If
+## 条件文 if
 
-Go 言語の `if` ステートメントは、 `for` ループと同様に、括弧 `( )` は不要で、中括弧 `{ }` は必要。
-
-## If with a short statement
-
-`if` ステートメントは、 `for` のように、条件の前に、評価するための簡単なステートメントを書くことができる。  
+Go 言語の `if` ステートメントは、 `for` ループと同様に、括弧 `( )` は不要で、中括弧 `{ }` は必要。  
+また、 `if` ステートメントは、 `for` のように、条件の前に、評価するための簡単なステートメントを書くことができる。  
 ここで宣言された変数は、 if のスコープ内だけで有効。
 
-```go:if-with-a-short-statement.go
+```go
 package main
 
 import (
@@ -474,7 +451,7 @@ import (
 )
 
 func pow(x, n, lim float64) float64 {
-	if v := math.Pow(x, n); v < lim {
+	if v := math.Pow(x, n); v < lim { // ここ注目
 		return v
 	}
 	return lim
@@ -488,11 +465,9 @@ func main() {
 }
 ```
 
-## If and else
-
 `if` ステートメントで宣言された変数は、 `else` ブロック内でも使うことができる。
 
-```go:if-and-else.go
+```go
 package main
 
 import (
@@ -504,7 +479,7 @@ func pow(x, n, lim float64) float64 {
 	if v := math.Pow(x, n); v < lim {
 		return v
 	} else {
-		fmt.Printf("%g >= %g\n", v, lim)
+		fmt.Printf("%g >= %g\n", v, lim) // v を参照できる
 	}
 	// can't use v here, though
 	return lim
@@ -518,11 +493,13 @@ func main() {
 }
 ```
 
-## Switch
+## switch 文
 
-Go の `switch` は C や C++、Java、JavaScript、PHP の `switch` と似ているが、 Go では選択された `case` だけを実行してそれに続く全ての `case` は実行されない。 これらの言語の各 `case` の最後に必要な `break` ステートメントが Go では *自動的に提供される* 。 もう一つの重要な違いは Go の `switch` の `case` は定数である必要はなく、 関係する値は整数である必要はない。
+Go の `switch` は C や C++、Java、JavaScript、PHP の `switch` と似ているが、 Go では選択された `case` だけを実行してそれに続く全ての `case` は実行されない。   
+これらの言語の各 `case` の最後に必要な `break` ステートメントが Go では *自動的に提供される* 。   
+もう一つの重要な違いは Go の `switch` の `case` は定数である必要はなく、 関係する値は整数である必要はない。
 
-```go:switch.go
+```go
 package main
 
 import (
@@ -545,12 +522,12 @@ func main() {
 }
 ```
 
-## Defer
+## defer
 
-`defer` ステートメントは、 `defer` へ渡した関数の実行を、呼び出し元の関数の終わり( `return` する)まで遅延させる。  
+`defer` ステートメントは、 `defer` へ渡した関数の実行を、呼び出し元の関数の終わり( `return` 後)まで遅延させる。  
 `defer` へ渡した関数の引数は、すぐに評価されるが、その関数自体は呼び出し元の関数が `return` するまで実行されない。
 
-```go:defer.go
+```go
 package main
 
 import "fmt"
@@ -567,9 +544,9 @@ func main() {
 
 ## Stacking defers
 
-`defer` へ渡した関数が複数ある場合、その呼び出しはスタックされ、 LIFO の順番で実行される。
+`defer` へ渡した関数が複数ある場合、その呼び出しはスタックされ、 LIFO の順番で実行される。（後から順に実行される）
 
-```go:defer-multi.go
+```go
 package main
 
 import "fmt"
@@ -583,49 +560,54 @@ func main() {
 
 	fmt.Println("done")
 }
+// counting
+// done
+// 9
+// 8
+// 7
+// 6
+// 5
+// 4
+// 3
+// 2
+// 1
+// 0
 ```
 
-[Defer, Panic, and Recover](https://blog.golang.org/defer-panic-and-recover)
+`defer` は `panic` の `recover` によく用いられる。（ Java で言う `try-catch` 的な）
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func hoge() {
+    defer func() {
+        err := recover()
+        if err != nil {
+            fmt.Println("Recover!:", err)
+        }
+    }()
+    panic("Panic!")
+}
+
+func main() {
+    hoge()
+}
+```
+
+`panic` は Java でいう `Runtime Exception` 。
+エラーハンドリングでは使っちゃダメ。 `Error` インターフェースを使おう。
+
+- https://qiita.com/nayuneko/items/3c0b3c0de9e8b27c9548
 
 ## つづき
 
+気が向いたらまとめるかも。
+
 https://go-tour-jp.appspot.com/moretypes/1
-
-# Cobra
-
-コマンドラインツール作成ライブラリ。
-
-```bash
-$ go get -u github.com/spf13/cobra/cobra
-```
-
-コマンドラインツール `cobra` が入る。  
-`cobra init` コマンドで以下の通りの雛形が作成される。
-
-```
-.
-├── LICENSE
-├── cmd
-│   └── root.go
-└── main.go
-```
-
-`cobra add version -p "rootCmd"` でサブコマンド `version` が追加される。
-
-```
-.
-├── LICENSE
-├── cmd
-│   ├── root.go
-│   └── version.go
-└── main.go
-```
-
-cobra はデフォルトで **viper** という設定ファイル読み込みライブラリが使用される。
-
-- cobra 参考
-    - https://qiita.com/tkit/items/3cdeafcde2bd98612428
-	- https://qiita.com/minamijoyo/items/cfd22e9e6d3581c5d81f
 
 # 参考
 
