@@ -980,11 +980,182 @@ func main() {
 }
 ```
 
+## goroutine
+
+**goroutine** （ゴルーチン）は Go ランタイムが管理する軽量スレッド。  
+OS が管理するスレッドではなく、 Go ランタイムなのがポイント。  
+関数の前に `go` と記載すれば新しい goroutine 上でその関数が実行される。  
+main 関数自体も goroutine で実行されており、 `go` キーワードで実行する関数自体はメイン goroutine 上で評価される。
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func say(s string) {
+	fmt.Println(s)
+}
+
+func main() {
+	// goroutine 実行
+	go say("hello")
+	
+	// 関数であれば実行できるので、即時関数でもよい
+	go func(s string) {
+		fmt.Println(s)
+	}("world")
+	
+	// 上記の goroutine が実行される前にメイン goroutine が終了するためスリープ
+	time.Sleep(1*time.Second)
+}
+```
+
+## チャネル（ channel ）
+
+Go では **チャネル** （ **channel** ）を用いて goroutine 間のデータの送受信およびブロックを実現する。  
+チャネルは `make` で作成（ `c := make(chan int)` ）し、送受信するデータの型を指定する。  
+また、データの送信（ `c <- 0` ）・受信（ `<-c` ）はアロー（？）で表現する。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	c := make(chan string) // チャネルの作成
+
+	go func(c chan string) {
+		c <- "hello world"
+	}(c)
+	
+	fmt.Println(<-c) // チャネルに値が入って読みだせるまでメイン goroutine はブロックされる
+}
+```
+
+```go
+package main
+
+import "fmt"
+
+func add(c chan int, x, y int) {
+	c <- x + y
+}
+
+func main() {
+	c := make(chan int) // チャネルの作成
+
+	nums := [4]int{1, 2, 3, 4}
+	go add(c, nums[0], nums[1]) // 足し算のお仕事を goroutine で分割
+	go add(c, nums[2], nums[3])
+	
+	r1, r2 := <-c, <-c
+	fmt.Println(r1, r2) // 7 3
+	// 終わった方から先に入るので順番に保証は無い
+}
+```
+
+チャネルには **バッファ** （チャネルに入るデータの数） を定義でき、 **バッファがいっぱいのときはチャネルへの送信をブロック** し、 **バッファが空の時はチャネルの受信をブロック** する。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	ch := make(chan int, 2) // バッファサイズ 2 のチャネル
+	ch <- 1
+	ch <- 2
+	fmt.Println(<-ch)
+	fmt.Println(<-ch)
+}
+```
+
+チャネルは閉じる（ **`close()`** ）ことができ、以下のように検知可能。
+
+- `v, ok := <-ch`
+    - `ok` が `false` の場合チャネルが閉じている
+- `for i := range c`
+    - チャネルが閉じられるまで値を繰り返し受信する
+
+```go
+package main
+
+import "fmt"
+
+func count(n int, c chan int) {
+	x := 0
+	for i := 0; i < n; i++ {
+		x += 1
+		c <- x
+	}
+	close(c)
+}
+
+func main() {
+	c := make(chan int, 10)
+	go count(cap(c), c)
+	for i := range c {
+		fmt.Print(i, " ")
+	} // 1 2 3 4 5 6 7 8 9 10
+}
+```
+
+**`select`** を使用することで複数のチャネルを評価できる。  
+複数ある `case` のいずれかが準備できるようになるまでブロックし、準備ができた `case` を実行する。  
+もし、複数の `case` の準備ができている場合、 `case` は **ランダムに選択・実行** される。  
+どの `case` も準備できていない場合は `default` が実行される。
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func count(c, quit chan int) {
+	x := 0
+	for {
+		select { // どちらかの case が for 内で評価され続ける
+		case c <- x:
+			x += 1
+		case <-quit:
+			fmt.Println("quit")
+			return
+		default:
+			fmt.Println("wait")
+			time.Sleep(1*time.Second)
+		}
+	}
+}
+
+func main() {
+	c, quit := make(chan int), make(chan int)
+	go func() {
+		for i := 0; i < 5; i++ {
+			fmt.Print(<-c, " ")
+		}
+		quit <- 0
+	}()
+	count(c, quit)
+}
+// wait
+// wait
+// 0 wait
+// 1 wait
+// 2 wait
+// 3 wait
+// 4 quit
+```
+
 ## つづき
 
 気が向いたらまとめるかも。
 
-https://go-tour-jp.appspot.com/concurrency/1
+https://go-tour-jp.appspot.com/concurrency/9
 
 # 参考
 
