@@ -7,7 +7,8 @@ tags:
 id: golang-basics
 ---
 
-golang の基本的なところをまとめる。
+golang の基本的なところをまとめる。  
+さらっとまとめるつもりがどえらい量になったので注意。
 
 - 環境構築
 - 基本文法
@@ -167,9 +168,12 @@ Hello, 世界
 ```
 
 なお、[The Go Playground](https://play.golang.org/) というサービスを使うと Web でお試し実行できる。  
-[他](http://interprism.hatenablog.com/entry/2014/03/04/132551) にもいろいろあるみたい。
+[他](http://interprism.hatenablog.com/entry/2014/03/04/132551) にもいろいろあるみたい。  
+以降は、[A Tour of Go](https://go-tour-jp.appspot.com/list) を読みつつも、**自分向けに** 補足したり省略したりしてまとめたもの。
 
-## 標準パッケージのインポート
+## パッケージのインポート
+
+標準パッケージのインポートは以下。
 
 ```go
 import (
@@ -192,9 +196,17 @@ import (
 )
 ```
 
-## exported name
+また、独自や OSS ライブラリのインポートは `${GOPATH}/src` からのパスを指定する。
 
-Go では、最初の文字が大文字で始まる名前は、外部のパッケージから参照できる公開された名前( *exported name* )。  
+```go
+import (
+    "github.com/spf13/cobra"
+)
+```
+
+## パッケージ外からの参照
+
+Go では、最初の文字が *大文字で始まる名前* は、外部のパッケージから参照できる公開された名前( *exported name* )。  
 例えば、 `Pi` は `math` パッケージでエクスポートされている。  
 `pi` （小文字）ではないことに注意。
 
@@ -258,7 +270,7 @@ func main() {
 }
 ```
 
-## result の変数名
+## return の変数名
 
 返り値となる変数に名前をつけることができる。  
 そして、 `return` と書くだけでよくなる。
@@ -277,6 +289,39 @@ func split(sum int) (x, y int) {
 func main() {
 	fmt.Println(split(17))
 }
+```
+
+## クロージャ
+
+Go の関数は **クロージャ** （関数オブジェクトの一種）。  
+関数の引数として渡したり、遅延実行させたりできる。
+
+```go
+package main
+
+import "fmt"
+
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x   
+		return sum
+	}
+}
+
+func main() {
+	pos := adder() // 無名関数をオブジェクトとして受け取る
+	for i := 0; i < 5; i++ {
+		// 関数オブジェクト内で sum が保持されているので
+		// 呼び出す度に加算されていく
+		fmt.Println(pos(i))
+	}
+}
+// 0
+// 1
+// 3
+// 6
+// 10
 ```
 
 ## 変数宣言
@@ -766,12 +811,180 @@ func main() {
 }
 ```
 
+## メソッド
+
+Go には **class** は無いが、**型に対してメソッドを定義** できる。  
+構造体だけにメソッド定義できるのではなく、型に対して定義できることに注意。  
+Go ではメソッドを定義する型を **レシーバ** と呼び、 **値レシーバ** と **ポインタレシーバ** がある。  
+レシーバは `func` と関数名の間に定義する。
+
+- 値レシーバ
+    - `(r Type)`
+	- メソッド呼び出しの度に `r` （値）が作成されるのでメモリ多用に注意
+	- 基本的にはポインタレシーバを使ってればいい。
+- ポインタレシーバ
+    - `(r *Type)`
+	- 値レシーバと異なり、メソッド呼び出しの度に値は作成されない（ポインタなので）
+	- ただし、 `nil` には注意（オブジェクト化されてなくても呼べちゃう）
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type user struct {
+	name  string
+	score int
+}
+
+// ポインタレシーバ
+func (u *user) hit() {
+	u.score++
+}
+
+// 参照渡しでないと
+func (u user) hit2() {
+	u.score++
+}
+
+func main() {
+	u1 := &user{name: "pepese", score: 100}
+	fmt.Println(u1) // &{pepese 100}
+
+	u1.hit()
+	fmt.Println(u1.score) // カウントアップされてる：101
+
+	u1.hit2()
+	fmt.Println(u1.score) // カウントアップされてない：101 （102になると思った？）
+	/*
+		hit2 はメソッド実行時に u1 のコピーが作成され、その値に対して処理が行われている。
+		なので、u1 のコピーに処理が行われているのであった、u1 に対しては処理は行われていない。
+	*/
+}
+```
+
+## インターフェース
+
+**インタフェース** は、メソッドのシグニチャの集まりを定義する。  
+何も定義していないもの `interface{}` 型は **空のインターフェース** といい、任意の値を保持できる。
+
+```go
+package main
+
+import "fmt"
+
+type vertex struct {
+	x, y int
+}
+
+func (v vertex) add() int {
+	return v.x + v.y
+}
+
+func (v *vertex) sub() int {
+	return v.x - v.y
+}
+
+type adder interface {
+	add() int
+}
+
+type suber interface {
+	sub() int
+}
+
+func main() {
+	var a adder
+	v1 := vertex{1, 2}
+
+	a = v1
+	fmt.Println(a.add()) // 3
+	
+	var s suber
+	v2 := &vertex{3, 4}
+	
+	s = v2
+	fmt.Println(s.sub()) // -1
+	
+	s = v1 // コンパイルエラーになる、sub() は vertex のメソッドではなく *vertex のメソッドなので、「s = &v1」ならOK
+	fmt.Println(s.sub())
+	
+	var n interface{}              // 空のインターフェース
+	n = v1                         // 空のインターフェースは任意の値を保持できる
+	fmt.Printf("(%v, %T)\n", n, n) // ({1 2}, main.vertex)
+	n = v2                         // 空のインターフェースは任意の値を保持できる
+	fmt.Printf("(%v, %T)\n", n, n) // (&{3 4}, *main.vertex)
+}
+```
+
+標準ライブラリには [**Stringer** インターフェース](https://go-tour-jp.appspot.com/methods/17)があり、 `String()` メソッドが定義されている。  
+例えば、 `fmt` に `String()` メソッドを実装したオブジェクトを渡すと、その定義通りに標準出力してくれる。  
+他にも以下の様なものがある。
+
+- [error インターフェース](https://go-tour-jp.appspot.com/methods/19)
+- [Reader インターフェース](https://go-tour-jp.appspot.com/methods/21)
+- [Image インターフェース](https://go-tour-jp.appspot.com/methods/24)
+
+## 型アサーション
+
+`val.(Type)` で型を確認できる。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var i interface{} = "hello"
+
+	s := i.(string) // string 型で空のインターフェースから値を取得する
+	fmt.Println(s)  // hello
+
+	s, ok := i.(string) // 第2引数で string 型かどうかチェックできる
+	fmt.Println(s, ok)  // hello true
+
+	f, ok := i.(float64) // 型が異なる場合は false
+	fmt.Println(f, ok)   // 0 false
+
+	f = i.(float64) // 型が異なるのに第2引数が無いと panic する
+	fmt.Println(f)
+}
+```
+
+## 型 switch
+
+`val.(type)` で型が取得でき、型に応じて switch できる。
+
+```go
+package main
+
+import "fmt"
+
+func do(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("int: %v\n", v)
+	case string:
+		fmt.Printf("string: %v\n", v)
+	default:
+		fmt.Printf("unknown type: %T\n", v)
+	}
+}
+
+func main() {
+	do(21)      // int: 21
+	do("hello") // string: hello
+	do(true)    // unknown type: bool
+}
+```
+
 ## つづき
 
 気が向いたらまとめるかも。
 
-https://go-tour-jp.appspot.com/moretypes/25
-関数の所に書く
+https://go-tour-jp.appspot.com/concurrency/1
 
 # 参考
 
