@@ -929,7 +929,7 @@ func main() {
 
 ## 型アサーション
 
-`val.(Type)` で型を確認できる。
+`インターフェース.(型)` で型を確認できる。
 
 ```go
 package main
@@ -955,7 +955,7 @@ func main() {
 
 ## 型 switch
 
-`val.(type)` で型が取得でき、型に応じて switch できる。
+`インターフェース.(type)` で型が取得でき、型に応じて switch できる。
 
 ```go
 package main
@@ -1017,7 +1017,7 @@ func main() {
 
 Go では **チャネル** （ **channel** ）を用いて goroutine 間のデータの送受信およびブロックを実現する。  
 チャネルは `make` で作成（ `c := make(chan int)` ）し、送受信するデータの型を指定する。  
-また、データの送信（ `c <- 0` ）・受信（ `<-c` ）はアロー（？）で表現する。
+また、データの送信（ `c <- 0` 入れる）・受信（ `<-c` 取り出す）はアロー（？）で表現する。 **キュー** みたいなものだ。
 
 ```go
 package main
@@ -1091,13 +1091,13 @@ func count(n int, c chan int) {
 		x += 1
 		c <- x
 	}
-	close(c)
+	close(c) // チャネルを閉じる
 }
 
 func main() {
 	c := make(chan int, 10)
 	go count(cap(c), c)
-	for i := range c {
+	for i := range c { // チャネルが閉じられるまでループ＆ブロック
 		fmt.Print(i, " ")
 	} // 1 2 3 4 5 6 7 8 9 10
 }
@@ -1151,19 +1151,57 @@ func main() {
 // 4 quit
 ```
 
-## つづき
+## sync.Mutex
 
-気が向いたらまとめるかも。
+チャネルは goroutine 間でデータの送受信とブロックを実現するものだが、データ送受信が不要な場合は **sync.Mutex** （排他制御・ミューテックス： mutual exclusion の略）を利用する。  
+所謂ロック機構（ `Lock` `Unlock` ）の機能を提供し、 **クリティカルセッション** （他の処理の介入抑止し、データの生合成を守る必要のある一連の一まとまりの処理）を保護する。
 
-https://go-tour-jp.appspot.com/concurrency/9
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+type counter struct {
+	num int
+	mux sync.Mutex
+}
+
+// クリティカルセッション
+func (c *counter) countup(roop int) {
+	c.mux.Lock()
+	defer c.mux.Unlock() // deferの利用、ほぼクリティカルセッションの構文
+	
+	for i:=0; i<roop; i++ {
+		c.num++
+	}
+	fmt.Println(c.num)
+}
+
+func main() {
+	c := counter{num: 0}
+	for i := 0; i < 5; i++ {
+		go c.countup(10)
+	}
+
+	time.Sleep(time.Second)
+}
+```
+
+上記はロック機構によりきちんと 10 単位でカウントアップ・表示されている。
 
 # 参考
 
-- https://www.slideshare.net/takuyaueda967/2016-go
+- [Where to Go from here...](https://go-tour-jp.appspot.com/concurrency/11)
+    - この先の学習のヒント
+- [Go入門](https://www.slideshare.net/takuyaueda967/2016-go)
     - slideshare
-- http://blog.amedama.jp/entry/2015/10/06/231038
-    - Go の文法ではなく、標準の構造・エコシステムがよくわかる
-- http://blog.nishimu.land/entry/2015/03/16/032222
+- [Mac OS X で Golang に入門してみる](http://blog.amedama.jp/entry/2015/10/06/231038)
+    - Go の文法ではなく、標準の構造がよくわかる
+- [シュッと golang に入門する話](http://blog.nishimu.land/entry/2015/03/16/032222)
     - 文法がわかる
-- おすすめさいとまとめ
-    - https://mayonez.jp/topic/1362
+- [Go言語入門](https://gist.github.com/hayajo/9559874)
+- [はじめてのGo言語](http://cuto.unirita.co.jp/gostudy/)
