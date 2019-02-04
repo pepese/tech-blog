@@ -19,8 +19,6 @@ k8s ではホストマシン（物理サーバ、もしくは仮想マシン、�
     - `kube-scheduler`
     - `kube-controller-manager`
 - **Worker Node(s)** ： Master からコントロールされるワーカーサーバ、複数台で構成されるクラスタ構成をとり、コンテナがマウントされる
-    - kubelet 、 kube-proxy 、 flanneld 、 docker デーモンなどのプロセスが稼働
-    - 複数 Node をまとめて **Cluster** と呼ぶ
     - `kubelet`
     - `kube-proxy`
     - `kube-dns` （ Worker Node ではない？）

@@ -1,2 +1,0 @@
----
-title: Golang入門
