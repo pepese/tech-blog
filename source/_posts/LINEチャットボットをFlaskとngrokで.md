@@ -1,5 +1,6 @@
 ---
 title: LINEチャットボットをFlaskとngrokで
+date: 2017-11-01 12:31:28
 tags:
 - Flask
 - Python
@@ -12,6 +13,8 @@ Flask と Heroku でメッセージをオウム返しする LINE のチャット
 Heroku で公開したい場合は以下参照。
 
 - [Heroku入門](https://pepese.github.io/blog/heroku-basics/)
+
+<!-- more -->
 
 # セットアップ
 
@@ -31,8 +34,8 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('1gNzfy4JypE950O60HrFFsY9sGRyCX41i2LWXp+z8QTwkWfaOUlzmLdZ5gTx5CB3NZhw+0CageDfB5WXbPU0PQxxpOEcb7S3pkMEhkWcKnczTijfF5DqRPKnAyXN9Q4D44rBrlhxB6u428NG/RdB2AdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('65ad16582aed0cda3b3347fc54633a76')
+line_bot_api = LineBotApi('アクセストークン')
+handler = WebhookHandler('Channel Secret')
 
 @app.route("/")
 def hello_world():

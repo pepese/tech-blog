@@ -1,5 +1,6 @@
 ---
 title: word2vec入門
+date: 2018-02-04 13:01:38
 tags:
 - Python
 - gensim
@@ -9,6 +10,8 @@ id: word2vec-basics
 Mecab については以下を参考。
 
 - [形態素解析システムMeCab入門](https://pepese.github.io/blog/mecab-basics/)
+
+<!-- more -->
 
 # コマンドで word2vec
 

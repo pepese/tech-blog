@@ -1,9 +1,17 @@
 ---
 title: Nginx入門
+date: 2018-02-04 12:46:23
 tags:
 - Nginx
 id: nginx-basics
 ---
+
+- インストール
+- ディレクトリ構成
+- 各種設定
+
+<!-- more -->
+
 
 # インストール
 
@@ -47,6 +55,8 @@ nginx 1092 1088 0 19:59 ? 00:00:00 nginx: worker process
 - `/etc/nginx/conf.d/*.conf`
     - 仮想サーバとアップストリームの設定
         - 例）www.example.com.conf
+
+# 各種設定
 
 ## Webサーバの設定
 

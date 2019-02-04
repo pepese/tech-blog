@@ -1,5 +1,6 @@
 ---
 title: Pandas入門 DataFrame編
+date: 2018-02-04 12:50:02
 tags:
 - Python
 - Pandas

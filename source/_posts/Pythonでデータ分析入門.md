@@ -1,5 +1,6 @@
 ---
 title: Pythonでデータ分析入門
+date: 2018-02-04 12:53:16
 tags:
 - Python
 - Pandas
@@ -8,6 +9,8 @@ id: python-data-analytics-basics
 ---
 
 Python でのデータ分析環境・アプローチについて自分向けにまとめる。
+
+<!-- more -->
 
 # はじめに
 

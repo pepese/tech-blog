@@ -1,11 +1,21 @@
 ---
 title: 形態素解析システムMeCab入門
+date: 2018-02-04 13:04:44
 tags:
 - MeCab
+- Python
+- Node.js
 id: mecab-basics
 ---
 
 [公式](http://taku910.github.io/mecab/)
+
+- 環境構築
+- 使い方
+- Node.js から Mecabを使う
+- Python3 から MeCab を使う
+
+<!-- more -->
 
 # 環境構築
 
