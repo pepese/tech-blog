@@ -6,10 +6,11 @@ tags:
 - Python
 - ngrok
 - chatbot
+- LINE
 id: flask-ngrok-chatbot
 ---
 
-Flask と Heroku でメッセージをオウム返しする LINE のチャットボットを作ってみた。  
+[Flask](http://flask.pocoo.org/) と [ngrok](https://ngrok.com/) でメッセージをオウム返しする LINE のチャットボットを作ってみた。  
 Heroku で公開したい場合は以下参照。
 
 - [Heroku入門](https://pepese.github.io/blog/heroku-basics/)
