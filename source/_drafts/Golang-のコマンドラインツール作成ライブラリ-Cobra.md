@@ -9,6 +9,8 @@ id: golang-cobra
 
 コマンドラインツール作成ライブラリ。
 
+<!-- more -->
+
 ```bash
 $ go get -u github.com/spf13/cobra/cobra
 ```

@@ -17,6 +17,8 @@ id: golang-design-pattern
 - 構造に関するパターン
 - 振る舞いに関するパターン
 
+<!-- more -->
+
 # 生成に関するパターン
 
 - Abstract Factory
