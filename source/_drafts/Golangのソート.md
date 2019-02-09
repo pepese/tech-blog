@@ -9,7 +9,8 @@ id: golang-sort
 Golang におけるソートについてまとめる。
 
 - sort パッケージ
-- 独自のソートを作ってみる
+- sort パッケージ独自のソートを作ってみる
+- スクラッチでソートしてみる
 
 <!-- more -->
 
@@ -48,12 +49,15 @@ sort.Ints(a)
 
 ## Slice
 
-less だけ実装すればよい、アレ。
+`Interface` の実装が面倒なら `less` だけ実装すればよい関数もある。
 
 - func Slice(slice interface{}, less func(i, j int) bool)
 - func SliceStable(slice interface{}, less func(i, j int) bool)
 
-# 独自のソートを作ってみる
+`slice` はソート対象。
+また、 `SliceStable` は [安定ソート](https://ja.wikipedia.org/wiki/%E5%AE%89%E5%AE%9A%E3%82%BD%E3%83%BC%E3%83%88) 。
+
+# sort パッケージ独自のソートを作ってみる
 
 ## Interface の実装
 
@@ -98,3 +102,62 @@ func main() {
 ```
 
 ## Sliceの利用
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+type user struct {
+	name string
+	age  int
+}
+
+func main() {
+	list := []user{
+		user{name: "A", age: 2},
+		user{name: "B", age: 1},
+		user{name: "C", age: 4},
+		user{name: "D", age: 3},
+	}
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].age < list[j].age
+	})
+	fmt.Println(list)
+}
+```
+
+# スクラッチでソートしてみる。
+
+sort パッケージ使わずに。
+
+## バブルソート
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func sort(list []int) error {
+	eNum := len(list)
+	for i := eNum; i > 0; i-- {
+		for j := 0; j < i-1; j++ {
+			if list[j] > list[j+1] {
+				list[j], list[j+1] = list[j+1], list[j]
+			}
+		}
+	}
+	return nil
+}
+
+func main() {
+	list := []int{3, 4, 1, 2, 8, 5}
+	sort(list)
+	fmt.Println(list)
+}
+```

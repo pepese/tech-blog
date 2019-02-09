@@ -115,5 +115,5 @@ func main() {
     - 1 行の読み込み上限サイズ（ `MaxScanTokenSize` ）を変更できる
 - func (s *Scanner) Split(split SplitFunc)
     - デフォルトでは行単位の読み込み単位を変更できる
-    - 行単位（ `ScanLines` : デフォルト）単語単位（ `bufio.ScanWords` ）、バイト単位（ `bufio.ScanBytes` ）、文字（ `rune` ）単位（ `bufio.ScanRunes` ）
+    - 行単位（ `bufio.ScanLines` : デフォルト）単語単位（ `bufio.ScanWords` ）、バイト単位（ `bufio.ScanBytes` ）、文字（ `rune` ）単位（ `bufio.ScanRunes` ）
     - また、 `func(data []byte, atEOF bool) (advance int, token []byte, err error)` を満たす関数であれば独自カスタマイズも可能
