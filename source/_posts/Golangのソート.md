@@ -1,5 +1,6 @@
 ---
 title: Golangのソート
+date: 2019-02-10 16:48:34
 tags:
 - golang
 - go
@@ -9,7 +10,7 @@ id: golang-sort
 Golang におけるソートについてまとめる。
 
 - sort パッケージ
-- sort パッケージ独自のソートを作ってみる
+- sort パッケージで独自のソートを作ってみる
 - スクラッチでソートしてみる
 
 <!-- more -->
@@ -57,7 +58,7 @@ sort.Ints(a)
 `slice` はソート対象。
 また、 `SliceStable` は [安定ソート](https://ja.wikipedia.org/wiki/%E5%AE%89%E5%AE%9A%E3%82%BD%E3%83%BC%E3%83%88) 。
 
-# sort パッケージ独自のソートを作ってみる
+# sort パッケージで独自のソートを作ってみる
 
 ## Interface の実装
 
@@ -130,7 +131,7 @@ func main() {
 }
 ```
 
-# スクラッチでソートしてみる。
+# スクラッチでソートしてみる
 
 sort パッケージ使わずに。
 
@@ -143,7 +144,7 @@ import (
 	"fmt"
 )
 
-func sort(list []int) error {
+func sort(list []int) {
 	eNum := len(list)
 	for i := eNum; i > 0; i-- {
 		for j := 0; j < i-1; j++ {
@@ -152,7 +153,6 @@ func sort(list []int) error {
 			}
 		}
 	}
-	return nil
 }
 
 func main() {
@@ -161,3 +161,5 @@ func main() {
 	fmt.Println(list)
 }
 ```
+
+暇になったら他にも作ろうかなー。
