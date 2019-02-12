@@ -1,9 +1,10 @@
 ---
 title: Golangの文字列操作
+date: 2019-02-11 17:06:11
 tags:
 - golang
 - go
-id: golang-strings
+id: golang-string
 ---
 
 golang の文字列操作をまとめる。
@@ -13,8 +14,6 @@ golang の文字列操作をまとめる。
 - strconv パッケージ
 
 <!-- more -->
-
-https://qiita.com/tchnkmr/items/b3d0b884db8d7d91fb1b
 
 # fmt パッケージ
 
