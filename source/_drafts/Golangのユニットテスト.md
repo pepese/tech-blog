@@ -32,6 +32,57 @@ golang のユニットテストについてまとめる。
 
 # testing パッケージ
 
+## testing.T
+
+- `func (c *T) Error(args ...interface{})` `func (c *T) Errorf(format string, args ...interface{})`
+    - テスト失敗としてログ出力、以後の処理は実行
+- `func (c *T) Fail()`
+    - テスト失敗とする、以後の処理は実行
+- `func (c *T) FailNow()`
+    - テスト失敗とする、以後の処理は実行 **されない**
+- `func (c *T) Failed() bool`
+- `func (c *T) Fatal(args ...interface{})` `func (c *T) Fatalf(format string, args ...interface{})`
+    - テスト失敗としてログ出力、以後の処理は実行 **されない**
+- func (c *T) Helper()
+- `func (c *T) Log(args ...interface{})` `func (c *T) Logf(format string, args ...interface{})`
+- func (c *T) Name() string
+- func (t *T) Parallel()
+- func (t *T) Run(name string, f func(t *T)) bool
+- func (c *T) Skip(args ...interface{})
+- func (c *T) SkipNow()
+- func (c *T) Skipf(format string, args ...interface{})
+- func (c *T) Skipped() bool
+
+## testing.B
+
+- func (c *B) Error(args ...interface{})
+- func (c *B) Errorf(format string, args ...interface{})
+- func (c *B) Fail()
+- func (c *B) FailNow()
+- func (c *B) Failed() bool
+- func (c *B) Fatal(args ...interface{})
+- func (c *B) Fatalf(format string, args ...interface{})
+- func (c *B) Helper()
+- func (c *B) Log(args ...interface{})
+- func (c *B) Logf(format string, args ...interface{})
+- func (c *B) Name() string
+- func (b *B) ReportAllocs()
+- func (b *B) ResetTimer()
+- func (b *B) Run(name string, f func(b *B)) bool
+- func (b *B) RunParallel(body func(*PB))
+- func (b *B) SetBytes(n int64)
+- func (b *B) SetParallelism(p int)
+- func (c *B) Skip(args ...interface{})
+- func (c *B) SkipNow()
+- func (c *B) Skipf(format string, args ...interface{})
+- func (c *B) Skipped() bool
+- func (b *B) StartTimer()
+- func (b *B) StopTimer()
+
+## testing.TB
+
+`testing.T` と `testing.B` を合わせたもの。
+
 # テスト手法
 
 - テーブルテスト
