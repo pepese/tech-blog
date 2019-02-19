@@ -96,3 +96,8 @@ $ sudo ip netns add testing
 - ネットワーク構成
     - CLOS アーキテクチャ
     - BGP Router
+
+以下を実装した。
+
+- [coil](https://github.com/cybozu-go/coil)
+- [Neco プロジェクトのスキルチェックシート](https://gist.github.com/ymmt2005/bd92296166e52d1beba9df8ac516a9db)
