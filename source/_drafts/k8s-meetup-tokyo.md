@@ -82,7 +82,7 @@ kubelet -> CNI Plugin という流れで、 CNI Plugin に対するインプッ�
 cnitool
 
 ```bash
-$ go install xxxxx/cnitool
+$ go install github.com/containernetworking/cni/cnitool
 
 
 $ sudo ip netns add testing
@@ -101,3 +101,28 @@ $ sudo ip netns add testing
 
 - [coil](https://github.com/cybozu-go/coil)
 - [Neco プロジェクトのスキルチェックシート](https://gist.github.com/ymmt2005/bd92296166e52d1beba9df8ac516a9db)
+
+# CNI
+
+https://qiita.com/yuanying/items/68b2a32b4d217e679955
+
+## 下準備
+
+Mac の場合は `ip` コマンド（ネットワークデバイズの IP アドレスを管理）をインストールする。
+
+```
+$ brew install iproute2mac
+$ ip
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }
+       ip -V
+where  OBJECT := { link | addr | route | neigh }
+       OPTIONS := { -4 | -6 }
+
+iproute2mac
+Homepage: https://github.com/brona/iproute2mac
+This is CLI wrapper for basic network utilities on Mac OS X inspired with iproute2 on Linux systems.
+Provided functionality is limited and command output is not fully compatible with iproute2.
+For advanced usage use netstat, ifconfig, ndp, arp, route and networksetup directly.
+```
+
+`ip netns` とか無いので `ifconfig` で[代用](https://www.atmarkit.co.jp/ait/articles/0109/29/news004.html)しよう。
