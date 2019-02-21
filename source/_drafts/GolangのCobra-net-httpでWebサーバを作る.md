@@ -11,6 +11,8 @@ id: golang-cobra-net-http-web
 
 - Cobra
 - net/http
+- その他トピック
+    - Filter 的な機能
 
 <!-- more -->
 
@@ -174,12 +176,64 @@ startWeb called
 `net/http/server.go` の実装をみればよくわかる。
 
 まずは **Mux** について記載する。  
-Mux は multiplexer の略で、アクセスされる URL パターンから対応する処理を持つ関数（ **Handler** ）を呼び出すルータの役割を持つ。  
-net/http パッケージには `http.DefaultServeMux` というデフォルトの Mux がある。
+Mux は multiplexer の略で、アクセスされる URL パターンから対応する処理を持つ関数（ **Handler** ）を呼び出すルータの役割を持ち、 `http.ServeMux` という構造体で定義されている。
 
-## Webサーバの起動
+```go
+type ServeMux struct {
+	mu    sync.RWMutex
+	m     map[string]muxEntry
+	es    []muxEntry // slice of entries sorted from longest to shortest.
+	hosts bool       // whether any patterns contain hostnames
+}
+```
 
-`net/http` の `ListenAndServe` 関数を使用する。
+net/http パッケージには `http.DefaultServeMux` というデフォルトの Mux がある。  
+`http.ServeMux` には以下のメソッドがある。
+
+- func (mux *ServeMux) Handle(pattern string, handler Handler)
+- func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request))
+
+### func (mux *ServeMux) Handle(pattern string, handler Handler)
+
+Handle メソッドは URL パターン（ `pattern` ）に対して対応する処理（ `handler` ）を登録する機能を持つ。  
+`handler` は以下の `Handler` インターフェースを実装している必要がある。
+
+```go
+type Handler interface {
+	ServeHTTP(ResponseWriter, *Request)
+}
+```
+
+第 1 引数はレスポンス、第 2 引数はリクエストのポインタが渡される。  
+自作の構造体に対して `ServeHTTP(ResponseWriter, *Request)` メソッドを実装して第 2 引数に渡すことになる。
+
+### func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request))
+
+構造体を作成して `Handler` インターフェースを実装する必要がない場合は直接処理を行う関数を定義できる。
+
+```go
+mux := http.NewServeMux()
+mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
+    w.WriteHeader(http.StatusOK)
+    fmt.Fprintf(w, "Hello World")
+})
+```
+
+>HandleFunc の仕組みは以下の `HandlerFunc` 型によって実現されている。（ Handle じゃなくて Handle「r」 になっている）
+>
+>```go
+>type HandlerFunc func(ResponseWriter, *Request)
+>
+>func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+>    f(w, r)
+>}
+>```
+>
+>つまり、任意の名前（無名含む）の関数を渡しても `net/http` パッケージ内部で `HandlerFunc` にキャストしてしまえば、 `ServeHTTP` メソッドを実装していることになり `Handler` インターフェースを満たすことになる。
+
+### Webサーバの起動
+
+Web サーバの起動には `http.ListenAndServe` 関数を使用する。
 
 ```go
 func startWeb(cmd *cobra.Command, args []string) {
@@ -187,7 +241,15 @@ func startWeb(cmd *cobra.Command, args []string) {
 }
 ```
 
-上記だと何も定義していないので `404` が返却される。
+第 2 引数には `http.ServeMux` を渡すが、 `nil` の場合は `net/http` 内部で `DefaultServeMux` が使われている。  
+上記だと Handler を何も定義していないので `404` が返却される。
+
+# その他トピック
+
+## Filter 的な機能
+
+Java でいう Filter 的な機能を作ってみる。
+
 
 # 参考
 
