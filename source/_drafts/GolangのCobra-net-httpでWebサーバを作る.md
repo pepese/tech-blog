@@ -12,6 +12,7 @@ id: golang-cobra-net-http-web
 - Cobra
 - net/http
 - その他トピック
+    - Graceful Shutdown
     - Filter 的な機能
 
 <!-- more -->
@@ -245,6 +246,13 @@ func startWeb(cmd *cobra.Command, args []string) {
 上記だと Handler を何も定義していないので `404` が返却される。
 
 # その他トピック
+
+## Graceful Shutdown
+
+新規のリクエストは受け付けず、既に受け付けた処理を終えてからサーバ停止する機能。  
+`net/http` には既に実装されている。
+
+- func (srv *Server) Shutdown(ctx context.Context) error
 
 ## Filter 的な機能
 
