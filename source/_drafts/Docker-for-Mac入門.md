@@ -5,7 +5,14 @@ tags:
 id: docker-for-mac-basics
 ---
 
-エンタープライズエディションではなく、コミュニティエディションの `Docker CE for Mac` を使用する。
+エンタープライズエディションではなく、コミュニティエディションの `Docker CE for Mac` を使用する。  
+なお、 `Docker for Windows` と合わせて **Docker Desktop** と呼ぶ。
+
+- インストール
+- 動かしてみる
+- docker コマンドの使い方・概要
+
+<!-- more -->
 
 # インストール
 
