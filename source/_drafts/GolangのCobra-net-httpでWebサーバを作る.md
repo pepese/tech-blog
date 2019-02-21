@@ -169,6 +169,14 @@ $ ./web start
 startWeb called
 ```
 
+## net/http パッケージのサーバ機能
+
+`net/http/server.go` の実装をみればよくわかる。
+
+まずは **Mux** について記載する。  
+Mux は multiplexer の略で、アクセスされる URL パターンから対応する処理を持つ関数（ **Handler** ）を呼び出すルータの役割を持つ。  
+net/http パッケージには `http.DefaultServeMux` というデフォルトの Mux がある。
+
 ## Webサーバの起動
 
 `net/http` の `ListenAndServe` 関数を使用する。
@@ -180,3 +188,7 @@ func startWeb(cmd *cobra.Command, args []string) {
 ```
 
 上記だと何も定義していないので `404` が返却される。
+
+# 参考
+
+- https://qiita.com/nirasan/items/2160be0a1d1c7ccb5e65
