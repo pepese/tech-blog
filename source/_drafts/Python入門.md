@@ -5,22 +5,24 @@ tags:
 id: python-basics
 ---
 
-自分にとって最低限のことだけまとめる。
+自分にとって最低限のことだけまとめる、というか整理。
 
-- [Windows での環境構築](#Windowsでの環境構築)
-- [モジュールとパッケージ](#モジュールとパッケージ)
-- [起動モジュール](#起動モジュール)
+- Windows での環境構築
+- モジュールとパッケージ
+- 起動モジュール
 
 <!-- more -->
 
 公式ドキュメントは以下。
 
 - [公式サイト](https://www.python.org/)
-- [公式ドキュメント一覧](https://docs.python.jp/3/index.html)
+- 公式ドキュメント一覧
+    - [Python2系](https://docs.python.jp/2/index.html)
+    - [Python3系](https://docs.python.jp/3/index.html)
 
-<a id="Windowsでの環境構築"></a>
-<a href="#Windowsでの環境構築"></a>
-# Windows での環境構築
+# 環境構築
+
+## Windows
 
 1. Anaconda の導入
     - [公式](https://www.anaconda.com/download/)
@@ -28,8 +30,39 @@ id: python-basics
     - [直リンク](http://go.microsoft.com/fwlink/?LinkId=691126&fixForIE=.exe.)
     - [公式](http://landinghub.visualstudio.com/visual-cpp-build-tools)
 
-<a id="モジュールとパッケージ"></a>
-<a href="#モジュールとパッケージ"></a>
+## Mac
+
+anyenv の pyenv で構築する。
+
+## pip
+
+パッケージ管理コマンドの `pip` 。  
+`pip3` や `pip2` などがあるが、 Python 3 系を明示したい場合は `pip3` と打っておくのが安全。  
+`pip` 自体をバージョンアップする方法は以下。
+
+```
+$ pip3 install -U pip setuptools
+$ pip3 list
+Package    Version
+---------- -------
+pip        19.0.3 
+setuptools 40.8.0
+```
+
+## pipenv
+
+`pip` と `virtualenv` と `requirements.txt` をラップするツール。もう悩まない。  
+`Pipfile` および `Pipfile.lock` を使ってパッケージのバージョンと依存関係を管理する。
+
+```bash
+$ brew install pipenv
+$ cd myproject
+$ pipenv install
+$ pipenv install <package>
+$ pipenv shell
+$ python --version
+```
+
 # モジュールとパッケージ
 
 ## モジュール
@@ -58,8 +91,6 @@ import パッケージ名(.サブパッケージ名).モジュール名
 http://note.crohaco.net/2014/python-module/
 
 
-<a id="起動モジュール"></a>
-<a href="#起動モジュール"></a>
 # 起動モジュール
 
 ```python
