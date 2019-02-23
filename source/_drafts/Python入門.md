@@ -63,6 +63,10 @@ $ pipenv shell
 $ python --version
 ```
 
+## VSCode
+
+`$ pipenv install pylint --dev` して VSCode に Python Extensions を入れる。
+
 # モジュールとパッケージ
 
 ## モジュール
