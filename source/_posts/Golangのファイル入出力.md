@@ -9,11 +9,18 @@ id: golang-file-io
 
 golang のファイル入出力についてまとめる。
 
+- fmt パッケージ
 - os パッケージ
 - io/ioutil パッケージ
 - bufio パッケージ
 
 <!-- more -->
+
+# fmt パッケージ
+
+標準入出力の場合だが fmt パッケージが利用できる。
+
+- http://golang.jp/pkg/fmt
 
 # os パッケージ
 
