@@ -7,14 +7,15 @@ id: golang-algorithm
 
 アルゴリズムの複数兼ねて golang でまとめる。
 
-- 全検索
+- 探索
 
-# 全検索
+# 探索
 
 リストを検索する際の以下について。
 
 - for 全検索
     - 線形探索、 n 次元探索
+- 二分探索
 - bit 全検索
 - DFS （ Depth First Search ： 深さ優先探索）
 - BFS （ Breadth-First Search ： 幅優先探索）
@@ -22,6 +23,14 @@ id: golang-algorithm
 - 順列
 - 動的計画法・メモ化
 - 探索範囲を狭めるアルゴリズム
+
+for 全検索は省略。
+
+## 二分探索
+
+二分探索はソートされている配列に対して、探索範囲を半分ずつに絞ることによってO(log N)で探索することができるアルゴリズム。
+
+- https://qiita.com/soy-curd/items/9f6fd0b8beca16084f04
 
 ## bit 全検索
 
@@ -42,7 +51,12 @@ func main() {
 	}
 	fmt.Println("---")
 	for bit := 1 << (n - 1); bit < (1 << n); bit++ { // n ビットの組合せ
-		fmt.Printf("%b\n", bit)
+		fmt.Printf("%b", bit)
+		if (bit & (1 << (2 - 1))) > 0 { // 2 ビット目が立っているか確認
+			fmt.Println(", 2nd bit flaged.")
+		} else {
+			fmt.Println()
+		}
 	}
 }
 ```
