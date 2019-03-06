@@ -5,63 +5,179 @@ tags:
 id: golang-algorithm
 ---
 
+タイトルは「Golagn でデータ構造とアルゴリズム」に変えるかな。  
 アルゴリズムの複数兼ねて golang でまとめる。
 
-- 探索
+- データ構造
+- リスト探索
+- ツリー・グラフ探索
+- 数え上げ
+- ソート
+- その他
 
-# 探索
+# データ構造
+
+データ構造は、データの集まりを効率よく扱うための形。
+
+- スタック
+- キュー
+- 連結リスト
+- 二分木
+
+# スタック・キュー・連結リストの前提
+
+- https://www.iandprogram.net/entry/2016/07/20/183638
+
+```go
+type node struct {
+    next *node
+    data int
+}
+
+type container struct {
+    root *node
+    size int
+}
+
+func (c *container) incremant() {
+    c.size++
+}
+
+func (c *container) decremant() {
+    c.size--
+}
+
+func (c *container) len() int {
+    return c.size
+}
+```
+
+## 二分木
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type binaryNode struct {
+	left, right *binaryNode
+	data        int
+}
+
+func (n *binaryNode) insert(x int) {
+	if n == nil {
+		return
+	}
+	if n.data > x {
+		if n.left == nil {
+			n.left = newBinaryNode(x)
+		} else {
+			n.left.insert(x)
+		}
+	} else {
+		if n.right == nil {
+			n.right = newBinaryNode(x)
+		} else {
+			n.right.insert(x)
+		}
+	}
+}
+
+func (n *binaryNode) search(x int) bool {
+	for n != nil {
+		switch {
+		case n.data == x:
+			return true
+		case n.data > x:
+			n = n.left
+		default:
+			n = n.right
+		}
+	}
+	return false
+}
+
+func newBinaryNode(x int) *binaryNode {
+	node := new(binaryNode)
+	node.data = x
+	return node
+}
+
+func main() {
+	root := newBinaryNode(5)
+	fmt.Println(*root)
+	root.insert(4)
+	fmt.Println(root.left)
+	fmt.Println(root.right)
+	fmt.Println(root.search(4))
+}
+```
+
+# リスト探索
 
 リストを検索する際の以下について。
 
 - for 全検索
     - 線形探索、 n 次元探索
-- 二分探索
-- bit 全検索
-- DFS （ Depth First Search ： 深さ優先探索）
-- BFS （ Breadth-First Search ： 幅優先探索）
-- IDDFS （ Iterative Deepening Depth First Search ： 反復深化探索）
-- 順列
-- 動的計画法・メモ化
-- 探索範囲を狭めるアルゴリズム
+- 
+- ハッシュ
 
 for 全検索は省略。
 
 ## 二分探索
 
-二分探索はソートされている配列に対して、探索範囲を半分ずつに絞ることによってO(log N)で探索することができるアルゴリズム。
-
-- https://qiita.com/soy-curd/items/9f6fd0b8beca16084f04
-
-## bit 全検索
-
-所謂、要素の **組合せ** を求める際に利用する。  
-リストに対して **ビットマスク** をあてることで実現する。  
-ビット列の組合せを作ることができれば、リストの要素の組合せも求めることができる。  
-例えば、 `01011` というビットマスクを `abcde` にあてると ` b de` が得られるといった具合だ。
+二分探索はソートされている配列に対して、探索範囲を半分ずつに絞ることによって `O(log N)` で探索することができるアルゴリズム。
 
 ```go
 package main
 
 import "fmt"
 
-func main() {
-	var n uint = 2                        // ビットの桁数
-	for bit := 0; bit < (1 << n); bit++ { // 1 から n ビットまでの組合せ
-		fmt.Printf("%b\n", bit)
-	}
-	fmt.Println("---")
-	for bit := 1 << (n - 1); bit < (1 << n); bit++ { // n ビットの組合せ
-		fmt.Printf("%b", bit)
-		if (bit & (1 << (2 - 1))) > 0 { // 2 ビット目が立っているか確認
-			fmt.Println(", 2nd bit flaged.")
-		} else {
-			fmt.Println()
+func binarySearch(list []int, elem int) int {
+	start, end, index := 0, len(list)-1, 0
+	for true {
+		index = (start + end) / 2
+		if end < start {
+			return -1
+		} else if list[index] == elem {
+			return index
+		} else if list[index] < elem {
+			start = index + 1
+		} else if list[index] > elem {
+			end = index - 1
 		}
 	}
+	return -1
+}
+
+func main() {
+	list := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	fmt.Println(binarySearch(list, 6))
 }
 ```
 
-[参考](https://qiita.com/drken/items/7c6ff2aa4d8fce1c9361#bit-%E5%85%A8%E6%8E%A2%E7%B4%A2f)
+# ツリー・グラフ探索
+
+- DFS （ Depth First Search ： 深さ優先探索）
+- BFS （ Breadth-First Search ： 幅優先探索）
+- IDDFS （ Iterative Deepening Depth First Search ： 反復深化探索）
+
+- http://hos.ac/slides/20110504_graph.pdf
+
+## DFS
+
+## BFS
+
+## IDDFS
+
+# 数え上げ
+
+- 順列
+- 組合せ（ bit 全検索）
+- 重複順列
+- 重複組合せ
 
 ## 順列
 
@@ -102,6 +218,37 @@ func main() {
 }
 ```
 
+## bit 全検索
+
+所謂、要素の **組合せ** を求める際に利用する。  
+リストに対して **ビットマスク** をあてることで実現する。  
+ビット列の組合せを作ることができれば、リストの要素の組合せも求めることができる。  
+例えば、 `01011` というビットマスクを `abcde` にあてると ` b de` が得られるといった具合だ。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var n uint = 2                        // ビットの桁数
+	for bit := 0; bit < (1 << n); bit++ { // 1 から n ビットまでの組合せ
+		fmt.Printf("%b\n", bit)
+	}
+	fmt.Println("---")
+	for bit := 1 << (n - 1); bit < (1 << n); bit++ { // n ビットの組合せ
+		fmt.Printf("%b", bit)
+		if (bit & (1 << (2 - 1))) > 0 { // 2 ビット目が立っているか確認
+			fmt.Println(", 2nd bit flaged.")
+		} else {
+			fmt.Println()
+		}
+	}
+}
+```
+
+[参考](https://qiita.com/drken/items/7c6ff2aa4d8fce1c9361#bit-%E5%85%A8%E6%8E%A2%E7%B4%A2f)
+
 # ソート
 
 - 挿入ソート
@@ -110,16 +257,18 @@ func main() {
 - 安定なソート
 - シェルソート
 
-# データ構造
+# その他
 
-- スタック
-- キュー
-- 連結リスト
+- 動的計画法（ DP : Dynamic Programming ）・メモ化
+- 探索範囲を狭めるアルゴリズム
 
-# 探索
+## 動的計画法（ DP : Dynamic Programming ）・メモ化
 
-- 線形探索
-- 二分探索
+**同じ探索を 2 度としない** ようにし、 1 度計算した結果を **メモ化** して使い回す。  
+計算は関数で実現し、メモは関数外の変数として覚えておく。
+
+- https://www.slideshare.net/iwiwi/ss-3578511
+- https://www.slideshare.net/KMC_JP/dp-34033161
 
 # 参考
 
