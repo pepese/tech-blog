@@ -5,7 +5,7 @@ tags:
 id: golang-algorithm
 ---
 
-アルゴリズムの複数兼ねて。
+アルゴリズムの複数兼ねて golang でまとめる。
 
 - 全検索
 
@@ -18,8 +18,75 @@ id: golang-algorithm
 - bit 全検索
 - DFS （ Depth First Search ： 深さ優先探索）
 - BFS （ Breadth-First Search ： 幅優先探索）
+- IDDFS （ Iterative Deepening Depth First Search ： 反復深化探索）
+- 順列
 - 動的計画法・メモ化
 - 探索範囲を狭めるアルゴリズム
+
+## bit 全検索
+
+所謂、要素の **組合せ** を求める際に利用する。  
+リストに対して **ビットマスク** をあてることで実現する。  
+ビット列の組合せを作ることができれば、リストの要素の組合せも求めることができる。  
+例えば、 `01011` というビットマスクを `abcde` にあてると ` b de` が得られるといった具合だ。
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var n uint = 2                        // ビットの桁数
+	for bit := 0; bit < (1 << n); bit++ { // 1 から n ビットまでの組合せ
+		fmt.Printf("%b\n", bit)
+	}
+	fmt.Println("---")
+	for bit := 1 << (n - 1); bit < (1 << n); bit++ { // n ビットの組合せ
+		fmt.Printf("%b\n", bit)
+	}
+}
+```
+
+[参考](https://qiita.com/drken/items/7c6ff2aa4d8fce1c9361#bit-%E5%85%A8%E6%8E%A2%E7%B4%A2f)
+
+## 順列
+
+Golang には C++ でいう next_permutation はないので自作した。
+
+```go
+package main
+
+import "fmt"
+
+// リストから指定のインデッックスの要素を削除
+func delEle(list []int, i int) []int {
+	result := []int{}
+	result = append(result, list[:i]...)
+	result = append(result, list[i+1:]...)
+	return result
+}
+
+func permutation(list []int) [][]int {
+	var result [][]int            // 結果の格納
+	var inner func(in, out []int) // 内部の再帰関数
+	// in を捜査して、 out へ足していく
+	inner = func(in, out []int) {
+		if len(in) == 1 { // len(in) が 1 の時は結果を格納して終了
+			result = append(result, append(out, in[0]))
+		} else { // in から 1 つ取り出して out に付け足して再帰
+			for i, n := range in {
+				inner(delEle(in, i), append(out, n)) // 勘違いしやすいが参照渡しではないので引数は関数内部へコピー（clone_）される
+			}
+		}
+	}
+	inner(list, []int{}) // 初回呼び出しの out は空
+	return result
+}
+
+func main() {
+	fmt.Println(permutation([]int{1, 2, 3}))
+}
+```
 
 # ソート
 
