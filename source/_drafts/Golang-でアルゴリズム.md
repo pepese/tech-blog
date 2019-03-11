@@ -24,6 +24,7 @@ id: golang-algorithm
 - キュー
 - 連結リスト
 - 二分木
+- B 木
 
 # スタック・キュー・連結リストの前提
 
@@ -55,7 +56,109 @@ func (c *container) len() int {
 
 ## スタック
 
+```go
+package main
+
+import (
+	"errors"
+)
+
+type node struct {
+	next *node
+	data int
+}
+
+type stack struct {
+	top  *node
+	size int
+}
+
+func (s *stack) len() int {
+	return s.size
+}
+
+func (s *stack) push(x int) {
+	node := &node{data: x}
+	if s.len() == 0 {
+		s.top, s.size = node, 1
+	} else {
+		node.next, s.top = s.top, node
+		s.size++
+	}
+}
+
+func (s *stack) pop() (int, error) {
+	if s == nil || s.len() == 0 {
+		return 0, errors.New("error")
+	}
+	data := s.top.data
+	s.top = s.top.next
+	s.size--
+	return data, nil
+}
+
+func newStack(x int) *stack {
+	s := new(stack)
+	node := &node{data: x}
+	s.top, s.size = node, 1
+	return s
+}
+```
+
 ## キュー
+
+```go
+package main
+
+import (
+	"errors"
+)
+
+type node struct {
+	next *node
+	data int
+}
+
+type queue struct {
+	head, tail *node
+	size       int
+}
+
+func (q *queue) len() int {
+	return q.size
+}
+
+func (q *queue) enqueue(x int) {
+	node := &node{data: x}
+	if q.len() == 0 {
+		q.head, q.tail, q.size = node, node, 1
+	} else {
+		q.head.next, q.head = node, node
+		q.size++
+	}
+}
+
+func (q *queue) dequeue() (int, error) {
+	if q == nil || q.len() == 0 {
+		return 0, errors.New("error")
+	}
+	data := q.tail.data
+	if q.len() == 1 {
+		q.head, q.tail = nil, nil
+	} else {
+		q.tail = q.tail.next
+	}
+	q.size--
+	return data, nil
+}
+
+func newQueue(x int) *queue {
+	q := new(queue)
+	node := &node{data: x}
+	q.head, q.tail, q.size = node, node, 1
+	return q
+}
+```
 
 ## 連結リスト
 
@@ -121,6 +224,8 @@ func main() {
 	fmt.Println(root.search(4))
 }
 ```
+
+## B 木
 
 # リスト探索
 
