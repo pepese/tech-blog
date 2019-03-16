@@ -262,3 +262,22 @@ Java でいう Filter 的な機能を作ってみる。
 # 参考
 
 - https://qiita.com/nirasan/items/2160be0a1d1c7ccb5e65
+
+# クリーンアーキテクチャ
+
+<img src="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg" />
+
+勝手ながら各層に名前をつける。
+
+- 第 1 層：青：
+- 第 2 層：緑：
+    - hander、apihandler、repository
+- 第 3 層：赤： **usecase** 層
+- 第 4 層：黄： **domain** 層
+    - todo
+
+
+
+
+
+https://eng-blog.iij.ad.jp/archives/2442
