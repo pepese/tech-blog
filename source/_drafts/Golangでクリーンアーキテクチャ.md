@@ -36,13 +36,36 @@ id: golang-clean-architecture
 - 第 4 層：黄色： **domain** 層
     - usecase 層によって扱われるドメインモデルとドメインロジック
     - サービスとしてのビジネスロジックは usecase 層に実装するが、ドメインルール・ロジックはここに実装する
+	- **model** ディレクトリ
+	    - ドメインモデルを入れる
 - その他の層
     - **registry** ： DI とか
     - **cmd** ： cobra とかで作ったコマンド
     - **view** ： html template とか
     - **public** ： css とか js とか
 
+例えば Hello Go は以下のようになる。（意図的に並び替えている。）
 
+```bash
+.
+├── infrastructure   # 第 1 層
+│   ├── server         # INPUT
+│   │   └── httpserver.go
+│   └── datastore      # OUTPUT
+│       └── hello_datastore.go
+├── interface        # 第 2 層
+│   ├── controller     # INPUT
+│   │   └── httphandler.go
+│   └── presenter      # OUTPUT
+│       └── hello_repository.go
+├── usecase          # 第 3 層
+│   └── hello_usecase.go
+├── domain           # 第 4 層
+│   ├── hello_logic.go # Logic
+│   └── model          # Model
+│       └── hello.go
+└── main.go
+```
 
 
 - https://qiita.com/yoshinori_hisakawa/items/f934178d4bd476c8da32
