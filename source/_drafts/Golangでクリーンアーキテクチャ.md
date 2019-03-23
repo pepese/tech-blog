@@ -20,22 +20,23 @@ id: golang-clean-architecture
 
 - 第 1 層：青色： **infrastructure** 層：外の世界とシステムを相互に繋ぐ層
 	- [INPUT] 外からのアクセス
-	    - **server** ： FW に依存したリクエスト受信・返却の実装
+	    - **server** ディレクトリ： FW に依存したリクエスト受信・返却の実装
 	        - view（HTMLとか）、api(JSONとかXML)
+		- **batch** ディレクトリ：FW に依存したバッチ・ジョブの実装
 	- [OUTPUT] 内（ interface ）からのアクセス
-	    - **datastore** ：データベース製品に依存したアクセスの実装
-		- **httpclient** とかもありえるかな
+	    - **datastore** ディレクトリ：データベース製品に依存したアクセス、 repository の実装
+		- **httpclient** ディレクトリ：他のマイクロサービスが外部サービスの API 呼び出し、 repository の実装
 - 第 2 層：緑色： **interface** 層： infrastructure と usecase を相互に繋ぐ層
-    - [INPUT] **controller** ：infrastructure からの呼び出しを usecase にマッピング
-	    - handler
-	- [OUTPUT] **presenter** ：usecase からの 呼び出しを infrastructure にマッピング
-	    - repository
+    - [INPUT] **controller** ディレクトリ：infrastructure からの呼び出しを usecase にマッピングする **handler** を実装する
+	- [OUTPUT] **presenter** ディレクトリ：usecase からの 呼び出され、 infrastructure のdatastore や httpclient のインターフェースとなる **repository** をインターフェースとして定義する、ロジックの実装はない
 - 第 3 層：赤色： **usecase** 層
-    - presenter を経由して domain を取得し、ビジネスロジックを実行する
+    - INPUT/OUTPUT の分けはない
+    - interface/controller より呼び出される
+	- interface/presenter を経由して 1 つ以上のドメインモデルを操作・ドメインロジックを実行し、ビジネスロジックを成立させる
 	- ビジネスロジックの結果を controller へ返却（ return ）する
 - 第 4 層：黄色： **domain** 層
     - usecase 層によって扱われるドメインモデルとドメインロジック
-    - サービスとしてのビジネスロジックは usecase 層に実装するが、ドメインルール・ロジックはここに実装する
+    - ユースケースを実行するビジネスロジックは usecase 層に実装するが、ドメイン固有のルール・ロジックはここに実装する
 	- **model** ディレクトリ
 	    - ドメインモデルを入れる
 - その他の層
