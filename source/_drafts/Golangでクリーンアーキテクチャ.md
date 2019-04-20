@@ -15,6 +15,8 @@ id: golang-clean-architecture
 # 階層定義
 
 <img src="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg" />
+<br />
+<img src="https://camo.qiitausercontent.com/90a79f885ff442a5d076cbf8c9dac47b6be29ff0/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e616d617a6f6e6177732e636f6d2f302f3239333336382f33656631653930302d386537342d633935342d326133332d3466343663373536393234342e6a706567" />
 
 勝手ながら各層に名前をつけて整理する。
 
