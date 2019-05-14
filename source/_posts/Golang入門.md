@@ -4,6 +4,7 @@ date: 2019-01-03 10:54:59
 tags:
 - go
 - golang
+- VS Code
 id: golang-basics
 ---
 
@@ -19,6 +20,8 @@ golang の基本的なところをまとめる。
 
 ```bash
 $ brew install go
+$ go version
+go version go1.11.5 darwin/amd64
 ```
 
 ## 環境変数の設定
@@ -49,14 +52,44 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 $ source .bash_profile
 ```
 
-## 依存関係管理ツール dep
+## VS Code の設定
 
-ライブラリの依存解決ツールはいくつかあるが、オフィシャル化に近そうなので `dep` を使用する。
+## 依存関係管理ツール Go Modules
+
+かつてここには `dep` の設定について書いていたが、 Go v1.11 から導入 Go v1.12 から正式リリースされる **Go Modules** （旧名 vgo）について記載する。  
+Go Modules の概要は以下。
+
+- Minimal Version Selection
+    - Go Modulesは [Semantic Versioning](https://semver.org/) に基づいてモジュールの管理を行なう
+- Go Modulesは **GOPATH mode** と **module-aware mode** という２つのモードがあり、環境変数 `GO111MODULE` で切り替える
+    - **GOPATH mode**
+	    - `$GOPATH/src` 配下で `go get` コマンドを利用した依存性管理（ go v1.10 以前と同じ）
+	    - 標準 pkg 以外を全部 `$GOPATH/src` 以下のディレクトリで管理する
+		- `$GOPATH/src/github.com` 配下に普通に `git clone` した状態のモジュールを参照する
+		    - `go get` で `go1` タグ・ブランチもしくは最新の `master` ブランチを取得したもの
+    - **module-aware mode**
+	    - `go mod` コマンド・ `go.mod` ファイルを利用した依存性管理
+	    - 標準 pkg 以外の全てのパッケージをモジュールとして管理する
+		- GOPATH mode とは異なり、 `$GOPATH/pkg/mod` 配下に同じモジュールでも Semantic Versioning された単位で管理され `go.mod` に記載されたバージョンを参照する
+	- 環境変数 `GO111MODULE`
+		- `GO111MODULE=off` ： **GOPATH mode**
+		- `GO111MODULE=on` ： **module-aware mode**
+	        - `$GOPATH/src` 配下のプロジェクトで `go mod` コマンド・ `go.mod` ファイルを利用した依存性管理を行いたい場合は `GO111MODULE=on` とする
+		- `GO111MODULE=auto` ： `$GOPATH/src` 配下では GOPATH mode 、それ以外では module-aware mode で動作する
+
+以上の通り、従来通り `$GOPATH/src` 配下でプロジェクトを作成・開発し且つ module-aware mode を利用したい場合には `GO111MODULE=on` とする必要がある。  
+以下の通り。
 
 ```bash
-$ brew install dep
-$ dep help
+$ cd $GOPATH/src/github.com/pepese/sample-prj
+$ export GO111MODULE=on
+$ go mod init
+go: creating new go.mod: module github.com/pepese/sample
+$ ls
+go.mod
 ```
+
+基本的にはどこのディレクトリで開発しようとも **module-aware mode** で開発することになると思う。
 
 ## ディレクトリ構造
 

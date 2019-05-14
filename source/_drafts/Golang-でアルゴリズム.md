@@ -1,7 +1,8 @@
 ---
 title: Golang でアルゴリズム
 tags:
-- Golang
+- golang
+- go
 id: golang-algorithm
 ---
 
