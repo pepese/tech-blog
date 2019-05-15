@@ -30,9 +30,9 @@ https://golang.org/doc/install/source#environment
 
 - `GOROOT`
     - go のバイナリのホームまでのパス
-	- `go env GOROOT`
+	- `go env GOROOT` で値確認
 - `GOPATH`
-    - `go env GOPATH`
+    - `go env GOPATH` で値確認
     - go のパスであってプロジェクトのパスでないことに注意
     - プロジェクトのパスは `$GOPATH/src/github.com/<Githubアカウント名>/<プロジェクト名>`
 - `GOOS`
@@ -48,15 +48,49 @@ export GOPATH=`go env GOPATH`
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
 
+反映。
+
 ```bash
 $ source .bash_profile
 ```
 
-## VS Code の設定
+また、 `$GOPATH` 以下のディレクトリ構造は以下のようになる。
+
+```
+$GOPATH
+├─bin/ # Goツール類の実行ファイルが格納されるディレクトリ
+├─pkg/ # ビルドしたパッケージオブジェクトが格納されるディレクトリ
+│  ├─darwin_amd64/
+│  │ ├─github.com/
+│  │ │  └─GitHubアカウント名
+│  │ │    ├─`*.a`ファイル[^1]
+│  │ │    └─GitHubレポジトリ名/`*.a`ファイル[^2]
+│  │ └─pkg.in/
+│  │   ├─パッケージ名/
+│  │   └─`*.a`ファイル
+│  └─mod/ # Go Modules で取得したモジュール類が格納されるディレクトリ
+│    ├─cache/ # download したモジュール類のメタ情報や実態のzipなどのキャッシュ
+│    ├─github.com/ # リポジトリから取得したモジュール
+│    └─gopkg.in/ # リポジトリから取得したモジュール
+└─src/ # パッケージごとのソースコードを配置するディレクトリ
+  ├─gopkg.in/
+  │  └─パッケージ名/
+  │    └─LICENSEとか`*.go`とかREADMEとか
+  └─github.com/
+    ├─GitHubアカウント名
+    │  └─GitHubレポジトリ名/
+    │    └─LICENSEとか`*.go`とかREADMEとか
+    └─<あなたのGitHubユーザ名>
+      └─GitHubレポジトリ名/ # プロジェクトディレクトリ（複数）
+        ├─go.mod
+        ├─go.sum
+        ├─main.go
+        └─その他、あなたが開発中のソフトウェアのコード
+```
 
 ## 依存関係管理ツール Go Modules
 
-かつてここには `dep` の設定について書いていたが、 Go v1.11 から導入 Go v1.12 から正式リリースされる **Go Modules** （旧名 vgo）について記載する。  
+かつてここには `dep` の設定について書いていたが、 Go v1.11 から導入 Go v1.12 から正式リリースされる **Go Modules** （旧名 vgo）に関する内容に書き換えた。  
 Go Modules の概要は以下。
 
 - Minimal Version Selection
@@ -74,54 +108,35 @@ Go Modules の概要は以下。
 	- 環境変数 `GO111MODULE`
 		- `GO111MODULE=off` ： **GOPATH mode**
 		- `GO111MODULE=on` ： **module-aware mode**
-	        - `$GOPATH/src` 配下のプロジェクトで `go mod` コマンド・ `go.mod` ファイルを利用した依存性管理を行いたい場合は `GO111MODULE=on` とする
 		- `GO111MODULE=auto` ： `$GOPATH/src` 配下では GOPATH mode 、それ以外では module-aware mode で動作する
 
-以上の通り、従来通り `$GOPATH/src` 配下でプロジェクトを作成・開発し且つ module-aware mode を利用したい場合には `GO111MODULE=on` とする必要がある。  
-以下の通り。
+従来通り `$GOPATH` 配下でプロジェクトを作成・開発し且つ module-aware mode を利用したい場合には `GO111MODULE=on` とする必要がある。  
+また、 `$GOPATH` 配下以外でプロジェクトを作成する場合であっても module-aware mode を利用すれば `$GOPATH/pkg/mod` 配下で依存モジュールが管理される。
+
+## プロジェクトの作成
+
+`$GOPATH` 配下で github および Go Modules を利用したプロジェクトの初回作成は以下のような感じ。
 
 ```bash
-$ cd $GOPATH/src/github.com/pepese/sample-prj
+$ mkdir -p $GOPATH/src/github.com/<あなたのGithubアカウント名>
+$ cd $GOPATH/src/github.com/<あなたのGithubアカウント名>
+$ mkdir <golangプロジェクト> # プロジェクトディレクトリの作成
+$ cd <golangプロジェクト>
 $ export GO111MODULE=on
-$ go mod init
-go: creating new go.mod: module github.com/pepese/sample
+$ go mod init # `GO111MODULE=on go mod init` のように一行でも
+go: creating new go.mod: module github.com/<あなたのGithubアカウント名>/<golangプロジェクト>
 $ ls
 go.mod
+$ touch app.go # 依存ライブラリ含め好きなコード書く
+$ go mod tidy  # 依存ライブラリの解決
+$ go run app.go
 ```
 
 基本的にはどこのディレクトリで開発しようとも **module-aware mode** で開発することになると思う。
 
-## ディレクトリ構造
+## VS Code の設定
 
-```
-$GOPATH
-├─bin/
-├─pkg/
-│  └─darwin_amd64/
-│    ├─github.com/
-│    │  └─GitHubアカウント名
-│    │    ├─`*.a`ファイル[^1]
-│    │    └─GitHubレポジトリ名/`*.a`ファイル[^2]
-│    └─pkg.in/
-│      ├─パッケージ名/
-│      └─`*.a`ファイル
-└─src/
-  ├─gopkg.in/
-  │  └─パッケージ名/
-  │    └─LICENSEとか`*.go`とかREADMEとか
-  └─github.com/
-    ├─GitHubアカウント名
-    │  └─GitHubレポジトリ名/
-    │    └─LICENSEとか`*.go`とかREADMEとか
-    └─<あなたのGitHubユーザ名>
-      └─GitHubレポジトリ名/ # プロジェクトディレクトリ（複数）
-        ├─glide.yaml
-        ├─main.go
-        ├─その他、あなたが開発中のソフトウェアのコード
-        └─vendor/依存先パッケージのコード(depでとってきたやつ)
-```
-
-## コマンドラインツール
+VS Code には Go の各種ツールと連携する拡張機能があり、 VS Code 内ターミナルから以下のようにコマンドラインツールを導入することにより自動で拡張機能インストールの案内をしてくれる。
 
 - goimports
     - 過不足のimportの自動補完
@@ -152,33 +167,35 @@ $GOPATH
 - gotests
     - `go get -u -v github.com/cweill/gotests/...`
 
-## プロジェクトの作成
-
-```bash
-$ mkdir -p $GOPATH/src/github.com/<あなたのGithubアカウント名>/<プロジェクト名>
-$ cd $GOPATH/src/github.com/<あなたのGithubアカウント名>/<プロジェクト名>
-```
-
-初回は以下のような感じ。
-
-```bash
-$ mkdir -p $GOPATH/src/github.com/<あなたのGithubアカウント名>
-$ cd $GOPATH/src/github.com/<あなたのGithubアカウント名>
-$ git clone <golangプロジェクト> # プロジェクトディレクトリの作成
-$ cd <golangプロジェクト>
-$ echo "vendor/" > .gitignore
-$ dep init # dep の初期化
-$ touch app.go # 依存ライブラリ含め好きなコード書く
-$ dep ensure -v # 依存ライブラリの解決
-$ go run app.go
-```
-
 ## デバッグ環境作成
+
+デバッガとして **Delve** を導入する。
 
 - デバッガツール delve のインストール
     - `go get -u github.com/derekparker/delve/cmd/dlv`
 - VSCodeにGo言語の拡張機能をインストール
     - `Rich Go language support for Visual Studio Code`
+
+コードにブレークポイントを設定して、 VSCode の `Debug` から `Start Debugging` を実行。（ `F5` でも）  
+以下を実行可能。
+
+- 継続実行（Continue）
+    - 次のブレークポイントに到達するまで処理を継続させる
+- ステップオーバー（Step Over）
+    - 見えているソースコードの次の行に移動する。 カーソル位置の関数の中は実行され、終了するところまで処理が進む
+- ステップイン（Step Into）
+    - 関数呼び出しの中に飛び込む。下のレイヤーに降り ていくときに使う
+- ステップアウト（Step Out）
+    - いま実行している関数が終了するところまで処理 を進める
+- 再スタート（Restart）
+    - 一度終了して再度実行を開始する
+- 停止（Stop）
+    - 一度終了する
+
+例えば `fmt.Println()` をステップインして細かいところを見ていこう。  
+`syscall.Write()` などでシステムコールされているのがわかる。（ Win だと別コード）  
+今回はデバッガのステップインでコードを掘っていったが、カーソルがあたっている位置の関数で `Go to Definition` （ `F12` ）しても関数の定義に飛ぶ。  
+また、カーソルがあたっている位置の関数や変数で `Find All Reference` （ `Shift+F12` ） すれば、使われている位置がリストされる。
 
 # 基本文法
 
