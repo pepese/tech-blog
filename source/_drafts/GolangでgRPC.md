@@ -13,6 +13,7 @@ id: golang-grpc
 
 - 環境設定
 - gRPC
+- その他 Tips
 
 # 環境設定
 
@@ -48,11 +49,63 @@ $ protoc -I helloworld/ helloworld/helloworld.proto --go_out=plugins=grpc:hellow
 # helloworld/helloworld.pb.go が新しく生成され上書きされてる
 ```
 
+`protoc <.proto file> --go_out=plugins=grpc:<out dir>` 。
+
 # gRPC
 
 HTTP/2 の stream もサポートしており、gRPCのサポートするRPC方式は以下の通り。
 
-- Unary RPC (1リクエスト1レスポンス)
-- Server streaming RPC (１つのリクエストに複数レスポンス)
-- Client streaming RPC (複数のリクエストに一つのレスポンス)
-- Bidirectional streaming RPC(双方向)
+- Unary RPC ：1リクエスト1レスポンス
+    - 
+    ```
+    rpc SayHello(HelloRequest) returns (HelloResponse){
+    }
+    ```
+- Server streaming RPC ：１つのリクエストに複数レスポンス
+    - 
+    ```
+    rpc LotsOfReplies(HelloRequest) returns (stream HelloResponse){
+    }
+    ```
+- Client streaming RPC ：複数のリクエストに一つのレスポンス
+    - 
+    ```
+    rpc LotsOfGreetings(stream HelloRequest) returns (HelloResponse) {
+    }
+    ```
+- Bidirectional streaming RPC ：双方向
+    - 
+    ```
+    rpc BidiHello(stream HelloRequest) returns (stream HelloResponse){
+    }
+    ```
+
+## 認証
+
+https://grpc.io/docs/guides/auth/
+
+## エラーハンドリングとデバッグ
+
+https://grpc.io/docs/guides/error/
+
+## Protocol Buffers
+
+https://developers.google.com/protocol-buffers/docs/overview
+
+### .proto 3
+
+https://developers.google.com/protocol-buffers/docs/proto3
+
+### Basics: Go
+
+https://developers.google.com/protocol-buffers/docs/gotutorial
+
+### Mappings
+
+- https://github.com/grpc/grpc.github.io/wiki/Mapping
+    - gRPC と REST のマッピング
+
+# その他 Tips
+
+- [Evans](https://github.com/ktr0731/evans) ： gRPC クライアントツール
+- [gRPC から REST API Server をつくる](https://fisproject.jp/2018/09/translates-grpc-into-rest-json-api-with-go/)
