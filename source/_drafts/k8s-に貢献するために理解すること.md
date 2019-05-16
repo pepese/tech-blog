@@ -82,11 +82,6 @@ https://github.com/kubernetes/community/blob/master/contributors/guide/README.md
 
 ## PR
 
-- Pull Request の流れを理解する
-    - http://kik.xii.jp/archives/179
-- [GitHub初心者はForkしない方のPull Requestから入門しよう](https://blog.qnyp.com/2013/05/28/pull-request-for-github-beginners/)
-    - upstream に push する権限無い可能性が高いので、fork型かな
-- [一人プルリクエストのすゝめ](https://crieit.net/posts/9c710ef2383a3703649ee712a9eb86e6)
 - 特に k8s では [k8s-ci-robot](https://github.com/k8s-ci-robot) の介在がポイント。
 - [Kubernetes-specific github workflow](https://github.com/kubernetes/community/blob/master/contributors/guide/pull-requests.md#the-testing-and-merge-workflow)
 - みんなの PR をみる
