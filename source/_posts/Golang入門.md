@@ -21,7 +21,7 @@ golang の基本的なところをまとめる。
 ```bash
 $ brew install go
 $ go version
-go version go1.11.5 darwin/amd64
+go version go1.12.5 darwin/amd64
 ```
 
 ## 環境変数の設定
@@ -33,19 +33,26 @@ https://golang.org/doc/install/source#environment
 	- `go env GOROOT` で値確認
 - `GOPATH`
     - `go env GOPATH` で値確認
-    - go のパスであってプロジェクトのパスでないことに注意
+    - go の各種資材が配置パスであってプロジェクトのパスでないことに注意
     - プロジェクトのパスは `$GOPATH/src/github.com/<Githubアカウント名>/<プロジェクト名>`
 - `GOOS`
     - コンパイルして作成するバイナリの対象 OS を指定する
 - `GOARCH`
     - コンパイルして作成するバイナリの対象 CPU を指定する
 
-`.bash_profile` に以下を追記。
+`.bash_profile` に以下を追記。（教科書的には）
 
-```
+``` bash
 export GOROOT=`go env GOROOT`
 export GOPATH=`go env GOPATH`
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+```
+
+個人的には以下。
+
+``` bash
+export GOPATH=`go env GOPATH`
+export PATH=$PATH:$GOPATH/bin
 ```
 
 反映。
