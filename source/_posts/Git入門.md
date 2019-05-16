@@ -10,6 +10,11 @@ id: git-basics
 Git/Githubのメモ。  
 インストールから簡単な使い方まで書いてみる。
 
+- 環境構築
+- 一通りの使い方
+- その他 Tips
+    - git submodule
+
 <!-- more -->
 
 # 環境構築
@@ -75,7 +80,7 @@ https.proxy=http://[ID]:[Password]@proxy.example.com:8080
 url.https://.insteadof=git://
 ```
 
-# 使い方
+# 一通りの使い方
 
 ## リモートリポジトリを作って、ローカルリポジトリにコピーして編集して更新するパターン
 
@@ -234,3 +239,9 @@ $ git rm -r [削除したいディレクトリ]
 もうちょっと知りたい人は以下を参照。
 
 - https://pepese.github.io/blog/git-commands/
+
+# その他 Tips
+
+## git submodule
+
+`git submodule` は、外部の git リポジトリを、自分の git リポジトリのサブディレクトリとして登録し、特定の commit を参照する仕組み。（ [参考](https://qiita.com/sotarok/items/0d525e568a6088f6f6bb) ）

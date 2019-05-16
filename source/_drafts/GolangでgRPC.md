@@ -16,22 +16,36 @@ id: golang-grpc
 
 # 環境設定
 
-## gRPC のインストール
+ここでは [公式](https://grpc.io/docs/quickstart/go/) とは異なる方法で設定して軽く動確する。
 
 ``` bash
 $ go get -u google.golang.org/grpc
+$ brew install protobuf # protoc コマンドが入る
+$ brew install protoc-gen-go # go に対応するコードを出力するためのプラグイン
 ```
 
-`$GOPATH/src/google.golang.org/grpc/examples` にサンプルあり。
+`$GOPATH/src/google.golang.org/grpc/examples` にサンプルあり。  
+以下 2 つのターミナルで動かしてみる。
 
-## Protocol Buffers v3 のインストール
+ターミナル１：サーバサイド
+``` bash
+$ cd $GOPATH/src/google.golang.org/grpc/examples/helloworld
+$ go run greeter_server/main.go
+```
 
-[ここ](https://github.com/protocolbuffers/protobuf/releases) から言語・環境に合わせた zip （ここでは `protoc-3.7.1-osx-x86_64.zip` ）をダウンロードし、 PATH の通ったディレクトリ（ここでは `$GOPATH/bin` ）に解凍したディレクトリの `/bin` の中のバイナリ（ `protoc` ）を移す。
+ターミナル２：クライアントサイド
+``` bash
+$ cd $GOPATH/src/google.golang.org/grpc/examples/helloworld
+$ go run greeter_client/main.go
+2019/05/16 16:05:11 Greeting: Hello world
+```
 
-## protoc plugin for Go のインストール
+`.proto` ファイルからコードを生成してみる。
 
 ``` bash
-$ go get -u github.com/golang/protobuf/protoc-gen-go
+$ cd $GOPATH/src/google.golang.org/grpc/examples/helloworld
+$ protoc -I helloworld/ helloworld/helloworld.proto --go_out=plugins=grpc:helloworld
+# helloworld/helloworld.pb.go が新しく生成され上書きされてる
 ```
 
 # gRPC
