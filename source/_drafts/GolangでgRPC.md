@@ -104,6 +104,7 @@ https://developers.google.com/protocol-buffers/docs/gotutorial
 
 - https://github.com/grpc/grpc.github.io/wiki/Mapping
     - gRPC と REST のマッピング
+- [Googleが公開しているAPIのスタンダード](https://cloud.google.com/apis/design/standard_methods)
 
 # その他 Tips
 
