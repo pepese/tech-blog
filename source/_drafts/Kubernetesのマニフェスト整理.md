@@ -5,7 +5,7 @@ tags:
 id: k8s-manifest-basics
 ---
 
-kubernetes では `kubectl` に様々コマンドがあるが、基本的には `kubectl create/delete/apply` コマンドと **マニフェスト** とよぶ YAML/JSON ファイルを使用することで、リソースの作成/削除/更新できる。
+kubernetes では `kubectl` に様々コマンドがあるが、基本的には `kubectl create/delete/apply` コマンドと **マニフェスト** とよぶ YAML/JSON ファイルを使用することで、リソースの作成/削除/更新できる。マニフェストのリファレンスは [ここ](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/) 。
 
 - マニフェストの雛形
 - マニフェストの理解
