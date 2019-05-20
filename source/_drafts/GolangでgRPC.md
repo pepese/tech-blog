@@ -94,7 +94,17 @@ https://developers.google.com/protocol-buffers/docs/overview
 
 ### .proto 3
 
-https://developers.google.com/protocol-buffers/docs/proto3
+- [Language Guide (proto3)](https://developers.google.com/protocol-buffers/docs/proto3)
+- [和訳](https://qiita.com/CyLomw/items/9aa4551bd6bb9c0818b6)
+
+`service` `rpc` `message` `enum` はアッパーキャメルケースで、 `message` のフィールドはスネークケースで、 `enum` のフィールドはコンスタントケースで記載する。
+
+> #### 変数名の命名規則/xxケース
+> - コンスタントケース：全部大文字、アンスコ区切り
+> - アッパーキャメルケース：先頭大文字、大文字区切り
+> - ローワーキャメルケース：先頭小文字、大文字区切り
+> - スネークケース：全部小文字、アンスコ区切り
+> - ケバブケース：全部小文字、ハイフン区切り
 
 ### Basics: Go
 
@@ -105,6 +115,10 @@ https://developers.google.com/protocol-buffers/docs/gotutorial
 - https://github.com/grpc/grpc.github.io/wiki/Mapping
     - gRPC と REST のマッピング
 - [Googleが公開しているAPIのスタンダード](https://cloud.google.com/apis/design/standard_methods)
+
+## gRPC Gateway
+
+- https://journal.lampetty.net/entry/implement-restful-api-with-grpc-gateway
 
 # その他 Tips
 
