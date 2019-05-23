@@ -26,6 +26,7 @@ id: aws-vpc-basics
         - カスタマーゲートウェイ
         - 仮想プライベートゲートウェイ
 - 設定方針
+- VPC作成手順
 
 # 用語整理
 
@@ -121,10 +122,15 @@ VPC 内でインスタンスを起動した場合、そのインスタンスは�
 起動時に特定のグループを指定しないと、インスタンスは VPC のデフォルトのセキュリティグループに自動的に割り当てられる。  
 **ステートフル Firewall** なので 戻りのトラフィックは考慮する必要がない。
 
-### VPC フローログ
+### VPC Flow logs
 
-VPC フローログは、VPC のネットワークインターフェイスとの間で行き来する IP トラフィックに関する情報をキャプチャできるようにする機能。  
-フローログデータは Amazon CloudWatch Logs と Amazon S3 に保存・閲覧・取得可能。
+- ネットワークトラフィックをキャプチャし、 CloudWatch Logs へ Publish する機能
+- セキュリティグループとネットワーク ACL のルールで accept/reject されたトラフィックログを取得
+- ネットワークインターフェースを送信元 / 送信先とするトラフィックが対象
+- キャプチャウインドウと呼ばれる時間枠（ 約 10 分）で収集・プロセッシング・保存
+- RDS、Redshift、ElastiCach、WorkSpacesのネットワークインターフェースのトラフィックも取得可能
+- Flow logs データは Amazon CloudWatch Logs と Amazon S3 に保存・閲覧・取得可能
+- VPC Flow logs は **GuardDuty** による脅威の検知と通知が可能
 
 ## ゲートウェイ
 
@@ -139,7 +145,22 @@ VPCからインターネットを接続するためのゲートウェイ。
 「NAPインスタンス」もあるが、基本的にはNATゲートウェイでいい。[参考](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/vpc-nat-comparison.html)  
 また、 IPv4の場合は NATゲートウェイだが、IPv6の場合は[Egress-Only インターネットゲートウェイ](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/egress-only-internet-gateway.html)を利用する。
 
-## DHCPオプションセット
+## DNS / NTP
+
+### Amazon Provided DNS
+
+VPCで用いることのできるDNSサーバ。  
+デフォルトではVPC内から名前解決を行う時はこのサーバを用いる。  
+VPC のインターネットゲートウェイを介して通信する必要があるインスタンスが利用できる DNS で、VPC が CIDR ブロック `10.0.0.0/16` ネットワークの場合 DNS サーバーの位置は `10.0.0.2` となる。（もしくは `169.254.169.253` ）
+VPC 内のインスタンスからのみ参照可能で、 VPN や専用線経由では参照できない。  
+以下の設定が可能。
+
+- Enable DNS resolution
+    - 基本は Yes 。 No にすると DNS 機能が無効になる。
+- Enable DNS hostname
+    - True にすると DNS 名が割り当てられる。
+
+### DHCPオプションセット
 
 VPCで使われるDHCPサービスの定義を行うもの。  
 独自のDNS・NTP・NetBIOSサーバを構築・設定したい場合に使用する。  
@@ -161,6 +182,10 @@ VPCで使われるDHCPサービスの定義を行うもの。
 * NetBIOS node type
     * DHCPで配布するNetBIOSのノードタイプを指定する
     * 1、2、4、8から指定する
+
+### Amazon Time Sync Service
+
+VPC 内で稼働する全てのインスタンスから利用できる NTP サーバ。（ `169.254.169.123` ）
 
 ## Elastic IP (EIP)
 
@@ -242,7 +267,7 @@ VPN接続においてのユーザ側（自社のデータセンタなど）の�
 仮想プライベートゲートウェイとカスタマーゲートウェイはセットで作成する必要がある。
 
 
-# **設定方針**
+# 設定方針
 
 自分なりのVPC設計方針。  
 ただし、[RFC1918](https://www.nic.ad.jp/ja/translation/rfc/1918.html)に沿う。
@@ -286,18 +311,18 @@ CIDRフロックを `/24` に設定した理由は、
 
 |Security Group|In-Bound               |Out-Bound|
 |:------------:|:---------------------:|:-------:|
-|default-sg    |tcp/udp/icmp全通し     |全通し   |
-|ssh-sg        |22のみ通す             |全通し   |
-|public-web-sg |80と443のみ通す        |全通し   |
-|app-sg        |public-web-sgからは通す|全通し   |
-|db-sg         |app-sgからは通す       |全通し   |
+|default-sg    |tcp/udp/icmp全通し      |全通し   |
+|ssh-sg        |22のみ通す              |全通し   |
+|public-web-sg |80と443のみ通す          |全通し   |
+|app-sg        |public-web-sgからは通す  |全通し   |
+|db-sg         |app-sgからは通す         |全通し   |
 
 基本的な通信用のdefault-sgとSSH用のssh-sgを作成。  
 その他、サービスの入り口（public-web-sg）、アプリ層（app-sg)、DB層（db-sg）を作成。  
 一部まったく同じ設定だが、レイヤとセキュリティグループの区切りを合わせている。
 
 
-# **VPC作成手順**
+# VPC作成手順
 
 VPCウィザードを使用せずに先述の方針に沿って設定する手順。
 
@@ -392,3 +417,7 @@ Nameタグに「sample-vpc-default-acl」とつける。
 |public-web-sg |すべてのトラフィック|すべて    |すべて|0.0.0.0/0|
 |app-sg        |すべてのトラフィック|すべて    |すべて|0.0.0.0/0|
 |db-sg         |すべてのトラフィック|すべて    |すべて|0.0.0.0/0|
+
+# 参考
+
+- [制限](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/amazon-vpc-limits.html)
