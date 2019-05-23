@@ -8,6 +8,8 @@ id: aws-lambda-basics
 
 [AWS](https://docs.aws.amazon.com/ja_jp/index.html) [Lambda](https://docs.aws.amazon.com/ja_jp/lambda/) についてまとめる。
 
+<!-- more -->
+
 # サーバーレス概要
 
 差別化につながるビジネス実装に集中したい、つまり、以下のような 差別化に繋がらない重い仕事 を避けたい。
