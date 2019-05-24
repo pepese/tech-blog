@@ -47,9 +47,20 @@ To prevent this, run `helm init` with the --tiller-tls-verify flag.
 For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
 ```
 
+上記で `$HELM_HOME` 環境変数（初期値は `$HOME/.helm` ）以下に所定のディレクトリとファイル群が生成されると同時に、 Tiller に関するリソースがkubernetesクラスタのkube-system名前空間に作成される。  
 Tiller をアンインストールするには `$ helm reset` 。  
 
 # 使い方
+
+|コマンド|概要|
+|:---|:---|
+| `helm update repo` |リポジトリ情報の更新|
+| `helm search` | Chartの検索|
+| `helm inspect` | Chartの詳細情報の表示|
+| `helm install` | Chartのインストール（デプロイ）|
+| `helm list` |クラスタ上のChartインスタンス(Release)の一覧を表示|
+| `helm upgrade` | Chartの更新のデプロイ|
+| `helm delete` | ReleaseとAPIオブジェクトの削除|
 
 ## 構築・確認・削除
 
@@ -58,10 +69,26 @@ Tiller をアンインストールするには `$ helm reset` 。
 ``` bash
 $ helm repo update
 $ helm install stable/mysql # これだけでクラスタに MySQL が構築される、恐ろしい、、、
-$ helm ls
 $ helm list
 $ helm delete wintering-rodent
 ```
+
+- `$ helm install` でクラスタ上にデプロイされた構成を **リリース** と呼ぶ
+    - このリリースには必ず名前がつけられ `--name` オプションで指定する（ [stable/mysql](https://github.com/helm/charts/tree/master/stable/mysql) ）
+        - 
+        ```
+        $ helm install --name my-release stable/mysql
+        ```
+    - オプション指定が無い場合はランダムで命名（上記でいう `wintering-rodent` ）される
+    - 同じチャートのより新しいリビジョンを使って内容を書き換えることが更新
+    - `$ helm install` コマンドは、 `$ helm upgrade` コマンドの `--install` オプションで代替できるので、実際には `$ helm install` コマンドを使わず、 `$ helm upgrade` コマンドだけで統一可能
+    - 事前にチェックするために `--dry-run` オプションを指定して初回は実行することをお勧め
+- `$ helm rollback` コマンドによって、指定したリビジョンの内容に復帰させるということが可能
+- `$ helm delete` コマンドでリリースを削除
+    - `--purge` オプションをつけない限り、「DELETED」の状態としてそのリリース定義自体は維持される
+    - この振る舞いによって、 `$ helm rollback` で「リリース削除の取り消し」も可能
+- リリース後は `$ helm list` コマンドで一覧取得
+    - 「DELETED」な状態のリリースを表示するには、 `--all` オプション
 
 ## Chart の探し方
 
@@ -80,7 +107,7 @@ stable/mariadb                  	6.1.0        	10.3.15    	Fast, reliable, scala
 
 ## Chart のカスタマイズ
 
-`$ helm inspect values` コマンドで Chart のパラメータを確認できる。
+`$ helm inspect values <Chart>` コマンドで Chart のパラメータを確認できる。
 
 ``` bash
 $ helm inspect values stable/mysql
@@ -114,12 +141,18 @@ testFramework:
 上記を基に `.yaml` ファイルを作成して以下のように構築する。
 
 ``` bash
-$ helm install -f config.yaml stable/mysql
+$ helm install --name my_release -f values.yaml stable/mysql
 ```
 
 なお、インストール対象の Chart には、アーカイブ・ディレクトリ・URL も指定できる。
 
 ## 独自の Chart を作成する
+
+|コマンド|概要|
+|:---|:---|
+| `helm create` |新しいChartの作成|
+| `helm template` |テンプレートのレンダリング|
+| `helm upgrade –install` |作ったChartのデプロイ|
 
 [詳細](https://helm.sh/docs/chart_template_guide/)
 
@@ -144,7 +177,7 @@ sample-chart/
 │   └── tests
 │       └── test-connection.yaml
 └── values.yaml
-$ helm list sample-chart    # リンター
+$ helm lint sample-chart    # リンター
 $ helm package sample-chart # パッケージング
 ```
 
@@ -165,6 +198,22 @@ $ helm package sample-chart # パッケージング
 1. 自分で作成したマニフェストをテンプレート化して `templates/` 配下に置く。
 2. 環境差分毎に `values.yaml` （ `values.dev.yaml` とか `values.prd.yaml` とか ）を作る
 3. 適用する（ `$ helm install -f values.yaml sample-chart` ）
+
+### テンプレートの書き方
+
+テンプレートでは `{{}}` で囲った部分が他の値で書き換えられるのだが、以下のようになる。
+
+- `.Values`
+    - `values.yaml` ファイルの値を参照する
+    - テンプレートファイル内から `.Values.aaa.bbb` のように、".Values"を接頭辞として、そのYAMLのルート構造以下にアクセスすることで値を参照する
+- `template`
+    - 定義済みの部分テンプレートを呼び出すAction
+    - `templates/_helpers.tpl` で `define` により定義した値を埋め込む
+- `.Release`
+- `include`
+- `.Chart`
+- `toYaml`
+
 
 # プラグイン・ツール
 
