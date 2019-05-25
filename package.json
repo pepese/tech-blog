@@ -16,10 +16,14 @@
     "hexo-generator-sitemap": "^1.2.0",
     "hexo-generator-tag": "^0.2.0",
     "hexo-renderer-ejs": "^0.3.0",
-    "hexo-renderer-marked": "^0.3.0",
+    "hexo-renderer-marked": "^0.3.2",
     "hexo-renderer-mathjax": "^0.6.0",
-    "hexo-renderer-pandoc": "^0.2.0",
+    "hexo-renderer-pandoc": "^0.2.6",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0"
+  },
+  "devDependencies": {
+    "markdownlint": "^0.14.2",
+    "markdownlint-cli": "^0.16.0"
   }
 }

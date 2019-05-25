@@ -1,10 +1,14 @@
 ---
 title: AWS IAMまとめ
 tags:
-id:
+- aws
+- iam
+id: aws-iam-basics
 ---
 
 [AWS](https://docs.aws.amazon.com/ja_jp/index.html) [Identity and Access Management（ IAM ）](https://docs.aws.amazon.com/ja_jp/iam/) についてまとめる。
+
+<!-- more -->
 
 # 概要
 
@@ -39,8 +43,6 @@ AWS IAM は AWS リソースをセキュアに操作するために、認証・�
 
 ## 用語
 
-- https://blog.pepese.com/entry/2016/02/04/134006
-
 -  ユーザー
     - **IAM ユーザー**
         - IAMユーザーはAWSアカウントの配下に作成され、**AWSマネジメントコンソール**にアクセスするための独自のID/Passwordを割り当てることができる
@@ -69,7 +71,34 @@ AWS IAM は AWS リソースをセキュアに操作するために、認証・�
 
 ### Amazon Resource Name （ ARN ）
 
-[http://tanakakns.hatenablog.com/entry/2016/02/03/200132:embed:cite]
+**ARN** は Amazon Resource Name の略で AWS リソースを一意に識別する値。
+
+```
+arn:partition:service:region:account-id:resource
+arn:partition:service:region:account-id:resourcetype/resource
+arn:partition:service:region:account-id:resourcetype:resource
+```
+
+- `partition`
+    - リソースが配置されるパーティション
+    - 標準のAWSリージョンの場合、パーティションは **aws**
+- `service`
+    - AWSのサービス名
+    - 「apigateway」や「ec2」など（ [参考](https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces) ）
+- `region`
+    - リソースが配置されるリージョン
+    - 東京リージョンであれば「ap-northeast-1」（ [参考](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) ）
+- `account-id`
+    - リソースを保有している AWS アカウントID（数字のみ）
+    - 一部のARNはこのアカウント番号を必要としないため省略される
+- `resource` `resourcetype/resource` `resourcetype/resource`
+    - サービスにより様々
+    - リソースタイプの指標（IAMユーザやRDSなど）が含まれることがよくある
+    - さらにスラッシュ（/）またはコロン（:）、リソース名自体が続く
+    - 一部のサービスではパス（ファイルパス、URIなど）を指定できる（ARNのパス）
+    - [参考](https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-arns-and-namespaces.html#arns-paths)
+
+[参考](https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-arns-and-namespaces.html)
 
 > ### AWS Directory Serviceとの連携
 > IAMは**AWS Directory Service**と連携してロールを作成することによって、**Simple AD**などで管理するID/Passwordを利用することができる。（[詳細](https://docs.aws.amazon.com/ja_jp/directoryservice/latest/admin-guide/ms_ad_manage_roles.html)）
@@ -155,15 +184,14 @@ AWS IAM は AWS リソースをセキュアに操作するために、認証・�
     - Statemant
         - アクセス許可に関する複数要素（ Effect/Action/Resource など ）を含むブロック
         - 複数作成可能
-        -
-        ```javascript
+        ```
         {
-          "Version": "2012-10-17",
-          "Statement": {
+            "Version": "2012-10-17",
+            "Statement": {
             "Effect": "Allow",
             "Action": "s3:ListBucket",
             "Resource": "arn:aws:s3:::example_bucket"
-          }
+            }
         }
         ```
     - Effect
@@ -217,20 +245,18 @@ AWS IAM は AWS リソースをセキュアに操作するために、認証・�
     - 適切なユーザーが与えられた権限で環境を操作しているのか確認と記録に使用
 - Amazon CloudWatch
 - AWS Config
-
-## アクセスレベルを使用して IAM 権限を確認する
-
 - アクセスアドバイザー
 
 ## 不要な認証情報を削除する
 
-- IAM 認証情報レポート（ Credential Report ）
+- IAM 認証情報レポート（ Credential Report ）を確認して、利用がないものは確認して削除
 
 ## 認証情報を定期的にローテーションする
 
-===========================================
+- パスワードに有効期限を設定し、ユーザーに更新させる
+- アクセスキーもローテーションできるようにする
+    - アクセスキーは 2 個作れるので、これを利用する
 
-- 36:25 から
-- 用語の説明の ARN も修正する
+# 参考
 
-# IAM Tips
+- [トラブルシューティング](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/troubleshoot.html)
