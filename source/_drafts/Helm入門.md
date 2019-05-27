@@ -61,6 +61,7 @@ Tiller をアンインストールするには `$ helm reset` 。
 | `helm list` |クラスタ上のChartインスタンス(Release)の一覧を表示|
 | `helm upgrade` | Chartの更新のデプロイ|
 | `helm delete` | ReleaseとAPIオブジェクトの削除|
+| `helm template` | Chartから作成されるマニフェストファイルの出力|
 
 ## 構築・確認・削除
 
