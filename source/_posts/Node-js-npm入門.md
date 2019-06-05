@@ -41,7 +41,6 @@ $ npm update -g npm # npm のバージョンアップ
 $ npm -v # 確認
 ```
 
-
 # npmの使い方
 
 公式ドキュメントは[ここ](https://docs.npmjs.com)。  
@@ -132,6 +131,36 @@ var req = require('request')
 
 上記のようにスクリプトを定義することにより `npm test` 、 `npm test-ci` といった具合で登録したスクリプトを実行することができる。
 
+### `package.json` の更新
+
+手動で `package.json` 内のライブラリバージョンを変更してもよいが、 `npm-check-updates` を利用すると楽。
+
+```bash
+$ npm install -g npm-check-updates
+$ which ncu
+/usr/local/bin/ncu
+```
+
+`ncu` コマンドで `package.json` のライブラリの最新バージョンを確認できる。
+
+```bash
+$ ncu
+Checking /path/to/project/package.json
+[====================] 17/17 100%
+
+ hexo-deployer-git       ^0.3.1  →  ^1.0.0 
+ hexo-generator-archive  ^0.1.4  →  ^0.1.5 
+ hexo-generator-index    ^0.2.0  →  ^0.2.1 
+ hexo-renderer-ejs       ^0.3.0  →  ^0.3.1 
+ hexo-renderer-marked    ^0.3.2  →  ^1.0.1 
+ hexo-renderer-pandoc    ^0.2.6  →  ^0.3.0 
+ hexo-renderer-stylus    ^0.3.1  →  ^0.3.3 
+ hexo-server             ^0.2.0  →  ^0.3.3 
+
+Run ncu -u to upgrade package.json
+```
+
+`ncu -u` で `package.json` が書き換えられる。
 
 # Node.jsの使い方
 
