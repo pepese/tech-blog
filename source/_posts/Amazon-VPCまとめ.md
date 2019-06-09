@@ -7,6 +7,7 @@ tags:
 id: aws-vpc-basics
 ---
 
+<!-- 移行済み -->
 [AWS](https://docs.aws.amazon.com/ja_jp/index.html) の [VPC](https://docs.aws.amazon.com/ja_jp/vpc/) についてまとめる。
 
 - 用語整理
