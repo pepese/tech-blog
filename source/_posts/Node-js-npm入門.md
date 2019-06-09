@@ -8,6 +8,7 @@ tags:
 id: nodejs-basics
 ---
 
+<!--移行済み -->
 Node.js（npm）についてまとめる。
 
 npm（Node Packege Manager）は、Node.js用のパッケージ管理コマンド。  

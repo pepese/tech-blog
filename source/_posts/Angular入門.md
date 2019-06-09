@@ -11,6 +11,7 @@ tags:
 id: angular-basics
 ---
 
+<!--移行済み-->
 フロントエンドMVCフレームワーク **Angular** （所謂Angular4）を触ってみた。  
 ここでは [Angular CLI](https://github.com/angular/angular-cli) を使う。  
 なお、 **ndenv** が入ってるテイで書く。導入は下記記事参照。

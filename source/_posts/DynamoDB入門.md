@@ -8,6 +8,7 @@ tags:
 id: dynamodb-basics
 ---
 
+<!-- 移行済み -->
 ここでは、 DynamoDB の概要と AWS CLI でのアクセスまでまとめる。
 
 - DynamoDB の概要

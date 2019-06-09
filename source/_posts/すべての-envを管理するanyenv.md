@@ -12,6 +12,7 @@ tags:
 id: anyenv
 ---
 
+<!--移行済み-->
 [anyenv](https://github.com/riywo/anyenv)は、renvやpyenvなどスクリプト言語のバージョン管理を行うツール類（所謂、 \*\*env）を管理するツール。  
 「すべて」は言い過ぎた。  
 以降、anyenv、\*\*env のインストールから簡単な使い方まで記載する。

@@ -10,6 +10,7 @@ tags:
 id: mean-stack-basics
 ---
 
+<!--移行済み-->
 Angular（所謂Angular4）でMEANスタックのアプリを作成してみる。  
 と言いつつMongoDBについてはほぼ言及しない。
 

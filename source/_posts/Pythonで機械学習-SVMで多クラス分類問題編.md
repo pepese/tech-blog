@@ -9,6 +9,7 @@ tags:
 id: python-ml-svm-multiclass
 ---
 
+<!--移行済み-->
 ここでは、 **scikit-learn** の **SVM** モジュールを使用して **多クラス分類問題** を解いてみる。  
 SVMを使用した2クラス分類問題は以下。
 
