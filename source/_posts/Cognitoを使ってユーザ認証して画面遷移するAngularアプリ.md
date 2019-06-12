@@ -10,6 +10,7 @@ tags:
 id: angular-router-cognito
 ---
 
+<!--移行済み-->
 以下の記事で紹介したCognitoで認証するAngularアプリにAngular Routerで画面遷移ロジックを加えたアプリを作成する。
 
 - [Cognitoを使ってAngularアプリからユーザ認証する](https://pepese.github.io/blog/angular-cognito/)

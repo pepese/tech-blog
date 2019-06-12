@@ -7,6 +7,7 @@ tags:
 id: atom-install-packages
 ---
 
+<!--移行済み-->
 Githubが開発したエディタ[Atom](https://atom.io/)のインストールからパッケージの導入までをまとめる。
 
 <!-- more -->

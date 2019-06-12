@@ -11,6 +11,7 @@ tags:
 id: mac-dev-environment
 ---
 
+<!--移行済み-->
 2016年下期にMacbook Proを買ったので開発環境の設定をまとめてみた。  
 以下のようなことを書く。
 

@@ -7,6 +7,7 @@ tags:
 id: jupyter-notebook-basics
 ---
 
+<!--移行済み-->
 Jupyter Notebook 、ついでに JupyterHub について軽くまとめる。
 
 - [公式](http://jupyter.org/)

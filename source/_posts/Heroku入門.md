@@ -6,6 +6,7 @@ tags:
 id: heroku-basics
 ---
 
+<!--移行済み-->
 Heroku は salesforce が運営する PaaS 。  
 Free プランではクレカ登録無しで月に 550 dyno hours （約 23 日分、 1 ヶ月分無い）、クレカ登録すると月に 1000 dyno hours を無料で利用できる。  
 Free プランの落とし穴は、 30 分アクセスが無いとインスタンス（ dyno ）が Sleep してしまうところ。　　

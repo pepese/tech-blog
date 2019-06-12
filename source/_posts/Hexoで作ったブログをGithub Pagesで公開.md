@@ -7,6 +7,7 @@ tags:
 id: hexo-github-pages
 ---
 
+<!--移行済み-->
 はてなブログが一向に *https* 対応しないし、そのほかのリスクも考えて流行りの **静的サイトジェネレータ** の [HEXO](https://hexo.io/) を使ってブログを作成し、[GitHub Pages](https://pages.github.com/)で公開してみる。  
 前提として **npm** と **Git** 環境が必要なため以下参照。
 

@@ -8,6 +8,7 @@ tags:
 id: android-env-on-mac
 ---
 
+<!-- 移行済み -->
 Mac で Android アプリを開発する際の環境構築についてまとめる。  
 なお、プログラミング言語は [Kotlin](https://kotlinlang.org/) を選択する。
 

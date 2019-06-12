@@ -10,6 +10,7 @@ tags:
 id: angular-cognito
 ---
 
+<!-- 移行済み -->
 Amazon Cognito を使ってユーザ認証ができる Angular アプリを作成してみる。  
 以下の記事の知識を前提とする。
 

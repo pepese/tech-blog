@@ -8,6 +8,7 @@ tags:
 id: git-flow-fix-conflict
 ---
 
+<!--移行済み-->
 git-flowの概要とマージ時のコンフリクトの解消についてまとめる。  
 gitについては以下を参照。
 
