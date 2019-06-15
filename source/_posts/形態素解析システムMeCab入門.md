@@ -8,6 +8,7 @@ tags:
 id: mecab-basics
 ---
 
+<!--移行済み-->
 [公式](http://taku910.github.io/mecab/)
 
 - 環境構築

@@ -7,6 +7,7 @@ tags:
 id: golang-string
 ---
 
+<!--移行済み-->
 golang の文字列操作をまとめる。
 
 - fmt パッケージ

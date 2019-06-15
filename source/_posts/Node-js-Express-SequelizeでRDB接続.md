@@ -10,6 +10,7 @@ tags:
 id: express-rdb-sequelize
 ---
 
+<!--移行済み-->
 Node.js/ExpressアプリケーションからRDBへ接続してみる。  
 使用するツール・ライブラリは以下。
 

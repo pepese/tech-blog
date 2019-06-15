@@ -9,6 +9,7 @@ tags:
 id: sdkman-basics
 ---
 
+<!--移行済み-->
 Java 系の anyenv 、 [SDKMAN](http://sdkman.io/index.html) をさわってみる。
 
 <!-- more -->

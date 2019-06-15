@@ -7,6 +7,7 @@ tags:
 id: golang-var-type-const-literal
 ---
 
+<!--移行済み-->
 golang の変数・型・定数・リテラルについてまとめる。
 
 - 変数

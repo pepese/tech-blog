@@ -10,6 +10,7 @@ tags:
 id: python-ml-recommendation
 ---
 
+<!--移行済み-->
 代表的なレコメンドアルゴリズムと Python での実装をまとめる。  
 スクラッチではなく、できるだけライブラリ（ [scikit-surprise](http://surpriselib.com/) ）を利用する。
 

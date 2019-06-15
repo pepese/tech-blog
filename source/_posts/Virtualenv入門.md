@@ -7,6 +7,7 @@ tags:
 id: virtualenv-basics
 ---
 
+<!--移行済み-->
 [Virtualenv](https://virtualenv.pypa.io/en/stable/) についてかるくまとめる。  
 以下の記事を読んで pyenv を導入済みである前提で記載する。
 

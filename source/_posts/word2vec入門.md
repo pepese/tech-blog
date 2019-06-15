@@ -7,6 +7,8 @@ tags:
 - word2vec
 id: word2vec-basics
 ---
+
+<!--移行済み-->
 Mecab については以下を参考。
 
 - [形態素解析システムMeCab入門](https://pepese.github.io/blog/mecab-basics/)

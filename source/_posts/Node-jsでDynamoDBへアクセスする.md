@@ -9,6 +9,7 @@ tags:
 id: nodejs-dynamodb
 ---
 
+<!--移行済み-->
 ここでは、Node.js から DynamoDB にアクセスしてみる。  
 以下の記事を読んだ前提で書く。
 

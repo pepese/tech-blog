@@ -8,6 +8,7 @@ tags:
 id: typescript-environment-basics
 ---
 
+<!--移行済み-->
 **TypeScript** について環境構築からトランスパイス、設定ファイルなどをまとめる。  
 文法については触れない。また、前提の環境構築（ `npm` など）は以下。
 

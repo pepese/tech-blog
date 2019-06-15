@@ -8,6 +8,7 @@ tags:
 id: python-data-analytics-basics
 ---
 
+<!--移行済み-->
 Python でのデータ分析環境・アプローチについて自分向けにまとめる。
 
 <!-- more -->

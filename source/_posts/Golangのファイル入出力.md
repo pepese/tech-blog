@@ -7,6 +7,7 @@ tags:
 id: golang-file-io
 ---
 
+<!--移行済み-->
 golang のファイル入出力についてまとめる。
 
 - fmt パッケージ

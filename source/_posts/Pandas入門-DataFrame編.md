@@ -8,6 +8,7 @@ tags:
 id: pandas-basics-dataframe
 ---
 
+<!--移行済み-->
 Python ライブラリである Pandas の DataFrame についてまとめる。
 
 - [公式ドキュメント](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html)

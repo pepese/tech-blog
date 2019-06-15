@@ -9,6 +9,7 @@ tags:
 id: python-ml-k-means-clustering
 ---
 
+<!--移行すみ-->
 ここでは、 **scikit-learn** で **k-means** を実行してみる。  
 データセットは、以下で紹介している **iris データセット** を使用する。
 

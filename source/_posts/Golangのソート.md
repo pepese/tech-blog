@@ -7,6 +7,7 @@ tags:
 id: golang-sort
 ---
 
+<!--移行済み-->
 Golang におけるソートについてまとめる。
 
 - sort パッケージ

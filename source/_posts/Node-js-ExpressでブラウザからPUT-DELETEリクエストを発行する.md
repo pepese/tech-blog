@@ -10,6 +10,7 @@ tags:
 id: express-browser-put-delete-request
 ---
 
+<!--移行済み-->
 Node.js/Expressアプリケーションに対してブラウザからPUT/DELETEリクエストを発行する方法について記載する。  
 通常、ブラウザからPUT/DELETEリクエストは発行できない。  
 ここで紹介する方法も実際にブラウザからPUT/DELETEリクエストを発行しているのではなく、 *Node.js/Express側でPUT/DELETEリクエストとして解釈* しているだけ。

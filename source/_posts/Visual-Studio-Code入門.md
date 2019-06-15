@@ -6,6 +6,7 @@ tags:
 id: vscode-basics
 ---
 
+<!--移行済み-->
 Microsoft が開発したエディタ[Visual Studio Code](https://code.visualstudio.com/)（以降、 VS Code ）のインストールから拡張機能の導入までをまとめる。
 
 <!-- more -->
